@@ -74,8 +74,8 @@ private:
 	CToolBar toolBar;
 	CStatusBar statusBar;
 
-	map<CWnd*,Editor*> editors;
-	map<CWnd*,HtmlHelp*> helps;
+	std::map<CWnd*, Editor*> editors;
+	std::map<CWnd*, HtmlHelp*> helps;
 
 	string last_quick_help;
 

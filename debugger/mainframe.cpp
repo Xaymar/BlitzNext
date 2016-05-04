@@ -285,8 +285,8 @@ SourceFile *MainFrame::sourceFile(const char *file){
 
 	file_tabs.insert( make_pair(file,tab) );
 
-	if( char *p=strrchr(file,'/') ) file=p+1;
-	if( char *p=strrchr(file,'\\') ) file=p+1;
+	if(const char *p=strrchr(file,'/') ) file=p+1;
+	if(const char *p=strrchr(file,'\\') ) file=p+1;
 	tabber.insert( tab,t,file );
 
 	tabber.setCurrent( tab );

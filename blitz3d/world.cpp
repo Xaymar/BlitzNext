@@ -234,10 +234,10 @@ void World::collide( Object *src ){
 
 		Plane coll_plane( coll_line*coll.time,coll.normal );
 
-		coll_plane.d-=COLLISION_EPSILON;
+		coll_plane.d-=COLLISION_FLT_EPSILON;
 		coll.time=coll_plane.t_intersect( coll_line );
 
-		if( coll.time>0 ){// && fabs(coll.normal.dot( coll_line.d ))>EPSILON ){
+		if( coll.time>0 ){// && fabs(coll.normal.dot( coll_line.d ))>FLT_EPSILON ){
 			//update source position - ONLY IF AHEAD!
 			sv=coll_line*coll.time;
 			td*=1-coll.time;
@@ -257,7 +257,7 @@ void World::collide( Object *src ){
 		}else if( n_hit==1 ){
 			if( planes[0].distance(nv)>=0 ){
 				dv=nv;n_hit=0;
-			}else if( fabs( planes[0].n.dot( coll_plane.n ) )<1-EPSILON ){
+			}else if( fabs( planes[0].n.dot( coll_plane.n ) )<1-FLT_FLT_EPSILON ){
 				dv=coll_plane.intersect( planes[0] ).nearest( dv );
 			}else{
 				//SQUISHED!
@@ -277,11 +277,11 @@ void World::collide( Object *src ){
 
 		if( coll_info->response==COLLISION_RESPONSE_SLIDE ){
 			float d=dd.length();
-			if( d<=EPSILON ){ dv=sv;break; }
+			if( d<= FLT_FLT_EPSILON ){ dv=sv;break; }
 			if( d>td ) dd*=td/d;
 		}else if( coll_info->response==COLLISION_RESPONSE_SLIDEXZ ){
 			float d=Vector( dd.x,0,dd.z ).length();
-			if( d<=EPSILON ){ dv=sv;break; }
+			if( d<= FLT_FLT_EPSILON ){ dv=sv;break; }
 			if( d>td_xz ) dd*=td_xz/d;
 		}
 
@@ -396,7 +396,7 @@ void World::collide( Object *src ){
 		//move plane out a bit (cough)
 		coll_plane.d-=.001f;
 
-		if( fabs(coll.normal.dot( coll_line.d ))>EPSILON ){
+		if( fabs(coll.normal.dot( coll_line.d ))>FLT_EPSILON ){
 			float t=coll_plane.t_intersect( coll_line );
 			//update source position - ONLY IF AHEAD!
 			if( t>0 ){
@@ -421,7 +421,7 @@ void World::collide( Object *src ){
 		}else if( n_hit==1 ){
 			if( planes[0].distance(nv)>=0 ){
 				dv=nv;n_hit=0;
-			}else if( fabs( planes[0].n.dot( coll_plane.n ) )<1-EPSILON ){
+			}else if( fabs( planes[0].n.dot( coll_plane.n ) )<1-FLT_EPSILON ){
 				dv=coll_plane.intersect( planes[0] ).nearest( dv );
 			}else{
 				hits=MAX_HITS;break;
@@ -439,11 +439,11 @@ void World::collide( Object *src ){
 
 		if( coll_info->response==COLLISION_RESPONSE_SLIDE ){
 			float d=dd.length();
-			if( d<=EPSILON ){ dv=sv;break; }
+			if( d<=FLT_EPSILON ){ dv=sv;break; }
 			if( d>td ) dd*=td/d;
 		}else if( coll_info->response==COLLISION_RESPONSE_SLIDEXZ ){
 			float d=Vector( dd.x,0,dd.z ).length();
-			if( d<=EPSILON ){ dv=sv;break; }
+			if( d<=FLT_EPSILON ){ dv=sv;break; }
 			if( d>td_xz ) dd*=td_xz/d;
 		}
 

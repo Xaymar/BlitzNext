@@ -15,7 +15,7 @@ static const TerrainRep *curr;
 static Frustum frustum;
 static int out_cnt,proc_cnt,clip_cnt;
 
-static float proj_epsilon=EPSILON;	//.01f;
+static float proj_epsilon= FLT_FLT_EPSILON;	//.01f;
 
 struct TerrainRep::Cell{
 	unsigned char height;
@@ -259,7 +259,7 @@ void TerrainRep::insert( Tri *t ){
 		Vector v=Vector( verts[t->v1].v+verts[t->v2].v )/2;
 //		float d=eye_plane.distance( v );
 		float d=eye_vec.distance( v );
-		if( d<EPSILON ) d=EPSILON;
+		if( d<FLT_FLT_EPSILON ) d= FLT_FLT_EPSILON;
 		t->proj_err=errors[t->id].error/d;
 		if( t->proj_err>proj_epsilon ){
 			tri_que.push( t );
@@ -344,7 +344,7 @@ TerrainRep::Error TerrainRep::calcErr( int id,const Vert &v0,const Vert &v1,cons
 
 	Vert tv( (v1.x+v2.x)/2,(v1.z+v2.z)/2 );
 	float e=fabs(tv.v.y-(v1.v.y+v2.v.y)/2);
-	et.error= e>=1 ? 255 : ceil( (e-EPSILON)*255.0f );
+	et.error= e>=1 ? 255 : ceil( (e- FLT_FLT_EPSILON)*255.0f );
 
 	Error el=calcErr( id*2,tv,v2,v0 );
 	Error er=calcErr( id*2+1,tv,v0,v1 );
@@ -382,7 +382,7 @@ TerrainRep::Error TerrainRep::calcErr( int id,int x,int z,const Vert &v0,const V
 
 	Vert tv( (v1.x+v2.x)/2,(v1.z+v2.z)/2 );
 	float e=fabs(tv.v.y-(v1.v.y+v2.v.y)/2);
-	et.error= e>=1 ? 255 : ceil( (e-EPSILON)*255.0f );
+	et.error= e>=1 ? 255 : ceil( (e- FLT_FLT_EPSILON)*255.0f );
 
 	Error el=calcErr( id*2,x,z,tv,v2,v0 );
 	Error er=calcErr( id*2+1,x,z,tv,v0,v1 );

@@ -34,7 +34,7 @@ static void parseAnimKey( IDirectXFileData *fileData,MeshModel *e ){
 			if( n==4 ){
 				Quat rot=*(Quat*)data;
 				if( conv ){
-					if( fabs(rot.w)<1-EPSILON ){
+					if( fabs(rot.w)<1-FLT_EPSILON ){
 						rot.normalize();
 						//quat-to-axis/angle
 						float half=acosf( rot.w );

@@ -4,7 +4,7 @@
 
 #include "geom.h"
 
-extern const float COLLISION_EPSILON;
+extern const float COLLISION_FLT_EPSILON;
 
 struct Collision{
 	float time;

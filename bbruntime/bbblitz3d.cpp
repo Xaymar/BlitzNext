@@ -1,8 +1,6 @@
 
 #include "std.h"
 
-#ifdef PRO
-
 #include "bbblitz3d.h"
 #include "bbgraphics.h"
 #include "../blitz3d/blitz3d.h"
@@ -1855,7 +1853,7 @@ void  bbPointEntity( Entity *e,Entity *t,float roll ){
 void  bbAlignToVector( Entity *e,float nx,float ny,float nz,int axis,float rate ){
 	Vector ax( nx,ny,nz );
 	float l=ax.length();
-	if( l<=EPSILON ) return;
+	if( l<=FLT_EPSILON ) return;
 	ax/=l;
 
 	Quat q=e->getWorldRotation();
@@ -1863,9 +1861,9 @@ void  bbAlignToVector( Entity *e,float nx,float ny,float nz,int axis,float rate 
 
 	float dp=ax.dot( tv );
 
-	if( dp>=1-EPSILON ) return;
+	if( dp>=1-FLT_EPSILON ) return;
 
-	if( dp<=-1+EPSILON ){
+	if( dp<=-1+FLT_EPSILON ){
 		float an=PI*rate/2;
 		Vector cp=(axis==1) ? q.j() : (axis==2 ? q.k() : q.i());
 		e->setWorldRotation( Quat( cosf(an),cp*sinf(an) ) * q );
@@ -2226,5 +2224,3 @@ void blitz3d_link( void (*rtSym)( const char *sym,void *pc ) ){
 	rtSym( "$EntityName%entity",bbEntityName );
 	rtSym( "$EntityClass%entity",bbEntityClass );
 }
-
-#endif

@@ -343,7 +343,7 @@ static void parseAnimKeys( Animation *anim,int type ){
 			in.sgetn( (char*)&angle,4 );
 			in.sgetn( (char*)&axis,12 );
 //			_log( "ROT_KEY: time="+itoa(time)+" angle="+ftoa(angle)+" axis="+ftoa(axis.x)+","+ftoa(axis.y)+","+ftoa(axis.z) );
-			if( axis.length()>EPSILON ){
+			if( axis.length()>FLT_EPSILON ){
 				if( flip_tris ) angle=-angle;
 				if( conv ) axis=conv_tform.m*axis;
 				quat=Quat( cosf( angle/2 ),axis.normalized()*sinf( angle/2 ) )*quat;
@@ -394,8 +394,8 @@ static void parseMeshInfo( MeshModel *root,float curr_time ){
 			_log( "PIVOT: "+ftoa(pivot.x)+","+ftoa(pivot.y)+","+ftoa(pivot.z) );
 			break;
 		case 0xb014:	//BOUNDBOX
-			in.sgetn( (char*)&box.a,12 );
-			in.sgetn( (char*)&box.b,12 );
+			in.sgetn( (char*)&(box.a),12 );
+			in.sgetn( (char*)&(box.b),12 );
 			box_centre=box.centre();
 			if( conv ) box_centre=conv_tform * box_centre;
 			_log( "BOUNDBOX: min="+ftoa(box.a.x)+","+ftoa(box.a.y)+","+ftoa(box.a.z)+" max="+ftoa(box.b.x)+","+ftoa(box.b.y)+","+ftoa(box.b.z) );

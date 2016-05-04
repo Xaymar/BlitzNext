@@ -8,3 +8,9 @@ Release
 _release
 *__Win32_*
 /innosetup/installs
+/#Intermediate
+/#Build
+*.vcxproj.user
+*.VC.db
+*.VC.opendb
+/ipch

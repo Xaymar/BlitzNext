@@ -69,7 +69,7 @@ void Surface::updateNormals(){
 		const Vector &v1=vertices[t.verts[1]].coords;
 		const Vector &v2=vertices[t.verts[2]].coords;
 		Vector n=(v1-v0).cross(v2-v0);
-		if( n.length()<=EPSILON ) continue;
+		if( n.length()<= FLT_FLT_EPSILON ) continue;
 		n.normalize();
 		norm_map[v0]+=n;
 		norm_map[v1]+=n;

@@ -4,6 +4,7 @@
 
 #define BASE_VER	1108
 
+#define PRO
 #ifdef	PRO
 #define	PRO_F	0x010000
 #else

@@ -2,7 +2,7 @@
 #include "std.h"
 #include "collision.h"
 
-const float COLLISION_EPSILON=.001f;
+const float COLLISION_FLT_EPSILON=.001f;
 
 /*
 //
@@ -202,7 +202,7 @@ bool Collision::update( const Line &line,float t,const Vector &n ){
 	if( t>time ) return false;
 	Plane p(line*t,n);
 	if( p.n.dot( line.d )>=0 ) return false;
-	if( p.distance(line.o)<-COLLISION_EPSILON ) return false;
+	if( p.distance(line.o)<-COLLISION_FLT_EPSILON ) return false;
 
 	time=t;
 	normal=n;
