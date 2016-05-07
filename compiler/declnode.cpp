@@ -76,7 +76,11 @@ void VarDeclNode::proto(DeclSeq *d, Environ *e) {
 			delete expr; expr = 0;
 		}
 
-		if (kind & DECL_PARAM) {
+		if (expr == nullptr) {
+			ex("Internal Error: expr turned into nullptr (3)");
+		}
+
+		if (kind & DECL_PARAM) { // Heap corruption, this being replaced again?
 			defType = ty->constType(); ty = defType->valueType;
 		}
 	} else if (constant) ex("Constants must be initialized");

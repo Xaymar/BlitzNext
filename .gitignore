@@ -15,9 +15,6 @@
 /#Test/*.exe
 /ipch
 *.obj
-*.lib
-*.dll
-*.exe
 *.ilk
 *.idb
 *.pdb
