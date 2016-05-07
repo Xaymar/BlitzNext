@@ -7,7 +7,6 @@
 const float PI=3.14159265359f;	//180 degrees
 const float TWOPI=PI*2.0f;		//360 degrees
 const float HALFPI=PI*.5f;		//90  degrees
-const float FLT_EPSILON=.000001f;
 
 gxLight::gxLight( gxScene *s,int type ):
 scene(s){

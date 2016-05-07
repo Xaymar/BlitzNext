@@ -35,9 +35,9 @@ bool gxMesh::lock( bool all ){
 	int flags=DDLOCK_WAIT|DDLOCK_WRITEONLY;
 
 	//XP or less?
-	if( graphics->runtime->osinfo.dwMajorVersion<6 ){
+	/*if( graphics->runtime->osinfo.dwMajorVersion<6 ){
 		flags|=(all ? DDLOCK_DISCARDCONTENTS : DDLOCK_NOOVERWRITE);
-	}
+	}*/
 
 	if( vertex_buff->Lock( flags,(void**)&locked_verts,0 )>=0 ){
 		mesh_dirty=false;

@@ -10,7 +10,7 @@ double atof( const string &s ){
 }
 
 string itoa( int n ){
-	char buff[32];itoa( n,buff,10 );
+	char buff[32]; _itoa( n,buff,10 );
 	return string( buff );
 }
 

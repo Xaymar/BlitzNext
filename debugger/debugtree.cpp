@@ -3,7 +3,7 @@
 #include "debugtree.h"
 #include "prefs.h"
 
-#include "../bbruntime/basic.h"
+#include "../RuntimeLib/basic.h"
 
 IMPLEMENT_DYNAMIC( DebugTree,CTreeCtrl )
 BEGIN_MESSAGE_MAP( DebugTree,CTreeCtrl )

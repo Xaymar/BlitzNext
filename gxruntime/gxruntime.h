@@ -110,10 +110,10 @@ public:
 	void debugError( const char *t );
 	void debugLog( const char *t );
 
-	int numGraphicsDrivers();
+	int enumerateGraphicsDrivers();
 	void graphicsDriverInfo( int driver,std::string *name,int *caps );
 
-	int numGraphicsModes( int driver );
+	int countGraphicsModes( int driver );
 	void graphicsModeInfo( int driver,int mode,int *w,int *h,int *d,int *caps );
 
 	void windowedModeInfo( int *caps );

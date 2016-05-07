@@ -1,19 +1,17 @@
+#pragma once
 
-#ifndef GXINPUT_H
-#define GXINPUT_H
-
-#include <dinput.h>
-
+#include "std.h"
 #include "gxdevice.h"
+#include "GraphicsRuntime.h"
 
 class gxRuntime;
 
 class gxInput{
 public:
 	gxRuntime *runtime;
-	IDirectInput7 *dirInput;
+	LPDIRECTINPUT8 dirInput;
 
-	gxInput( gxRuntime *runtime,IDirectInput7 *di );
+	gxInput( gxRuntime *runtime, LPDIRECTINPUT8 di );
 	~gxInput();
 
 	void reset();
@@ -46,5 +44,3 @@ public:
 	int numJoysticks()const;
 	int toAscii( int key )const;
 };
-
-#endif

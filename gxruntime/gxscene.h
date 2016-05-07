@@ -1,4 +1,6 @@
 
+#include "GraphicsRuntime.h"
+
 #ifndef GXSCENE_H
 #define GXSCENE_H
 

@@ -1,4 +1,6 @@
 
+#include "GraphicsRuntime.h"
+
 #ifndef GXLIGHT_H
 #define GXLIGHT_H
 

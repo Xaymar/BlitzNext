@@ -126,7 +126,7 @@ void main(){
 			name='\"'+name+'\"';
 		}
 
-		char bf[4];itoa( bytes.size()/3,bf,16 );
+		char bf[4]; _itoa( bytes.size()/3,bf,16 );
 		bytes="\\x"+string( bf )+bytes;
 
 		out<<name<<','<<lop<<','<<rop<<','<<flags<<",\""<<bytes<<"\",\n";
@@ -135,5 +135,5 @@ void main(){
 	out.flush();
 	out.close();
 	cout<<"All done!\n";
-	getch();
+	_getch();
 }

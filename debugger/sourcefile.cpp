@@ -39,11 +39,11 @@ void SourceFile::highLight( int row,int col ){
 	bool quote=false;
 	int end=pos,len=GetTextLength();
 	while( end<len ){
-		char temp[8];
 		SetSel( end,end+1 );
-		GetSelText( temp );
-		if( temp[0]=='\"' ) quote=!quote;
-		if( !quote && (temp[0]==':' || !isprint( temp[0] )) ) break;
+		auto txt = GetSelText();
+		
+		if( txt[0]=='\"' ) quote=!quote;
+		if( !quote && (txt[0]==':' || !isprint(txt[0] )) ) break;
 		++end;
 	}
 	HideSelection( false,false );

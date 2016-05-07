@@ -1,0 +1,32 @@
+.lib " "
+
+AdaptKPID( handle%, id%, slide# )
+AddCL( handle%, x1#, y1#, x2#, y2# )
+AddKP( handle%, x_pos%, y_pos%, radius%, mass%, collision_type%, torque%, id% )
+AddVK( handle%, source_kp%, destin_kp%, spring%, damping%, id% )
+AddVKIDLen( bank%, id%, lenght# )
+AppCED( handle%, loops# )
+BreakKPID( handle%, id%, linear#, fricty#, free_abs# )
+DelCED( handle% )
+DrawCED( handle% )
+DrawKP( handle%, Image% )
+FreeCED( handle% )
+GetCEDXPos#( handle%, mode% )
+GetCEDYPos#( handle%, mode% )
+GetID( file$, id% )
+LoadCED( file$, scale# )
+LoadVED( file$, scale#, z_step% )
+NewCED( )
+SetCED( handle%, x_pos#, y_pos#, angle#, mode% )
+TurnKPID( handle%, id%, speed#, damping# )
+CollBzQuad3D( area_code%, depth% )
+DrawImageKP( handle%, x_pos#, y_pos#, angle#, size#, frame% )
+
+DropSED( image_handle%, sed_handle%, x_pos#, y_pos#, x_adding#, y_adding#, angle#, speed#, adder# )
+LoadSED( file$ )
+AnimSED( )
+
+AnimFlakes4D( handle%, x_speed#, y_speed#, z_speed#, muddle# )
+AnimRifled4D( handle%, x_speed#, y_speed#, z_speed#, muddle#, expand# )
+CreateFlakes4D( particles%, dimension#, fading#, lakes# )
+

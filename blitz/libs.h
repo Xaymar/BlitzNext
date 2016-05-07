@@ -9,10 +9,10 @@
 
 using namespace std;
 
-#include "../linker/linker.h"
+#include "../LinkerLib/linker.h"
 #include "../compiler/environ.h"
 #include "../compiler/parser.h"
-#include "../bbruntime_dll/bbruntime_dll.h"
+#include "../Runtime/bbruntime_dll.h"
 
 extern int bcc_ver;
 extern int lnk_ver;

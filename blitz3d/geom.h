@@ -77,15 +77,15 @@ public:
 		x -= q.x; y -= q.y; z -= q.z; return *this;
 	}
 	bool operator<(const Vector &q)const {
-		if (fabs(x - q.x) > FLT_FLT_EPSILON) return x < q.x ? true : false;
-		if (fabs(y - q.y) > FLT_FLT_EPSILON) return y < q.y ? true : false;
-		return fabs(z - q.z) > FLT_FLT_EPSILON && z < q.z;
+		if (fabs(x - q.x) > FLT_EPSILON) return x < q.x ? true : false;
+		if (fabs(y - q.y) > FLT_EPSILON) return y < q.y ? true : false;
+		return fabs(z - q.z) > FLT_EPSILON && z < q.z;
 	}
 	bool operator==(const Vector &q)const {
-		return fabs(x - q.x) <= FLT_FLT_EPSILON && fabs(y - q.y) <= FLT_FLT_EPSILON && fabs(z - q.z) <= FLT_FLT_EPSILON;
+		return fabs(x - q.x) <= FLT_EPSILON && fabs(y - q.y) <= FLT_EPSILON && fabs(z - q.z) <= FLT_EPSILON;
 	}
 	bool operator!=(const Vector &q)const {
-		return fabs(x - q.x) > FLT_FLT_EPSILON || fabs(y - q.y) > FLT_FLT_EPSILON || fabs(z - q.z) > FLT_FLT_EPSILON;
+		return fabs(x - q.x) > FLT_EPSILON || fabs(y - q.y) > FLT_EPSILON || fabs(z - q.z) > FLT_EPSILON;
 	}
 	float dot(const Vector &q)const {
 		return x*q.x + y*q.y + z*q.z;
@@ -222,7 +222,7 @@ struct Quat {
 		Quat t = q;
 		float d = dot(q), b = 1 - a;
 		if (d < 0) { t.w = -t.w; t.v = -t.v; d = -d; }
-		if (d < 1 - FLT_FLT_EPSILON) {
+		if (d < 1 - FLT_EPSILON) {
 			float om = acosf(d);
 			float si = sinf(om);
 			a = sinf(a*om) / si;
@@ -527,7 +527,7 @@ inline Quat matrixQuat(const Matrix &p) {
 	Matrix m = p;
 	m.orthogonalize();
 	float t = m.i.x + m.j.y + m.k.z, w, x, y, z;
-	if (t > FLT_FLT_EPSILON) {
+	if (t > FLT_EPSILON) {
 		t = sqrtf(t + 1) * 2;
 		x = (m.k.y - m.j.z) / t;
 		y = (m.i.z - m.k.x) / t;

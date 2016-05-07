@@ -1,0 +1,23 @@
+prg_debug	0
+prg_lastbuild	C:\Projects\Sirius Online - Client\ExeFile.bb
+win_maximized	0
+win_notoolbar	0
+win_rect	395 325 1035 805
+font_editor	blitz 12
+font_tabs	verdana 8
+font_debug	verdana 8
+rgb_bkgrnd	225588
+rgb_string	ff66
+rgb_ident	ffffff
+rgb_keyword	aaffff
+rgb_comment	ffee00
+rgb_digit	33ffdd
+rgb_default	eeeeee
+edit_tabs	4
+edit_blkcursor	0
+edit_backup	2
+img_toolbar	toolbar.bmp
+cmd_line	
+file_recent	c:\projects\sirius online - client\include\launcher.bb
+file_recent	c:\projects\sirius online - client\libraries\blitzsteam\blitzsteam.bb
+file_recent	C:\Projects\Sirius Online - Client\ExeFile.bb

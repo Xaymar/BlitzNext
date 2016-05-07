@@ -560,6 +560,7 @@ void gxScene::render( gxMesh *m,int first_vert,int vert_cnt,int first_tri,int tr
 	tris_drawn+=tri_cnt;
 	if( n_texs<=tex_stages ) return;
 
+
 	setTSS( 0,D3DTSS_COLOROP,D3DTOP_SELECTARG1 );
 	setTSS( 0,D3DTSS_ALPHAOP,D3DTOP_SELECTARG1 );
 	if( tex_stages>1 ){

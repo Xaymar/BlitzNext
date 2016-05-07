@@ -12,6 +12,8 @@ extern gxRuntime *gx_runtime;
 #define _log( X )
 #endif
 
+class Box;
+
 static filebuf in;
 static int chunk_end;
 static vector<int> parent_end;
@@ -369,7 +371,7 @@ static void parseMeshInfo( MeshModel *root,float curr_time ){
 	Vector pivot;
 	Animation anim;
 	unsigned short id=65535,parent=65535,flags1,flags2;
-	Box box( Vector(),Vector() );
+	Box box = Box( Vector(),Vector() );
 	Vector box_centre;
 	while( int chunk_id=nextChunk() ){
 		switch( chunk_id ){

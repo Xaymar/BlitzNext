@@ -98,7 +98,7 @@ TNode *Node::createVars( Environ *e ){
 // release local vars //
 ////////////////////////
 TNode *Node::deleteVars( Environ *e ){
-	TNode *t=0,*l=0,*p,*p1,*p2;
+	TNode *t=0,*l=0,*p,*p1 = nullptr,*p2 = nullptr;
 	for( int k=0;k<e->decls->size();++k ){
 		Decl *d=e->decls->decls[k];
 		Type *type=d->type;
