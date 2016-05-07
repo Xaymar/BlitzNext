@@ -1,16 +1,23 @@
-*.sbl
-*.plg
-*.aps
-*.ncb
-*.opt
-Debug
-Release
-_release
-*__Win32_*
-/innosetup/installs
-/#Intermediate
-/#Build
+# Visual Studio
+/.vs
 *.vcxproj.user
 *.VC.db
 *.VC.opendb
+/enc_temp_folder
+
+# Build Files
+/#Build
+/#Intermediate
+/#Test/bin/*.dll
+/#Test/bin/*.pdb
+/#Test/bin/*.exe
+/#Test/*.pdb
+/#Test/*.exe
 /ipch
+*.obj
+*.lib
+*.dll
+*.exe
+*.ilk
+*.idb
+*.pdb

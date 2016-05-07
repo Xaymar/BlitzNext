@@ -273,7 +273,7 @@ int _cdecl main(int argc, char *argv[]) {
 		Debugger *debugger = 0;
 
 		if (debug) {
-			dbgHandle = LoadLibrary((home + "/bin/debugger.dll").c_str());
+			dbgHandle = LoadLibrary((home + "\\debugger.dll").c_str());
 			if (dbgHandle) {
 				typedef Debugger *(_cdecl*GetDebugger)(Module*, Environ*);
 				GetDebugger gd = (GetDebugger)GetProcAddress(dbgHandle, "debuggerGetDebugger");

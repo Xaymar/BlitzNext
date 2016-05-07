@@ -14,38 +14,38 @@ string itoa( int n ){
 	return string( buff );
 }
 
-static int _finite( double n ){		// definition: exponent anything but 2047.
-
-	int e;					// 11 bit exponent
-	const int eMax = 2047;	// 0x7ff, all bits = 1	
-	
-	int *pn = (int *) &n;
-
-	e = *++pn;				// Intel order!
-	e = ( e >> 20 ) & eMax;
-
-	return e != eMax;
-}
-
-static int _isnan( double n ){		// definition: exponent 2047, nonzero fraction.
-
-	int e;					// 11 bit exponent
-	const int eMax = 2047;	// 0x7ff, all bits = 1	
-	
-	int *pn = (int *) &n;
-
-	e = *++pn;				// Intel order!
-	e = ( e >> 20 ) & eMax;
-
-	if ( e != 2047 ) return 0;	// almost always return here
-
-	int fHi, fLo;				// 52 bit fraction
-
-	fHi = ( *pn ) & 0xfffff;	// first 20 bits
-	fLo = *--pn;				// last 32 bits
-
-	return  ( fHi | fLo ) != 0;	// returns 0,1 not just 0,nonzero
-}
+//static int _finite( double n ){		// definition: exponent anything but 2047.
+//
+//	int e;					// 11 bit exponent
+//	const int eMax = 2047;	// 0x7ff, all bits = 1	
+//	
+//	int *pn = (int *) &n;
+//
+//	e = *++pn;				// Intel order!
+//	e = ( e >> 20 ) & eMax;
+//
+//	return e != eMax;
+//}
+//
+//static int _isnan( double n ){		// definition: exponent 2047, nonzero fraction.
+//
+//	int e;					// 11 bit exponent
+//	const int eMax = 2047;	// 0x7ff, all bits = 1	
+//	
+//	int *pn = (int *) &n;
+//
+//	e = *++pn;				// Intel order!
+//	e = ( e >> 20 ) & eMax;
+//
+//	if ( e != 2047 ) return 0;	// almost always return here
+//
+//	int fHi, fLo;				// 52 bit fraction
+//
+//	fHi = ( *pn ) & 0xfffff;	// first 20 bits
+//	fLo = *--pn;				// last 32 bits
+//
+//	return  ( fHi | fLo ) != 0;	// returns 0,1 not just 0,nonzero
+//}
 
 /////////////
 //By FLOYD!//

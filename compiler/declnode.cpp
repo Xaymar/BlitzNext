@@ -64,8 +64,8 @@ void VarDeclNode::proto(DeclSeq *d, Environ *e) {
 			ex("Internal Error: expr turned into nullptr (2)");
 		}
 
-		if (constant || (kind&DECL_PARAM)) {
-			ConstNode *c = expr->constNode();
+		if (constant || (kind & DECL_PARAM)) {
+			ConstNode *c = static_cast<ConstNode*>(expr);//->constNode();
 
 
 			if (!c) ex("Expression must be constant");
@@ -75,7 +75,8 @@ void VarDeclNode::proto(DeclSeq *d, Environ *e) {
 			e->types.push_back(ty);
 			delete expr; expr = 0;
 		}
-		if (kind&DECL_PARAM) {
+
+		if (kind & DECL_PARAM) {
 			defType = ty->constType(); ty = defType->valueType;
 		}
 	} else if (constant) ex("Constants must be initialized");
