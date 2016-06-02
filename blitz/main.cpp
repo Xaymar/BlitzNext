@@ -135,7 +135,7 @@ static void demoError() {
 	exit(0);
 }
 
-int _cdecl main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
 	string in_file, out_file, args;
 
@@ -144,9 +144,7 @@ int _cdecl main(int argc, char *argv[]) {
 	bool versinfo = false;
 
 	for (int k = 1; k < argc; ++k) {
-
 		string t = argv[k];
-
 		t = tolower(t);
 
 		if (t == "-h") {
@@ -168,10 +166,14 @@ int _cdecl main(int argc, char *argv[]) {
 		} else if (t == "-v") {
 			versinfo = true;
 		} else if (t == "-o") {
-			if (out_file.size() || k == argc - 1) usageErr();
+			if (out_file.size() || k == argc - 1)
+				usageErr();
+
 			out_file = argv[++k];
 		} else {
-			if (in_file.size() || t[0] == '-' || t[0] == '+') usageErr();
+			if (in_file.size() || t[0] == '-' || t[0] == '+')
+				usageErr();
+
 			in_file = argv[k];
 			for (++k; k < argc; ++k) {
 				string t = argv[k];
@@ -192,14 +194,14 @@ int _cdecl main(int argc, char *argv[]) {
 	if (dumpkeys) dumpKeys(true, true, dumphelp);
 	if (versinfo) versInfo();
 
-	if (!in_file.size()) return 0;
-
-#ifdef DEMO
-	if (!getenv("blitzide")) demoError();
-#endif
+	if (!in_file.size()) {
+		return 0;
+	}
 
 	if (in_file[0] == '\"') {
-		if (in_file.size() < 3 || in_file[in_file.size() - 1] != '\"') usageErr();
+		if ((in_file.size() < 3) || (in_file[in_file.size() - 1] != '\"')) {
+			usageErr();
+}
 		in_file = in_file.substr(1, in_file.size() - 2);
 	}
 
