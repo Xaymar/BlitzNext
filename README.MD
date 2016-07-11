@@ -1,3 +1,11 @@
+# BlitzNext - An attempt at modernizing the BlitzBasic language.
+
+BlitzNext is an attempt at modernizing the BlitzBasic language a bit, so that it works on current generation PCs again.
+
+
+--------
+
+
 Blitz3D open source release!
 
 Workspace and project files are in MSVC 6.0 format.
