@@ -90,8 +90,8 @@ void Runtime::execute( void (*pc)(),const char *args,Debugger *dbg ){
 
 	trackmem( true );
 
-	_se_translator_function old_trans=_set_se_translator( seTranslator );
-	_control87( _RC_NEAR|_PC_24|_EM_INVALID|_EM_ZERODIVIDE|_EM_OVERFLOW|_EM_UNDERFLOW|_EM_INEXACT|_EM_DENORMAL,0xfffff );
+	_se_translator_function old_trans = _set_se_translator(seTranslator);
+	_control87(_RC_NEAR | _PC_24 | _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL, 0xfffff);
 
 	//strip spaces from ends of args...
 	string params=args;
@@ -106,8 +106,8 @@ void Runtime::execute( void (*pc)(),const char *args,Debugger *dbg ){
 		gxRuntime::closeRuntime( t );
 	}
 
-	_control87( _CW_DEFAULT,0xfffff );
-	_set_se_translator( old_trans );
+	_control87(_CW_DEFAULT, 0xfffff);
+	_set_se_translator(old_trans);
 }
 
 void Runtime::asyncStop(){

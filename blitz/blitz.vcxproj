@@ -69,6 +69,7 @@
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <ExceptionHandling>Async</ExceptionHandling>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
     </ClCompile>
     <Midl>
       <TypeLibraryName>.\Debug\blitz.tlb</TypeLibraryName>
@@ -100,6 +101,7 @@
       <ControlFlowGuard>false</ControlFlowGuard>
       <CallingConvention>StdCall</CallingConvention>
       <ExceptionHandling>Async</ExceptionHandling>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
     </ClCompile>
     <Midl>
       <TypeLibraryName>.\Release\blitz.tlb</TypeLibraryName>

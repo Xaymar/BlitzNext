@@ -66,6 +66,7 @@
       <ControlFlowGuard>false</ControlFlowGuard>
       <CallingConvention>StdCall</CallingConvention>
       <ExceptionHandling>Async</ExceptionHandling>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
     </ClCompile>
     <Midl>
       <TypeLibraryName>.\Release\asm_makeinsts.tlb</TypeLibraryName>
@@ -96,6 +97,7 @@
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <ExceptionHandling>Async</ExceptionHandling>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
     </ClCompile>
     <Midl>
       <TypeLibraryName>.\Debug\asm_makeinsts.tlb</TypeLibraryName>

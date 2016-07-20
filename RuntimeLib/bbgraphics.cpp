@@ -1361,3 +1361,8 @@ void graphics_link(void(*rtSym)(const char *sym, void *pc)) {
 	rtSym("ShowPointer", bbShowPointer);
 	rtSym("HidePointer", bbHidePointer);
 }
+
+// NVidia Optimus
+extern "C" {
+	_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+}
