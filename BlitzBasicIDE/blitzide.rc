@@ -57,7 +57,7 @@ IDR_MAINFRAME MENU DISCARDABLE
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "&New\tCtrl+N",                ID_NEW
+        MENUITEM "&New\tCtrl+N",                Inew
         MENUITEM "&Open...\tCtrl+O",            ID_OPEN
         MENUITEM SEPARATOR
         MENUITEM "&Close\tCtrl+F4",             ID_CLOSE
@@ -118,7 +118,7 @@ IDR_MAINFRAME ACCELERATORS DISCARDABLE
 BEGIN
     "F",            ID_FIND,                VIRTKEY, CONTROL, NOINVERT
     "H",            ID_HOME,                VIRTKEY, CONTROL, NOINVERT
-    "N",            ID_NEW,                 VIRTKEY, CONTROL, NOINVERT
+    "N",            Inew,                 VIRTKEY, CONTROL, NOINVERT
     "O",            ID_OPEN,                VIRTKEY, CONTROL, NOINVERT
     "P",            ID_PRINT,               VIRTKEY, CONTROL, NOINVERT
     "R",            ID_REPLACE,             VIRTKEY, CONTROL, NOINVERT
@@ -228,7 +228,7 @@ BEGIN
     ID_STEP                 "Strp program\nStep"
     ID_TRACE                "Trace program\nTrace"
     ID_END                  "End program\nEnd"
-    ID_NEW                  "Start a new program\nNew"
+    Inew                  "Start a new program\nNew"
     ID_FINDNEXT             "Find next\nFind next"
     ID_RUN                  "Continue Program\nContinue"
     ID_STOP                 "Pause program\nPause"

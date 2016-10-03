@@ -312,7 +312,7 @@ void  bbRenderWorld( float tween ){
 	if( bbKeyHit( 0x58 ) ){
 		static int n;
 		string t="screenshot"+itoa(++n)+".bmp";
-		bbSaveBuffer( bbBackBuffer(),d_new BBStr(t) );
+		bbSaveBuffer( bbBackBuffer(),new BBStr(t) );
 	}
 
 	if( !stats_mode ) return;
@@ -334,7 +334,7 @@ void  bbRenderWorld( float tween ){
 
 	string t="FPS:"+t_fps+" UPS:"+t_ups+" RPS:"+t_rps+" TRIS:"+t_tris;
 
-	bbText( 0,bbGraphicsHeight()-bbFontHeight(),d_new BBStr(t),0,0 );
+	bbText( 0,bbGraphicsHeight()-bbFontHeight(),new BBStr(t),0,0 );
 }
 
 int  bbTrisRendered(){
@@ -353,7 +353,7 @@ float  bbStats3D( int n ){
 //
 Texture *  bbLoadTexture( BBStr *file,int flags ){
 	debug3d();
-	Texture *t=d_new Texture( *file,flags );delete file;
+	Texture *t=new Texture( *file,flags );delete file;
 	if( !t->getCanvas(0) ){ delete t;return 0; }
 	texture_set.insert( t );
 	return t;
@@ -361,7 +361,7 @@ Texture *  bbLoadTexture( BBStr *file,int flags ){
 
 Texture *  bbLoadAnimTexture( BBStr *file,int flags,int w,int h,int first,int cnt ){
 	debug3d();
-	Texture *t=d_new Texture( *file,flags,w,h,first,cnt );
+	Texture *t=new Texture( *file,flags,w,h,first,cnt );
 	delete file;
 	if( !t->getCanvas(0) ){
 		delete t;
@@ -378,7 +378,7 @@ Texture *  bbCreateTexture( int w,int h,int flags,int frames ){
 			ThrowRuntimeException( "Illegal number of texture frames" );
 		}
 	}
-	Texture *t=d_new Texture( w,h,flags,frames );
+	Texture *t=new Texture( w,h,flags,frames );
 	texture_set.insert( t );
 	return t;
 }
@@ -427,7 +427,7 @@ int  bbTextureHeight( Texture *t ){
 BBStr *bbTextureName( Texture *t ){
 	debugTexture(t);
 	CachedTexture *c=t->getCachedTexture();
-	return c ? d_new BBStr( c->getName().c_str() ) : d_new BBStr("");
+	return c ? new BBStr( c->getName().c_str() ) : new BBStr("");
 }
 
 void bbSetCubeFace( Texture *t,int face ){
@@ -476,7 +476,7 @@ void  bbTextureFilter( BBStr *t,int flags ){
 ////////////////////
 Brush *  bbCreateBrush( float r,float g,float b ){
 	debug3d();
-	Brush *br=d_new Brush();
+	Brush *br=new Brush();
 	br->setColor( Vector( r*ctof,g*ctof,b*ctof ) );
 	brush_set.insert( br );
 	return br;
@@ -522,7 +522,7 @@ void  bbBrushTexture( Brush *b,Texture *t,int frame,int index ){
 
 Texture *bbGetBrushTexture( Brush *b,int index ){
 	debugBrush(b);
-	Texture *tex=d_new Texture(b->getTexture(index));
+	Texture *tex=new Texture(b->getTexture(index));
 	texture_set.insert( tex );
 	return tex;
 }
@@ -542,7 +542,7 @@ void  bbBrushFX( Brush *b,int fx ){
 ///////////////////
 Entity *  bbCreateMesh( Entity *p ){
 	debugParent(p);
-	MeshModel *m=d_new MeshModel();
+	MeshModel *m=new MeshModel();
 	return insertEntity( m,p );
 }
 
@@ -552,7 +552,7 @@ Entity *  bbLoadMesh( BBStr *f,Entity *p ){
 	delete f;
 
 	if( !e ) return 0;
-	MeshModel *m=d_new MeshModel();
+	MeshModel *m=new MeshModel();
 	collapseMesh( m,e );
 	return insertEntity( m,p );
 }
@@ -597,7 +597,7 @@ Entity *  bbCopyMesh( MeshModel *m,Entity *p ){
 	debugMesh(m);
 	debugParent(p);
 
-	MeshModel *t=d_new MeshModel();
+	MeshModel *t=new MeshModel();
 	t->add( *m );
 	return insertEntity( t,p );
 }
@@ -729,14 +729,14 @@ Surface *  bbCreateSurface( MeshModel *m,Brush *b ){
 }
 
 Brush *bbGetSurfaceBrush( Surface *s ){
-	Brush *br=d_new Brush( s->getBrush() );
+	Brush *br=new Brush( s->getBrush() );
 	brush_set.insert( br );
 	return br;
 }
 
 Brush *bbGetEntityBrush( Model *m ){
 	debugModel(m);
-	Brush *br=d_new Brush( m->getBrush() );
+	Brush *br=new Brush( m->getBrush() );
 	brush_set.insert( br );
 	return br;
 }
@@ -858,7 +858,7 @@ Entity *  bbCreateCamera( Entity *p ){
 	debugParent(p);
 	int x,y,w,h;
 	gx_canvas->getViewport( &x,&y,&w,&h );
-	Camera *c=d_new Camera();
+	Camera *c=new Camera();
 	c->setViewport( x,y,w,h );
 	return insertEntity( c,p );
 }
@@ -1066,7 +1066,7 @@ int  bbPickedTriangle(){
 ////////////////////
 Entity *  bbCreateLight( int type,Entity *p ){
 	debugParent(p);
-	Light *t=d_new Light( type );
+	Light *t=new Light( type );
 	return insertEntity( t,p );
 }
 
@@ -1096,7 +1096,7 @@ void  bbLightConeAngles( Light *light,float inner,float outer ){
 ////////////////////
 Entity *  bbCreatePivot( Entity *p ){
 	debugParent(p);
-	Pivot *t=d_new Pivot();
+	Pivot *t=new Pivot();
 	return insertEntity( t,p );
 }
 
@@ -1105,7 +1105,7 @@ Entity *  bbCreatePivot( Entity *p ){
 /////////////////////
 Entity *  bbCreateSprite( Entity *p ){
 	debugParent(p);
-	Sprite *s=d_new Sprite();
+	Sprite *s=new Sprite();
 	s->setFX( gxScene::FX_FULLBRIGHT );
 	return insertEntity( s,p );
 }
@@ -1114,7 +1114,7 @@ Entity *  bbLoadSprite( BBStr *file,int flags,Entity *p ){
 	debugParent(p);
 	Texture t( *file,flags );
 	delete file;if( !t.getCanvas(0) ) return 0;
-	Sprite *s=d_new Sprite();
+	Sprite *s=new Sprite();
 	s->setTexture( 0,t,0 );
 	s->setFX( gxScene::FX_FULLBRIGHT );
 
@@ -1150,7 +1150,7 @@ void  bbSpriteViewMode( Sprite *s,int mode ){
 /////////////////////
 Entity *  bbCreateMirror( Entity *p ){
 	debugParent(p);
-	Mirror *t=d_new Mirror();
+	Mirror *t=new Mirror();
 	return insertEntity( t,p );
 }
 
@@ -1162,7 +1162,7 @@ Entity *  bbCreatePlane( int segs,Entity *p ){
 		debugParent(p);
 		if( segs<1 || segs>20 ) ThrowRuntimeException( "Illegal number of segments" );
 	}
-	PlaneModel *t=d_new PlaneModel( segs );
+	PlaneModel *t=new PlaneModel( segs );
 	return insertEntity( t,p );
 }
 
@@ -1171,7 +1171,7 @@ Entity *  bbCreatePlane( int segs,Entity *p ){
 //////////////////
 Entity *  bbLoadMD2( BBStr *file,Entity *p ){
 	debugParent(p);
-	MD2Model *t=d_new MD2Model( *file );delete file;
+	MD2Model *t=new MD2Model( *file );delete file;
 	if( !t->getValid() ){ delete t;return 0; }
 	return insertEntity( t,p );
 }
@@ -1202,7 +1202,7 @@ int  bbMD2Animating( MD2Model *m ){
 Entity *  bbLoadBSP( BBStr *file,float gam,Entity *p ){
 	debugParent(p);
 	CachedTexture::setPath( filenamepath( *file ) );
-	Q3BSPModel *t=d_new Q3BSPModel( *file,gam );delete file;
+	Q3BSPModel *t=new Q3BSPModel( *file,gam );delete file;
 	CachedTexture::setPath( "" );
 
 	if( !t->isValid() ){ delete t;return 0; }
@@ -1246,7 +1246,7 @@ Entity *  bbCreateTerrain( int n,Entity *p ){
 	int shift=0;
 	while( (1<<shift)<n ) ++shift;
 	if( (1<<shift)!=n ) ThrowRuntimeException( "Illegal terrain size" );
-	Terrain *t=d_new Terrain( shift );
+	Terrain *t=new Terrain( shift );
 	return insertEntity( t,p );
 }
 
@@ -1259,7 +1259,7 @@ Entity *  bbLoadTerrain( BBStr *file,Entity *p ){
 	int shift=0;
 	while( (1<<shift)<w ) ++shift;
 	if( (1<<shift)!=w ) ThrowRuntimeException( "Illegal terrain size" );
-	Terrain *t=d_new Terrain( shift );
+	Terrain *t=new Terrain( shift );
 	c->lock();
 	for( int y=0;y<h;++y ){
 		for( int x=0;x<w;++x ){
@@ -1322,7 +1322,7 @@ Entity *  bbCreateListener( Entity *p,float roll,float dopp,float dist ){
 		debugParent(p);
 		if( listener ) ThrowRuntimeException( "Listener already created" );
 	}
-	listener=d_new Listener( roll,dopp,dist );
+	listener=new Listener( roll,dopp,dist );
 	return insertEntity( listener,p );
 }
 
@@ -1478,7 +1478,7 @@ int  bbAddAnimSeq( Object *o,int length ){
 	if( anim ){
 		anim->addSeq( length );
 	}else{
-		anim=d_new Animator( o,length );
+		anim=new Animator( o,length );
 		o->setAnimator( anim );
 	}
 	return anim->numSeqs()-1;
@@ -1886,7 +1886,7 @@ void  bbNameEntity( Entity *e,BBStr *t ){
 
 BBStr *  bbEntityName( Entity *e ){
 	debugEntity(e);
-	return d_new BBStr( e->getName() );
+	return new BBStr( e->getName() );
 }
 
 BBStr *bbEntityClass( Entity *e ){
@@ -1928,7 +1928,7 @@ int  bbActiveTextures(){
 void blitz3d_open(){
 	gx_scene=gx_graphics->createScene( 0 );
 	if( !gx_scene ) ThrowRuntimeException( "Unable to create 3D Scene" );
-	world=d_new World();
+	world=new World();
 	projected=Vector();
 	picked.collision=Collision();
 	picked.with=0;picked.coords=Vector();

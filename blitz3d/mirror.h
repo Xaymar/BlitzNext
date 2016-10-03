@@ -11,7 +11,7 @@ public:
 	~Mirror();
 
 	//Entity interface
-	Entity *clone(){ return d_new Mirror( *this ); }
+	Entity *clone(){ return new Mirror( *this ); }
 	Mirror *getMirror(){ return this; }
 };
 

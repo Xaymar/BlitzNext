@@ -94,7 +94,7 @@ void DimNode::semant(Environ *e) {
 	} else {
 		if (e->level > 0) ex("Array not found in main program");
 		if (!t) t = Type::int_type;
-		sem_type = d_new ArrayType(t, exprs->size());
+		sem_type = new ArrayType(t, exprs->size());
 		sem_decl = e->decls->insertDecl(ident, sem_type, DECL_ARRAY);
 		e->types.push_back(sem_type);
 	}
@@ -255,7 +255,7 @@ void ExitNode::semant(Environ *e) {
 }
 
 void ExitNode::translate(Codegen *g) {
-	g->code(d_new TNode(IR_JUMP, 0, 0, sem_brk));
+	g->code(new TNode(IR_JUMP, 0, 0, sem_brk));
 }
 
 /////////////////////
@@ -340,7 +340,7 @@ void ForNode::translate(Codegen *g) {
 	//execute the step part
 	debug(nextPos, g);
 	int op = ty == Type::int_type ? IR_ADD : IR_FADD;
-	t = d_new TNode(op, var->load(g), stepExpr->translate(g));
+	t = new TNode(op, var->load(g), stepExpr->translate(g));
 	g->code(var->store(g, t));
 
 	//test for loop cond
@@ -408,13 +408,13 @@ void ReturnNode::semant(Environ *e) {
 	if (e->level > 0) {
 		if (!expr) {
 			if (e->returnType == Type::float_type) {
-				expr = d_new FloatConstNode(0);
+				expr = new FloatConstNode(0);
 			} else if (e->returnType == Type::string_type) {
-				expr = d_new StringConstNode("");
+				expr = new StringConstNode("");
 			} else if (e->returnType->structType()) {
-				expr = d_new NullNode();
+				expr = new NullNode();
 			} else {
-				expr = d_new IntConstNode(0);
+				expr = new IntConstNode(0);
 			}
 		}
 		expr = expr->semant(e);
@@ -425,16 +425,16 @@ void ReturnNode::semant(Environ *e) {
 
 void ReturnNode::translate(Codegen *g) {
 	if (!expr) {
-		g->code(d_new TNode(IR_RET, 0, 0));
+		g->code(new TNode(IR_RET, 0, 0));
 		return;
 	}
 
 	TNode *t = expr->translate(g);
 
 	if (expr->sem_type == Type::float_type) {
-		g->code(d_new TNode(IR_FRETURN, t, 0, returnLabel));
+		g->code(new TNode(IR_FRETURN, t, 0, returnLabel));
 	} else {
-		g->code(d_new TNode(IR_RETURN, t, 0, returnLabel));
+		g->code(new TNode(IR_RETURN, t, 0, returnLabel));
 	}
 }
 
@@ -494,7 +494,7 @@ void SelectNode::semant(Environ *e) {
 
 	//we need a temp var
 	Decl *d = e->decls->insertDecl(genLabel(), expr->sem_type, DECL_LOCAL);
-	sem_temp = d_new DeclVarNode(d);
+	sem_temp = new DeclVarNode(d);
 
 	for (int k = 0; k < cases.size(); ++k) {
 		CaseNode *c = cases[k];

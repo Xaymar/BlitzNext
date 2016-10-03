@@ -100,7 +100,7 @@ struct PlaneModel::Rep{
 };
 
 PlaneModel::PlaneModel( int sub_divs ):
-rep( d_new Rep(sub_divs) ){
+rep( new Rep(sub_divs) ){
 }
 
 PlaneModel::PlaneModel( const PlaneModel &t ):

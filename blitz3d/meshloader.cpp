@@ -31,7 +31,7 @@ static vector<MLMesh*> mesh_stack;
 
 void MeshLoader::beginMesh(){
 	mesh_stack.push_back( ml_mesh );
-	ml_mesh=d_new MLMesh();
+	ml_mesh=new MLMesh();
 }
 
 int MeshLoader::numVertices(){
@@ -71,7 +71,7 @@ void MeshLoader::addTriangle( int v0,int v1,int v2,const Brush &b ){
 	map<Brush,Surf*>::const_iterator it=ml_mesh->brush_map.find( b );
 	if( it!=ml_mesh->brush_map.end() ) surf=it->second;
 	else{
-		surf=d_new Surf;
+		surf=new Surf;
 		ml_mesh->brush_map.insert( make_pair( b,surf ) );
 	}
 

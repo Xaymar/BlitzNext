@@ -40,7 +40,7 @@ static BBType _bbCStrType(BBTYPE_CSTR);
 static void *bbMalloc(int size) {
 	return malloc(size);
 	/*
-	char *c=d_new char[ size ];
+	char *c=new char[ size ];
 	memBlks.push_back( c );
 	return c;
 	*/
@@ -121,7 +121,7 @@ BBStr::~BBStr() {
 }
 
 BBStr *_bbStrLoad(BBStr **var) {
-	return *var ? d_new BBStr(**var) : d_new BBStr();
+	return *var ? new BBStr(**var) : new BBStr();
 }
 
 void _bbStrRelease(BBStr *str) {
@@ -147,7 +147,7 @@ int _bbStrToInt(BBStr *s) {
 }
 
 BBStr *_bbStrFromInt(int n) {
-	return d_new BBStr(itoa(n));
+	return new BBStr(itoa(n));
 }
 
 float _bbStrToFloat(BBStr *s) {
@@ -156,11 +156,11 @@ float _bbStrToFloat(BBStr *s) {
 }
 
 BBStr *_bbStrFromFloat(float n) {
-	return d_new BBStr(ftoa(n));
+	return new BBStr(ftoa(n));
 }
 
 BBStr *_bbStrConst(const char *s) {
-	return d_new BBStr(s);
+	return new BBStr(s);
 }
 
 void * _bbVecAlloc(BBVecType *type) {
@@ -378,13 +378,13 @@ int _bbObjEachNext2(BBObj **var) {
 }
 
 BBStr *_bbObjToStr(BBObj *obj) {
-	if (!obj || !obj->fields) return d_new BBStr("[NULL]");
+	if (!obj || !obj->fields) return new BBStr("[NULL]");
 
 	static BBObj *root;
 	static int recurs_cnt;
 
-	if (obj == root) return d_new BBStr("[ROOT]");
-	if (recurs_cnt == 8) return d_new BBStr("....");
+	if (obj == root) return new BBStr("[ROOT]");
+	if (recurs_cnt == 8) return new BBStr("....");
 
 	++recurs_cnt;
 	BBObj *oldRoot = root;
@@ -392,7 +392,7 @@ BBStr *_bbObjToStr(BBObj *obj) {
 
 	BBObjType *type = obj->type;
 	BBField *fields = obj->fields;
-	BBStr *s = d_new BBStr("["), *t;
+	BBStr *s = new BBStr("["), *t;
 	for (int k = 0; k < type->fieldCnt; ++k) {
 		if (k) *s += ',';
 		switch (type->fieldTypes[k]->type) {
@@ -467,9 +467,9 @@ float _bbReadFloat() {
 BBStr *_bbReadStr() {
 	switch (dataPtr->fieldType) {
 	case BBTYPE_END:ThrowRuntimeException("Out of data"); return 0;
-	case BBTYPE_INT:return d_new BBStr(itoa(dataPtr++->field.INT));
-	case BBTYPE_FLT:return d_new BBStr(ftoa(dataPtr++->field.FLT));
-	case BBTYPE_CSTR:return d_new BBStr(dataPtr++->field.CSTR);
+	case BBTYPE_INT:return new BBStr(itoa(dataPtr++->field.INT));
+	case BBTYPE_FLT:return new BBStr(ftoa(dataPtr++->field.FLT));
+	case BBTYPE_CSTR:return new BBStr(dataPtr++->field.CSTR);
 	default:ThrowRuntimeException("Bad data type"); return 0;
 	}
 }

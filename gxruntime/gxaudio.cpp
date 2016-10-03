@@ -149,7 +149,7 @@ static gxChannel *allocSoundChannel( int n ){
 	for( int k=0;k<soundChannels.size();++k ){
 		chan=soundChannels[next_chan];
 		if( !chan ){
-			chan=soundChannels[next_chan]=d_new SoundChannel();
+			chan=soundChannels[next_chan]=new SoundChannel();
 			channels.push_back(chan);
 		}else if( chan->isPlaying() ){
 			chan=0;
@@ -162,7 +162,7 @@ static gxChannel *allocSoundChannel( int n ){
 		next_chan=soundChannels.size();
 		soundChannels.resize(soundChannels.size()*2);
 		for( int k=next_chan;k<soundChannels.size();++k ) soundChannels[k]=0;
-		chan=soundChannels[next_chan++]=d_new SoundChannel();
+		chan=soundChannels[next_chan++]=new SoundChannel();
 		channels.push_back( chan );
 	}
 
@@ -176,7 +176,7 @@ runtime(r){
 	soundChannels.resize( 4096 );
 	for( int k=0;k<4096;++k ) soundChannels[k]=0;
 
-	cdChannel=d_new CDChannel();
+	cdChannel=new CDChannel();
 	channels.push_back( cdChannel );
 }
 
@@ -219,7 +219,7 @@ gxSound *gxAudio::loadSound( const string &f,bool use3d ){
 	FSOUND_SAMPLE *sample=FSOUND_Sample_Load( FSOUND_FREE,f.c_str(),flags,0,0 );
 	if( !sample ) return 0;
 
-	gxSound *sound=d_new gxSound( this,sample );
+	gxSound *sound=new gxSound( this,sample );
 	sound_set.insert( sound );
 	return sound;
 }
@@ -268,11 +268,11 @@ gxChannel *gxAudio::playFile( const string &t,bool use_3d ){
 		f.find( ".asf" )!=string::npos ){
 		FSOUND_STREAM *stream=FSOUND_Stream_Open( f.c_str(),use_3d,0,0 );
 		if( !stream ) return 0;
-		chan=d_new StreamChannel( stream );
+		chan=new StreamChannel( stream );
 	}else{
 		FMUSIC_MODULE *module=FMUSIC_LoadSong( f.c_str() );
 		if( !module ) return 0;
-		chan=d_new MusicChannel( module );
+		chan=new MusicChannel( module );
 	}
 	channels.push_back( chan );
 	songs[f]=chan;

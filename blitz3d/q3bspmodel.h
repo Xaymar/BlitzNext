@@ -11,7 +11,7 @@ public:
 	~Q3BSPModel();
 
 	//Entity interface
-	Entity *clone(){ return d_new Q3BSPModel( *this ); }
+	Entity *clone(){ return new Q3BSPModel( *this ); }
 
 	//Object interface
 	virtual bool collide( const Line &line,float radius,Collision *curr_coll,const Transform &t );

@@ -12,7 +12,7 @@
 //	void *data;
 //
 //	Connection( const GUID &g,const string &n,void *d,int sz ):guid(g),name(n){
-//		data=d_new char[sz];memcpy( data,d,sz );
+//		data=new char[sz];memcpy( data,d,sz );
 //	}
 //
 //	~Connection(){
@@ -67,7 +67,7 @@
 //	int n=dp->InitializeConnection( conn,0 );
 //	dp->Release();if( n<0 ) return TRUE;
 //
-//	Connection *c=d_new Connection( *guid,string( strdup( name->lpszShortNameA ) ),conn,size );
+//	Connection *c=new Connection( *guid,string( strdup( name->lpszShortNameA ) ),conn,size );
 //	connections.push_back( c );
 //
 //	return TRUE;
@@ -76,7 +76,7 @@
 //static BOOL FAR PASCAL enumSession( LPCDPSESSIONDESC2 desc,LPDWORD timeout,DWORD flags,LPVOID lpContext ){
 //
 //	if( !desc ) return FALSE;
-//	sessions.push_back( d_new Session( desc ) );
+//	sessions.push_back( new Session( desc ) );
 //	return TRUE;
 //}
 //
@@ -196,7 +196,7 @@
 //	case WM_INITDIALOG:
 //		SetForegroundWindow( hwnd );
 //		clearConnections();
-//		connections.push_back( d_new Connection( GUID_NULL,"<no connection>","",0 ) );
+//		connections.push_back( new Connection( GUID_NULL,"<no connection>","",0 ) );
 //		if( openDirPlay( hwnd ) ){
 //			if( dirPlay->EnumConnections( 0,enumConnection,0,0 )<0 ){
 //				MessageBox( hwnd,"Failed to enumerate connections","DirectPlay Error",MB_SETFOREGROUND|MB_TOPMOST|MB_ICONWARNING|MB_OK );

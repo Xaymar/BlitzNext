@@ -79,19 +79,19 @@ Texture::Texture() :rep(0) {
 Texture::Texture(const string &f, int flags) {
 	flags = filterFile(f, flags) | gxCanvas::CANVAS_TEXTURE;
 	if (flags & gxCanvas::CANVAS_TEX_MASK) flags |= gxCanvas::CANVAS_TEX_RGB | gxCanvas::CANVAS_TEX_ALPHA;
-	rep = d_new Rep(f, flags, 0, 0, 0, 1);
+	rep = new Rep(f, flags, 0, 0, 0, 1);
 }
 
 Texture::Texture(const string &f, int flags, int w, int h, int first, int cnt) {
 	flags = filterFile(f, flags) | gxCanvas::CANVAS_TEXTURE;
 	if (flags & gxCanvas::CANVAS_TEX_MASK) flags |= gxCanvas::CANVAS_TEX_RGB | gxCanvas::CANVAS_TEX_ALPHA;
-	rep = d_new Rep(f, flags, w, h, first, cnt);
+	rep = new Rep(f, flags, w, h, first, cnt);
 }
 
 Texture::Texture(int w, int h, int flags, int cnt) {
 	flags |= gxCanvas::CANVAS_TEXTURE;
 	if (flags & gxCanvas::CANVAS_TEX_MASK) flags |= gxCanvas::CANVAS_TEX_RGB | gxCanvas::CANVAS_TEX_ALPHA;
-	rep = d_new Rep(w, h, flags, cnt);
+	rep = new Rep(w, h, flags, cnt);
 }
 
 Texture::Texture(const Texture &t) :

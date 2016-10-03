@@ -43,9 +43,9 @@ static inline void debugDir( gxDir *d ){
 
 static bbFile *open( BBStr *f,int n ){
 	string t=*f;
-	filebuf *buf=d_new filebuf();
+	filebuf *buf=new filebuf();
 	if( buf->open( t.c_str(),n|ios_base::binary ) ){
-		bbFile *f=d_new bbFile( buf );
+		bbFile *f=new bbFile( buf );
 		file_set.insert( f );
 		return f;
 	}
@@ -90,11 +90,11 @@ void bbCloseDir( gxDir *d ){
 
 BBStr *bbNextFile( gxDir *d ){
 	debugDir( d );
-	return d_new BBStr( d->getNextFile() );
+	return new BBStr( d->getNextFile() );
 }
 
 BBStr *bbCurrentDir(){
-	return d_new BBStr( gx_filesys->getCurrentDir() );
+	return new BBStr( gx_filesys->getCurrentDir() );
 }
 
 void bbChangeDir( BBStr *d ){

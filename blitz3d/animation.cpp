@@ -197,7 +197,7 @@ struct Animation::Rep{
 };
 
 Animation::Animation():
-rep( d_new Rep() ){
+rep( new Rep() ){
 }
 
 Animation::Animation( const Animation &t ):
@@ -206,7 +206,7 @@ rep( t.rep ){
 }
 
 Animation::Animation( const Animation &t,int first,int last ):
-rep( d_new Rep() ){
+rep( new Rep() ){
 	Rep::KeyList::const_iterator it;
 	for( it=t.rep->pos_anim.begin();it!=t.rep->pos_anim.end();++it ){
 		const Rep::Key &key=*it;
@@ -239,7 +239,7 @@ Animation &Animation::operator=( const Animation &t ){
 Animation::Rep *Animation::write(){
 	if( rep->ref_cnt>1 ){
 		--rep->ref_cnt;
-		rep=d_new Rep( *rep );
+		rep=new Rep( *rep );
 	}
 	return rep;
 }

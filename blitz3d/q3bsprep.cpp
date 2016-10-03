@@ -176,7 +176,7 @@ static void debuglog(const string &t) {}
 static Surf *findSurf(q3_face *f) {
 	FaceMap::const_iterator it = face_map.find(f);
 	if (it != face_map.end()) return it->second;
-	Surf *s = d_new Surf;
+	Surf *s = new Surf;
 	s->texture = f->texture;
 	s->lm_index = f->lm_index;
 	face_map.insert(make_pair(f, s));
@@ -263,7 +263,7 @@ void Q3BSPRep::createCollider() {
 		std::swap(coll_tris[k].verts[1], coll_tris[k].verts[2]);
 	}
 #endif
-	collider = d_new MeshCollider(coll_verts, coll_tris);
+	collider = new MeshCollider(coll_verts, coll_tris);
 	p_coll_verts.clear();
 	coll_verts.clear();
 	coll_tris.clear();
@@ -298,7 +298,7 @@ void Q3BSPRep::createSurfs() {
 		}
 		mesh->unlock();
 
-		Q3BSPSurf *surf = d_new Q3BSPSurf;
+		Q3BSPSurf *surf = new Q3BSPSurf;
 		surf->texture = s->texture;
 		surf->lm_index = s->lm_index;
 		surf->mesh = mesh;
@@ -468,7 +468,7 @@ static void meshFace(Q3BSPFace *face, q3_face *q3face, bool draw, bool solid) {
 }
 
 static Q3BSPBrush *createBrush(int n) {
-	Q3BSPBrush *brush = d_new Q3BSPBrush;
+	Q3BSPBrush *brush = new Q3BSPBrush;
 	q3_brush *q3brush = (q3_brush*)header.dir[8].lump + n;
 	q3_brushside *q3brushside = (q3_brushside*)header.dir[9].lump + q3brush->brushside;
 	Plane p;
@@ -484,7 +484,7 @@ static Q3BSPBrush *createBrush(int n) {
 Q3BSPLeaf *Q3BSPRep::createLeaf(int n) {
 	q3_leaf *q3leaf = (q3_leaf*)header.dir[4].lump + n;
 
-	Q3BSPLeaf *leaf = d_new Q3BSPLeaf;
+	Q3BSPLeaf *leaf = new Q3BSPLeaf;
 
 	leaf->cluster = q3leaf->cluster;
 
@@ -523,7 +523,7 @@ Q3BSPLeaf *Q3BSPRep::createLeaf(int n) {
 		Q3BSPFace *face = 0;
 		if (draw) {
 			Surf *surf = findSurf(q3face);
-			face = d_new Q3BSPFace;
+			face = new Q3BSPFace;
 			face->t_surf = surf;
 			face->vert = surf->verts.size();
 			face->tri = surf->tris.size();
@@ -588,7 +588,7 @@ Q3BSPRep::Q3BSPRep(const string &f, float gam) :root_node(0), vis_sz(0), vis_dat
 	for (k = 0; k < 17; ++k) {
 		if (header.dir[k].offset && header.dir[k].length) {
 			fseek(buf, header.dir[k].offset, SEEK_SET);
-			header.dir[k].lump = d_new char[header.dir[k].length];
+			header.dir[k].lump = new char[header.dir[k].length];
 			fread(header.dir[k].lump, header.dir[k].length, 1, buf);
 		} else {
 			header.dir[k].lump = 0;

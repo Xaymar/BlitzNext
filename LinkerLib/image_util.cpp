@@ -107,7 +107,7 @@ static void openRsrcDir( Section *s,int off,Rsrc *p ){
 	Rdir *dir=(Rdir*)(data+off);
 	Rent *ent=(Rent*)(dir+1);
 	for( int k=0;k<dir->num_ids;++ent,++k ){
-		Rsrc *r=d_new Rsrc( ent->id,p );
+		Rsrc *r=new Rsrc( ent->id,p );
 		if( ent->data<0 ){	//a node - offset is another dir
 			openRsrcDir( s,ent->data&0x7fffffff,r );
 		}else{				//a leaf
@@ -115,7 +115,7 @@ static void openRsrcDir( Section *s,int off,Rsrc *p ){
 //			cout<<"dat addr:"<<dat->addr<<" size:"<<dat->size<<endl;
 			int sz=dat->size;
 			void *src=dat->addr-s->sect.virt_addr+data;
-			void *dest=d_new char[sz];
+			void *dest=new char[sz];
 			memcpy( dest,src,sz );
 			r->data=dest;
 			r->data_sz=sz;
@@ -124,7 +124,7 @@ static void openRsrcDir( Section *s,int off,Rsrc *p ){
 }
 
 static void openRsrcTree( Section *s ){
-	rsrc_root=d_new Rsrc( 0,0 );
+	rsrc_root=new Rsrc( 0,0 );
 	openRsrcDir( s,0,rsrc_root );
 }
 
@@ -217,7 +217,7 @@ static void closeRsrcTree( Section *s ){
 	s->sect.data_size=data_sz;
 
 	delete[] s->data;
-	s->data=d_new char[data_sz];
+	s->data=new char[data_sz];
 	closeRsrcDir( s,0,rsrc_root );
 
 	delete rsrc_root;
@@ -244,27 +244,27 @@ static void loadImage( istream &in ){
 	//read stub
 	in.seekg( 0x3c );
 	in.read( (char*)&stub_sz,4 );
-	stub_sz+=4;stub=d_new char[stub_sz];
+	stub_sz+=4;stub=new char[stub_sz];
 	in.seekg( 0 );in.read( stub,stub_sz );
 
 	//read head
-	head=d_new Head;
+	head=new Head;
 	head_sz=sizeof(Head);
 	in.read( (char*)head,head_sz );
 
 	//read opts
-	opts=d_new Opts;
+	opts=new Opts;
 	opts_sz=sizeof(Opts);
 	in.read( (char*)opts,opts_sz );
 
 	//read data dirs
 	ddir_sz=opts->dir_entries * sizeof(DDir);
-	ddir=(DDir*)d_new char[ddir_sz];
+	ddir=(DDir*)new char[ddir_sz];
 	in.read( (char*)ddir,ddir_sz );
 
 	//read sects...
 	for( k=0;k<head->num_sects;++k ){
-		Section *s=d_new Section;
+		Section *s=new Section;
 		in.read( (char*)&s->sect,sizeof(Sect) );
 		sections.push_back( s );
 	}
@@ -273,7 +273,7 @@ static void loadImage( istream &in ){
 		Section *s=sections[k];
 		if( !s->sect.data_addr ) continue;
 		int data_sz=s->sect.data_size;
-		s->data=d_new char[data_sz];//char[s->sect.virt_size];
+		s->data=new char[data_sz];//char[s->sect.virt_size];
 		//memset( s->data,0,s->sect.virt_size );
 		in.seekg( s->sect.data_addr );
 		in.read( s->data,data_sz );
@@ -336,7 +336,7 @@ bool replaceRsrc( int type,int id,int lang,void *data,int data_sz ){
 		if( Rsrc *r=findRsrc( type,id,lang ) ){
 			delete[] r->data;
 			r->data_sz=data_sz;
-			r->data=d_new char[data_sz];
+			r->data=new char[data_sz];
 			memcpy( r->data,data,data_sz );
 			closeRsrcTree( s );
 			return true;

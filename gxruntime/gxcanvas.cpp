@@ -528,11 +528,11 @@ bool gxCanvas::collide(int x1, int y1, const gxCanvas *i2, int x2, int y2, bool 
 	if (solid) return true;
 
 	if (!cm_mask) {
-		cm_mask = d_new unsigned[cm_pitch*clip_rect.bottom];
+		cm_mask = new unsigned[cm_pitch*clip_rect.bottom];
 		updateBitMask(clip_rect);
 	}
 	if (!i2->cm_mask) {
-		i2->cm_mask = d_new unsigned[i2->cm_pitch*i2->clip_rect.bottom];
+		i2->cm_mask = new unsigned[i2->cm_pitch*i2->clip_rect.bottom];
 		i2->updateBitMask(i2->clip_rect);
 	}
 
@@ -616,7 +616,7 @@ bool gxCanvas::rect_collide(int x1, int y1, int x2, int y2, int w2, int h2, bool
 	ir.bottom = r1.bottom < r2.bottom ? r1.bottom : r2.bottom;
 
 	if (!cm_mask) {
-		cm_mask = d_new unsigned[cm_pitch*clip_rect.bottom];
+		cm_mask = new unsigned[cm_pitch*clip_rect.bottom];
 		updateBitMask(clip_rect);
 	}
 

@@ -210,7 +210,7 @@ static Object *readBone(){
 	t.m.k.z=.1f;
 	bone->transform( t );
 #else
-	Pivot *bone=d_new Pivot();
+	Pivot *bone=new Pivot();
 #endif
 
 	bones.push_back( bone );
@@ -264,7 +264,7 @@ static Object *readObject( Object *parent ){
 		switch( readChunk() ){
 		case 'MESH':
 			MeshLoader::beginMesh();
-			obj=mesh=d_new MeshModel();
+			obj=mesh=new MeshModel();
 			mesh_brush=readInt();
 			mesh_flags=readMesh();
 			break;
@@ -280,14 +280,14 @@ static Object *readObject( Object *parent ){
 			readFloat();
 			break;
 		case 'NODE':
-			if( !obj ) obj=d_new MeshModel();
+			if( !obj ) obj=new MeshModel();
 			readObject( obj );
 			break;
 		}
 		exitChunk();
 	}
 
-	if( !obj ) obj=d_new MeshModel();
+	if( !obj ) obj=new MeshModel();
 
 	obj->setName( name );
 	obj->setLocalPosition( Vector( pos[0],pos[1],pos[2] ) );
@@ -303,11 +303,11 @@ static Object *readObject( Object *parent ){
 
 	if( mesh && bones.size() ){
 		bones.insert( bones.begin(),mesh );
-		mesh->setAnimator( d_new Animator( bones,anim_len ) );
+		mesh->setAnimator( new Animator( bones,anim_len ) );
 		mesh->createBones();
 		bones.clear();
 	}else if( anim_len ){
-		obj->setAnimator( d_new Animator( obj,anim_len ) );
+		obj->setAnimator( new Animator( obj,anim_len ) );
 	}
 
 	if( parent ) obj->setParent( parent );

@@ -10,7 +10,7 @@ public:
 	Pivot( const Object &t );
 
 	//Entity interface
-	Entity *clone(){ return d_new Pivot( *this ); }
+	Entity *clone(){ return new Pivot( *this ); }
 };
 
 #endif

@@ -76,7 +76,7 @@
 //
 //static BOOL FAR PASCAL enumPlayer( DPID id,DWORD type,LPCDPNAME name,DWORD flags,LPVOID context ){
 //	Player *p=findPlayer( id );if( p ) return TRUE;
-//	p=d_new Player( id,string( name->lpszShortNameA ),true );
+//	p=new Player( id,string( name->lpszShortNameA ),true );
 //	return TRUE;
 //}
 //
@@ -103,8 +103,8 @@
 //bool multiplay_create(){
 //
 //	recv_buff_sz=send_buff_sz=1024;
-//	recv_buff=d_new char[recv_buff_sz];
-//	send_buff=d_new char[send_buff_sz];
+//	recv_buff=new char[recv_buff_sz];
+//	send_buff=new char[send_buff_sz];
 //
 //	multiplay_setup_create();
 //
@@ -176,7 +176,7 @@
 //
 //	if( dirPlay->CreatePlayer( &id,&name,0,0,0,0 )<0 ) return 0;
 //
-//	Player *p=d_new Player( id,t,false );
+//	Player *p=new Player( id,t,false );
 //
 //	if( players.size()==1 ){
 //		if( dirPlay->EnumPlayers( 0,enumPlayer,0,0 )<0 ){
@@ -198,9 +198,9 @@
 //}
 //
 //BBStr *bbNetPlayerName( DPID player ){
-//	if( !player ) return d_new BBStr( "<all>" );
+//	if( !player ) return new BBStr( "<all>" );
 //	Player *p=findPlayer( player );
-//	return d_new BBStr( p ? p->name : "<unknown>" );
+//	return new BBStr( p ? p->name : "<unknown>" );
 //}
 //
 //int bbNetPlayerLocal( DPID player ){
@@ -230,7 +230,7 @@
 //
 //		if( n==DPERR_BUFFERTOOSMALL ){
 //			sz=recv_buff_sz=sz/2+sz;
-//			delete[] recv_buff;recv_buff=d_new char[recv_buff_sz];
+//			delete[] recv_buff;recv_buff=new char[recv_buff_sz];
 //			n=dirPlay->Receive( &from,&to,0,recv_buff,&sz );
 //		}
 //
@@ -241,7 +241,7 @@
 //			case DPSYS_CREATEPLAYERORGROUP:
 //				if( DPMSG_CREATEPLAYERORGROUP *msg=(DPMSG_CREATEPLAYERORGROUP*)recv_buff ){
 //					if( findPlayer( from=msg->dpId ) ) continue;
-//					d_new Player( from,string( msg->dpnName.lpszShortNameA ),true );
+//					new Player( from,string( msg->dpnName.lpszShortNameA ),true );
 //					continue;
 //				}
 //				break;
@@ -277,7 +277,7 @@
 //}
 //
 //BBStr *bbNetMsgData(){
-//	return d_new BBStr( msg_data );
+//	return new BBStr( msg_data );
 //}
 //
 //DPID bbNetMsgFrom(){
@@ -294,7 +294,7 @@
 //	int sz=msg->size()+sizeof(bbMsg);
 //	if( sz>send_buff_sz ){
 //		send_buff_sz=sz/2+sz;
-//		delete send_buff;send_buff=d_new char[send_buff_sz];
+//		delete send_buff;send_buff=new char[send_buff_sz];
 //	}
 //	bbMsg *m=(bbMsg*)send_buff;
 //	m->type=type;m->from=from;m->to=to;

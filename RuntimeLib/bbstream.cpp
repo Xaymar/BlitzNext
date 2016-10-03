@@ -58,9 +58,9 @@ float bbReadFloat( bbStream *s ){
 BBStr *bbReadString( bbStream *s ){
 	if( debug ) debugStream( s );
 	int len;
-	BBStr *str=d_new BBStr();
+	BBStr *str=new BBStr();
 	if( s->read( (char*)&len,4 ) ){
-		char *buff=d_new char[len];
+		char *buff=new char[len];
 		if( s->read( buff,len ) ){
 			*str=string( buff,len );
 		}
@@ -72,7 +72,7 @@ BBStr *bbReadString( bbStream *s ){
 BBStr *bbReadLine( bbStream *s ){
 	if( debug ) debugStream( s );
 	unsigned char c;
-	BBStr *str=d_new BBStr();
+	BBStr *str=new BBStr();
 	for(;;){
 		if( s->read( (char*)&c,1 )!=1 ) break;
 		if( c=='\n' ) break;
@@ -121,7 +121,7 @@ void bbCopyStream( bbStream *s,bbStream *d,int buff_size ){
 		debugStream( s );debugStream( d ); 
 		if( buff_size<1 || buff_size>1024*1024 ) ThrowRuntimeException( "Illegal buffer size" );
 	}
-	char *buff=d_new char[buff_size];
+	char *buff=new char[buff_size];
 	while( s->eof()==0 && d->eof()==0 ){
 		int n=s->read( buff,buff_size );
 		d->write( buff,n );

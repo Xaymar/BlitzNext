@@ -12,7 +12,7 @@ struct Q3BSPModel::Rep : public Q3BSPRep{
 };
 
 Q3BSPModel::Q3BSPModel( const string &f,float gam ):
-rep( d_new Rep( f,gam ) ){
+rep( new Rep( f,gam ) ){
 }
 
 Q3BSPModel::Q3BSPModel( const Q3BSPModel &t ):Model(t),

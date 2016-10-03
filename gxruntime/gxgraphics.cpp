@@ -10,8 +10,8 @@ gxGraphics::gxGraphics(gxRuntime *rt, IDirectDraw7 *dd, IDirectDrawSurface7 *fs,
 
 	dirDraw->QueryInterface(IID_IDirectDraw, (void**)&ds_dirDraw);
 
-	front_canvas = d_new gxCanvas(this, fs, 0);
-	back_canvas = d_new gxCanvas(this, bs, 0);
+	front_canvas = new gxCanvas(this, fs, 0);
+	back_canvas = new gxCanvas(this, bs, 0);
 
 	front_canvas->cls();
 	back_canvas->cls();
@@ -170,7 +170,7 @@ gxMovie *gxGraphics::openMovie(const string &file, int flags) {
 				delete path;
 
 				if (n == S_OK) {
-					gxMovie *movie = d_new gxMovie(this, iam_stream);
+					gxMovie *movie = new gxMovie(this, iam_stream);
 					movie_set.insert(movie);
 					return movie;
 				}
@@ -192,7 +192,7 @@ void gxGraphics::closeMovie(gxMovie *m) {
 gxCanvas *gxGraphics::createCanvas(int w, int h, int flags) {
 	ddSurf *s = ddUtil::createSurface(w, h, flags, this);
 	if (!s) return 0;
-	gxCanvas *c = d_new gxCanvas(this, s, flags);
+	gxCanvas *c = new gxCanvas(this, s, flags);
 	canvas_set.insert(c);
 	c->cls();
 	return c;
@@ -201,7 +201,7 @@ gxCanvas *gxGraphics::createCanvas(int w, int h, int flags) {
 gxCanvas *gxGraphics::loadCanvas(const string &f, int flags) {
 	ddSurf *s = ddUtil::loadSurface(f, flags, this);
 	if (!s) return 0;
-	gxCanvas *c = d_new gxCanvas(this, s, flags);
+	gxCanvas *c = new gxCanvas(this, s, flags);
 	canvas_set.insert(c);
 	return c;
 }
@@ -275,9 +275,9 @@ gxFont *gxGraphics::loadFont(const string &f, int height, int flags) {
 
 	int first = tm.tmFirstChar, last = tm.tmLastChar;
 	int sz = last - first + 1;
-	int *offs = d_new int[sz];
-	int *widths = d_new int[sz];
-	int *as = d_new int[sz];
+	int *offs = new int[sz];
+	int *widths = new int[sz];
+	int *as = new int[sz];
 
 	//calc size of canvas to hold font.
 	int x = 0, y = 0, max_x = 0;
@@ -333,7 +333,7 @@ gxFont *gxGraphics::loadFont(const string &f, int height, int flags) {
 			delete[] as;
 
 			c->backup();
-			gxFont *font = d_new gxFont(this, c, tm.tmMaxCharWidth, height, first, last + 1, tm.tmDefaultChar, offs, widths);
+			gxFont *font = new gxFont(this, c, tm.tmMaxCharWidth, height, first, last + 1, tm.tmDefaultChar, offs, widths);
 			font_set.insert(font);
 
 			//restore font smoothing
@@ -545,7 +545,7 @@ gxScene *gxGraphics::createScene(int flags) {
 							string ts = "ZBuffer Bit Depth:" + itoa(zbuffFmt.dwZBufferBitDepth);
 							gx_runtime->debugLog(ts.c_str());
 #endif
-							gxScene *scene = d_new gxScene(this, back_canvas);
+							gxScene *scene = new gxScene(this, back_canvas);
 							scene_set.insert(scene);
 
 							dummy_mesh = createMesh(8, 12, 0);
@@ -596,8 +596,8 @@ gxMesh *gxGraphics::createMesh(int max_verts, int max_tris, int flags) {
 
 	IDirect3DVertexBuffer7 *buff;
 	if (dir3d->CreateVertexBuffer(&desc, &buff, 0) < 0) return 0;
-	WORD *indices = d_new WORD[max_tris * 3];
-	gxMesh *mesh = d_new gxMesh(this, buff, indices, max_verts, max_tris);
+	WORD *indices = new WORD[max_tris * 3];
+	gxMesh *mesh = new gxMesh(this, buff, indices, max_verts, max_tris);
 	mesh_set.insert(mesh);
 	return mesh;
 }

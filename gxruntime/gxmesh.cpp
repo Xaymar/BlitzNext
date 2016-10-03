@@ -77,7 +77,7 @@ void gxMesh::backup(){
 
 	dxVertex *verts;
 	if( vertex_buff->Lock( DDLOCK_READONLY|DDLOCK_WAIT,(void**)&verts,0 )>=0 ){
-		backup_verts=d_new dxVertex[ max_verts ];
+		backup_verts=new dxVertex[ max_verts ];
 		memcpy( backup_verts,verts,sizeof(dxVertex)*max_verts );
 		vertex_buff->Unlock();
 	}

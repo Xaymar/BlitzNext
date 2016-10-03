@@ -7,7 +7,7 @@
 #define CHKOFF(x) if( (x)<=0 ) ThrowRuntimeException( "parameter must be greater than 0" );
 
 BBStr *bbString( BBStr *s,int n ){
-	BBStr *t=d_new BBStr();
+	BBStr *t=new BBStr();
 	while( n-->0 ) *t+=*s;
 	delete s;return t;
 }
@@ -83,7 +83,7 @@ BBStr *bbRSet( BBStr *s,int n ){
 }
 
 BBStr *bbChr( int n ){
-	BBStr *t=d_new BBStr();
+	BBStr *t=new BBStr();
 	*t+=(char)n;return t;
 }
 
@@ -94,7 +94,7 @@ BBStr *bbHex( int n ){
 		buff[k]=t>'9' ? t+='A'-'9'-1 : t;
 	}
 	buff[8]=0;
-	return d_new BBStr( buff );
+	return new BBStr( buff );
 }
 
 BBStr *bbBin( int n ){
@@ -103,7 +103,7 @@ BBStr *bbBin( int n ){
 		buff[k]=n&1 ? '1' : '0';
 	}
 	buff[32]=0;
-	return d_new BBStr( buff );
+	return new BBStr( buff );
 }
 
 int bbAsc( BBStr *s ){
@@ -121,7 +121,7 @@ BBStr *bbCurrentDate(){
 	time( &t );
 	char buff[256];
 	strftime( buff,256,"%d %b %Y",localtime( &t ) );
-	return d_new BBStr( buff );
+	return new BBStr( buff );
 }
 
 BBStr *bbCurrentTime(){
@@ -129,7 +129,7 @@ BBStr *bbCurrentTime(){
 	time( &t );
 	char buff[256];
 	strftime( buff,256,"%H:%M:%S",localtime( &t ) );
-	return d_new BBStr( buff );
+	return new BBStr( buff );
 }
 
 bool string_create(){

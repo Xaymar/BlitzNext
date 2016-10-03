@@ -20,7 +20,7 @@ BEGIN_MESSAGE_MAP( MainFrame,CFrameWnd )
 	ON_WM_SIZE()
 	ON_WM_ACTIVATE()
 
-	ON_COMMAND( ID_NEW,fileNew )
+	ON_COMMAND( Inew,fileNew )
 	ON_COMMAND( ID_OPEN,fileOpen )
 	ON_COMMAND( ID_SAVE,fileSave )
 	ON_COMMAND( ID_SAVEAS,fileSaveAs )
@@ -54,7 +54,7 @@ BEGIN_MESSAGE_MAP( MainFrame,CFrameWnd )
 	ON_COMMAND( ID_FORWARD,helpForward )
 	ON_COMMAND( ID_ABOUT,helpAbout )
 
-	ON_UPDATE_COMMAND_UI( ID_NEW,updateCmdUI )
+	ON_UPDATE_COMMAND_UI( Inew,updateCmdUI )
 	ON_UPDATE_COMMAND_UI( ID_OPEN,updateCmdUI )
 	ON_UPDATE_COMMAND_UI( ID_SAVE,updateCmdUI )
 	ON_UPDATE_COMMAND_UI( ID_SAVEAS,updateCmdUI )
@@ -112,7 +112,7 @@ int MainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct ){
 	static HBITMAP toolbmp;
 	static SIZE imgsz,butsz;
 	static UINT toolbuts[]={ 
-		ID_NEW,ID_OPEN,ID_SAVE,ID_CLOSE,ID_SEPARATOR,
+		Inew,ID_OPEN,ID_SAVE,ID_CLOSE,ID_SEPARATOR,
 		ID_CUT,ID_COPY,ID_PASTE,ID_SEPARATOR,
 		ID_FIND,ID_SEPARATOR,
 		ID_EXECUTE,ID_SEPARATOR,
@@ -835,7 +835,7 @@ void MainFrame::updateCmdUI( CCmdUI *ui ){
 	Editor *e=getEditor();
 
 	switch( ui->m_nID ){
-	case ID_NEW:case ID_OPEN:case ID_HOME:
+	case Inew:case ID_OPEN:case ID_HOME:
 		ui->Enable( true );
 		break;
 	case ID_DEBUG:

@@ -139,8 +139,8 @@ TerrainRep::TerrainRep( int n ):
 cell_shift(n),cell_size(1<<n),cell_mask((1<<n)-1),
 end_tri_id( (1<<n)*(1<<n)*2 ),
 shading(false),mesh(0),detail(0),morph(true){
-	cells=d_new Cell[cell_size*cell_size];
-	errors=d_new Error[end_tri_id];
+	cells=new Cell[cell_size*cell_size];
+	errors=new Error[end_tri_id];
 	setDetail( 2000,false );
 	clear();
 }
@@ -279,7 +279,7 @@ void TerrainRep::split( Tri *t ){
 	if( tv>=max_verts ){
 		max_verts+=max_verts/2+32;
 		Vert *t=verts;
-		verts=d_new Vert[max_verts];
+		verts=new Vert[max_verts];
 		memcpy( verts,t,sizeof(Vert)*tv );
 		next_vert=verts+tv;
 	}

@@ -605,7 +605,7 @@ void gxScene::end(){
 }
 
 gxLight *gxScene::createLight( int flags ){
-	gxLight *l=d_new gxLight( this,flags );
+	gxLight *l=new gxLight( this,flags );
 	_allLights.insert(l);
 	return l;
 }

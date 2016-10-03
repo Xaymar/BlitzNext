@@ -105,7 +105,7 @@ CachedTexture::Rep *CachedTexture::findRep( const string &f,int flags,int w,int 
 }
 
 CachedTexture::CachedTexture( int w,int h,int flags,int cnt ):
-rep(d_new Rep(w,h,flags,cnt)){
+rep(new Rep(w,h,flags,cnt)){
 }
 
 CachedTexture::CachedTexture( const string &f_,int flags,int w,int h,int first,int cnt ){
@@ -114,7 +114,7 @@ CachedTexture::CachedTexture( const string &f_,int flags,int w,int h,int first,i
 	if( path.size() ){
 		string t=path+tolower( filenamefile( f ) );
 		if( rep=findRep( t,flags,w,h,first,cnt ) ) return;
-		rep=d_new Rep( t,flags,w,h,first,cnt );
+		rep=new Rep( t,flags,w,h,first,cnt );
 		if( rep->frames.size() ){
 			rep_set.insert( rep );
 			return;
@@ -123,7 +123,7 @@ CachedTexture::CachedTexture( const string &f_,int flags,int w,int h,int first,i
 	}
 	string t=tolower( fullfilename( f ) );
 	if( rep=findRep( t,flags,w,h,first,cnt ) ) return;
-	rep=d_new Rep( t,flags,w,h,first,cnt );
+	rep=new Rep( t,flags,w,h,first,cnt );
 	rep_set.insert( rep );
 }
 

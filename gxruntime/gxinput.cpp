@@ -145,14 +145,14 @@ static Keyboard *createKeyboard(gxInput *input) {
 				dword.diph.dwHow = DIPH_DEVICE;
 				dword.dwData = 32;
 				if (dev->SetProperty(DIPROP_BUFFERSIZE, &dword.diph) >= 0) {
-					return d_new Keyboard(input, dev);
+					return new Keyboard(input, dev);
 				} else {
 					//					input->runtime->debugInfo( "keyboard: SetProperty failed" );
 				}
 			} else {
 				//				input->runtime->debugInfo( "keyboard: SetDataFormat failed" );
 			}
-			return d_new Keyboard(input, dev);
+			return new Keyboard(input, dev);
 
 		} else {
 			input->runtime->debugInfo("keyboard: SetCooperativeLevel failed");
@@ -170,11 +170,11 @@ static Mouse *createMouse(gxInput *input) {
 		if (dev->SetCooperativeLevel(input->runtime->hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE) >= 0) {
 
 			if (dev->SetDataFormat(&c_dfDIMouse) >= 0) {
-				return d_new Mouse(input, dev);
+				return new Mouse(input, dev);
 			} else {
 				//				input->runtime->debugInfo( "mouse: SetDataFormat failed" );
 			}
-			return d_new Mouse(input, dev);
+			return new Mouse(input, dev);
 
 		} else {
 			input->runtime->debugInfo("mouse: SetCooperativeLevel failed");
@@ -192,7 +192,7 @@ static Joystick *createJoystick(gxInput *input, LPCDIDEVICEINSTANCE devinst) {
 		if (dev->SetCooperativeLevel(input->runtime->hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE) >= 0) {
 			if (dev->SetDataFormat(&c_dfDIJoystick) >= 0) {
 				int t = ((devinst->dwDevType >> 8) & 0xff) == DI8DEVCLASS_GAMECTRL ? 1 : 2;
-				return d_new Joystick(input, dev, t);
+				return new Joystick(input, dev, t);
 			}
 		}
 		dev->Release();

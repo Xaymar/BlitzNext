@@ -4,9 +4,9 @@
 
 Environ::Environ( const string &f,Type *r,int l,Environ *gs )
 :funcLabel(f),returnType(r),level(l),globals(gs){
-	decls=d_new DeclSeq();
-	typeDecls=d_new DeclSeq();
-	funcDecls=d_new DeclSeq();
+	decls=new DeclSeq();
+	typeDecls=new DeclSeq();
+	funcDecls=new DeclSeq();
 	if( globals ) globals->children.push_back( this );
 }
 
@@ -57,7 +57,7 @@ Label *Environ::findLabel( const string &s ){
 }
 
 Label *Environ::insertLabel( const string &s,int def,int src,int sz ){
-	Label *l=d_new Label( s,def,src,sz );
+	Label *l=new Label( s,def,src,sz );
 	labels.push_back( l );return l;
 }
 

@@ -29,7 +29,7 @@ void Node::ex( const string &e,int pos,const string &f ){
 VarNode *Node::genLocal( Environ *e,Type *ty ){
 	string t=genLabel();
 	Decl *d=e->decls->insertDecl( t,ty,DECL_LOCAL );
-	return d_new DeclVarNode( d );
+	return new DeclVarNode( d );
 }
 
 /////////////////////////////////////////////////
@@ -39,9 +39,9 @@ ConstNode *Node::constValue( Type *ty ){
 	ConstType *c=ty->constType();
 	if( !c ) return 0;
 	ty=c->valueType;
-	if( ty==Type::int_type ) return d_new IntConstNode( c->intValue );
-	if( ty==Type::float_type ) return d_new FloatConstNode( c->floatValue );
-	return d_new StringConstNode( c->stringValue );
+	if( ty==Type::int_type ) return new IntConstNode( c->intValue );
+	if( ty==Type::float_type ) return new FloatConstNode( c->floatValue );
+	return new StringConstNode( c->stringValue );
 }
 
 ///////////////////////////////////////////////////////
@@ -74,10 +74,10 @@ TNode *Node::createVars( Environ *e ){
 		Decl *d=e->decls->decls[k];
 		if( d->kind!=DECL_LOCAL ) continue;
 		if( d->type->vectorType() ) continue;
-		if( !t ) t=d_new TNode( IR_CONST,0,0,0 );
-		TNode *p=d_new TNode( IR_LOCAL,0,0,d->offset );
-		p=d_new TNode( IR_MEM,p,0 );
-		t=d_new TNode( IR_MOVE,t,p );
+		if( !t ) t=new TNode( IR_CONST,0,0,0 );
+		TNode *p=new TNode( IR_LOCAL,0,0,d->offset );
+		p=new TNode( IR_MEM,p,0 );
+		t=new TNode( IR_MOVE,t,p );
 	}
 	//initialize vectors
 	for( k=0;k<e->decls->size();++k ){
@@ -123,7 +123,7 @@ TNode *Node::deleteVars( Environ *e ){
 			}
 		}
 		if( !func.size() ) continue;
-		p=d_new TNode( IR_SEQ,call( func,p1,p2 ),0 );
+		p=new TNode( IR_SEQ,call( func,p1,p2 ),0 );
 		(l ? l->r : t)=p;
 		l=p;
 	}
@@ -150,12 +150,12 @@ TNode *Node::compare( int op,TNode *l,TNode *r,Type *ty ){
 	}
 	if( ty==Type::string_type ){
 		l=call( "__bbStrCompare",l,r );
-		r=d_new TNode( IR_CONST,0,0,0 );
+		r=new TNode( IR_CONST,0,0,0 );
 	}else if( ty->structType() ){
 		l=call( "__bbObjCompare",l,r );
-		r=d_new TNode( IR_CONST,0,0,0 );
+		r=new TNode( IR_CONST,0,0,0 );
 	}
-	return d_new TNode( n,l,r );
+	return new TNode( n,l,r );
 }
 
 /////////////////////////////////
@@ -196,8 +196,8 @@ TNode *Node::call( const string &func,TNode *a0,TNode *a1,TNode *a2 ){
 			}
 		}
 	}
-	TNode *l=d_new TNode( IR_GLOBAL,0,0,func );
-	return d_new TNode( IR_CALL,l,t,size );
+	TNode *l=new TNode( IR_GLOBAL,0,0,func );
+	return new TNode( IR_CALL,l,t,size );
 }
 
 ////////////////////////////////////////////////////////
@@ -218,67 +218,67 @@ TNode *Node::fcall( const string &func,TNode *a0,TNode *a1,TNode *a2 ){
 			}
 		}
 	}
-	TNode *l=d_new TNode( IR_GLOBAL,0,0,func );
-	return d_new TNode( IR_FCALL,l,t,size );
+	TNode *l=new TNode( IR_GLOBAL,0,0,func );
+	return new TNode( IR_FCALL,l,t,size );
 }
 
 TNode *Node::seq( TNode *l,TNode *r ){
-	return d_new TNode( IR_SEQ,l,r );
+	return new TNode( IR_SEQ,l,r );
 }
 
 TNode *Node::move( TNode *src,TNode *dest ){
-	return d_new TNode( IR_MOVE,src,dest );
+	return new TNode( IR_MOVE,src,dest );
 }
 
 TNode *Node::global( const string &s ){
-	return d_new TNode( IR_GLOBAL,0,0,s );
+	return new TNode( IR_GLOBAL,0,0,s );
 }
 
 TNode *Node::local( int offset ){
-	return d_new TNode( IR_LOCAL,0,0,offset );
+	return new TNode( IR_LOCAL,0,0,offset );
 }
 
 TNode *Node::arg( int offset ){
-	return d_new TNode( IR_ARG,0,0,offset );
+	return new TNode( IR_ARG,0,0,offset );
 }
 
 TNode *Node::mem( TNode *ref ){
-	return d_new TNode( IR_MEM,ref,0 );
+	return new TNode( IR_MEM,ref,0 );
 }
 
 TNode *Node::add( TNode *l,TNode *r ){
-	return d_new TNode( IR_ADD,l,r );
+	return new TNode( IR_ADD,l,r );
 }
 
 TNode *Node::mul( TNode *l,TNode *r ){
-	return d_new TNode( IR_MUL,l,r );
+	return new TNode( IR_MUL,l,r );
 }
 
 TNode *Node::iconst( int n ){
-	return d_new TNode( IR_CONST,0,0,n );
+	return new TNode( IR_CONST,0,0,n );
 }
 
 TNode *Node::ret(){
-	return d_new TNode( IR_RET,0,0 );
+	return new TNode( IR_RET,0,0 );
 }
 
 TNode *Node::jsr( const string &s ){
-	return d_new TNode( IR_JSR,0,0,s );
+	return new TNode( IR_JSR,0,0,s );
 }
 
 TNode *Node::jump( const string &s ){
-	return d_new TNode( IR_JUMP,0,0,s );
+	return new TNode( IR_JUMP,0,0,s );
 }
 
 TNode *Node::jumpt( TNode *expr,const string &s ){
-	return d_new TNode( IR_JUMPT,expr,0,s );
+	return new TNode( IR_JUMPT,expr,0,s );
 }
 
 TNode *Node::jumpf( TNode *expr,const string &s ){
-	return d_new TNode( IR_JUMPF,expr,0,s );
+	return new TNode( IR_JUMPF,expr,0,s );
 }
 
 TNode *Node::jumpge( TNode *l,TNode *r,const string &s ){
-	return d_new TNode( IR_JUMPGE,l,r,s );
+	return new TNode( IR_JUMPGE,l,r,s );
 }
 

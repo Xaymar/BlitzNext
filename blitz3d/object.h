@@ -26,7 +26,7 @@ public:
 
 	//Entity interface
 	Object *getObject(){ return this; }
-	Entity *clone(){ return d_new Object( *this ); }
+	Entity *clone(){ return new Object( *this ); }
 
 	//deep object copy!
 	Object *copy();

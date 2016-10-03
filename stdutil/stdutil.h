@@ -9,24 +9,6 @@
 #include <string>
 #include <iostream>
 
-#ifdef MEMDEBUG
-
-void * _cdecl operator new( size_t size );
-void * _cdecl operator new[]( size_t size );
-void * _cdecl operator new( size_t size,const char *file,int line );
-void * _cdecl operator new[]( size_t size,const char *file,int line );
-void _cdecl operator delete( void *q );
-void _cdecl operator delete[]( void *q );
-void _cdecl operator delete( void *q,const char *file,int line );
-void _cdecl operator delete[]( void *q,const char *file,int line );
-#define d_new new( __FILE__,__LINE__ )
-
-#else
-
-#define d_new new
-
-#endif
-
 void trackmem( bool enable );
 void checkmem( std::ostream &out );
 
@@ -87,9 +69,9 @@ public:
 	pool():free(0){}
 	pointer allocate( size_type n,const void *){
 		clog<<"Allocating "<<n<<endl;
-		if( n>1 ) return d_new T[n];
+		if( n>1 ) return new T[n];
 		if( !free ){
-			free=(T*)d_new char[sizeof(T)*N];
+			free=(T*)new char[sizeof(T)*N];
 			for( int k=0;k<N-1;++k ) *(T**)(free+k)=free+k+1;
 			*(T**)(free+N-1)=0;
 		}

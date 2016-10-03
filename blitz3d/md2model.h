@@ -12,7 +12,7 @@ public:
 	~MD2Model();
 
 	//Entity interface
-	Entity *clone(){ return d_new MD2Model( *this ); }
+	Entity *clone(){ return new MD2Model( *this ); }
 	MD2Model *getMD2Model(){ return this; }
 
 	//Object interface

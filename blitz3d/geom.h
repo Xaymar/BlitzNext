@@ -14,8 +14,6 @@ static float PI = 3.14159265359f;		//180 degrees
 static float TWOPI = PI*2.0f;			//360 degrees
 static float HALFPI = PI*.5f;			//90  degrees
 static float QUARTERPI = PI*.25f;		//45  degrees
-//static float FLT_EPSILON=.000001f;		//small value
-//static float INFINITY=10000000.0f;	//big value
 
 class Vector {
 public:

@@ -46,7 +46,7 @@ static void check(Mem *m) {
 		MessageBox(GetDesktopWindow(), "mem_check: pre_tag!='DNEW'", "Memory error", MB_OK | MB_ICONWARNING);
 		if (m->tag == 'NDWE') {
 			string t = "Probable double delete";
-			t += "- d_new file: " + string(m->file) + " line:" + itoa(m->line);
+			t += "- new file: " + string(m->file) + " line:" + itoa(m->line);
 			MessageBox(GetDesktopWindow(), t.c_str(), "Memory error", MB_OK | MB_ICONWARNING);
 		}
 		ExitProcess(0);
@@ -54,7 +54,7 @@ static void check(Mem *m) {
 	int *t = (int*)((char*)(m + 1) + m->size);
 	if (*t != 'dnew') {
 		MessageBox(GetDesktopWindow(), "mem_check: post_tag!='dnew'", "Memory error", MB_OK | MB_ICONWARNING);
-		string t = "Probable memory overwrite - d_new file: " + string(m->file) + " line:" + itoa(m->line);
+		string t = "Probable memory overwrite - new file: " + string(m->file) + " line:" + itoa(m->line);
 		MessageBox(GetDesktopWindow(), t.c_str(), "Memory error", MB_OK | MB_ICONWARNING);
 		ExitProcess(0);
 	}
@@ -317,7 +317,7 @@ string filenamefile(const string &t) {
 const int MIN_SIZE = 256;
 
 qstreambuf::qstreambuf() {
-	buf = d_new char[MIN_SIZE];
+	buf = new char[MIN_SIZE];
 	setg(buf, buf, buf);
 	setp(buf, buf, buf + MIN_SIZE);
 }
@@ -349,7 +349,7 @@ qstreambuf::int_type qstreambuf::overflow(qstreambuf::int_type c) {
 	if (pptr() == epptr()) {
 		int sz = size();
 		int n_sz = sz * 2; if (n_sz < MIN_SIZE) n_sz = MIN_SIZE;
-		char *n_buf = d_new char[n_sz];
+		char *n_buf = new char[n_sz];
 		memcpy(n_buf, gptr(), sz);
 		delete buf; buf = n_buf;
 		setg(buf, buf, buf + sz);

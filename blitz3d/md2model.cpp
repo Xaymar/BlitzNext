@@ -12,7 +12,7 @@ struct MD2Model::Rep : public MD2Rep{
 };
 
 MD2Model::MD2Model( const string &f ):
-rep( d_new Rep( f ) ),
+rep( new Rep( f ) ),
 anim_mode(0),anim_time(0),
 render_a(0),render_b(0),render_t(0),trans_verts(0){
 }
@@ -40,7 +40,7 @@ void MD2Model::startMD2Anim( int first,int last,int mode,float speed,float trans
 	else if( last>=rep->numFrames() ) last=rep->numFrames()-1;
 
 	if( trans>0 ){
-		if( !trans_verts ) trans_verts=d_new MD2Rep::Vert[rep->numVertices()];
+		if( !trans_verts ) trans_verts=new MD2Rep::Vert[rep->numVertices()];
 
 		if( anim_mode & 0x8000 ) rep->render( trans_verts,anim_time,trans_time );
 		else rep->render( trans_verts,render_a,render_b,render_t );

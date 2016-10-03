@@ -9,7 +9,7 @@ struct bbBank{
 
 	bbBank( int sz ):size(sz){
 		capacity=(size+15)&~15;
-		data=d_new char[capacity];
+		data=new char[capacity];
 		memset( data,0,size );
 	}
 	virtual ~bbBank(){
@@ -21,7 +21,7 @@ struct bbBank{
 				capacity=capacity*3/2;
 				if( n>capacity ) capacity=n;
 				capacity=(capacity+15)&~15;
-				char *p=d_new char[capacity];
+				char *p=new char[capacity];
 				memcpy( p,data,size );
 				delete[] data;
 				data=p;
@@ -47,7 +47,7 @@ static inline void debugBank( bbBank *b,int offset ){
 }
 
 bbBank *bbCreateBank( int size ){
-	bbBank *b=d_new bbBank( size );
+	bbBank *b=new bbBank( size );
 	bank_set.insert( b );
 	return b;
 }

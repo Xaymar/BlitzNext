@@ -68,7 +68,7 @@ gxDir *gxFileSystem::openDir( const std::string &name,int flags ){
 	WIN32_FIND_DATA f;
 	HANDLE h=FindFirstFile( t.c_str(),&f );
 	if( h!=INVALID_HANDLE_VALUE ){
-		gxDir *d=d_new gxDir( h,f );
+		gxDir *d=new gxDir( h,f );
 		dir_set.insert( d );
 		return d;
 	}

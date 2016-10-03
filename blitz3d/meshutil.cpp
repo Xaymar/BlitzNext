@@ -15,7 +15,7 @@ MeshModel *MeshUtil::createCube( const Brush &b ){
 	};
 	static Box box( Vector(-1,-1,-1),Vector(1,1,1) );
 
-	MeshModel *m=d_new MeshModel();
+	MeshModel *m=new MeshModel();
 	Surface *s=m->createSurface( b );
 	Surface::Vertex v;
 	Surface::Triangle t;
@@ -38,7 +38,7 @@ MeshModel *MeshUtil::createSphere( const Brush &b,int segs ){
 
 	int h_segs=segs*2,v_segs=segs;
 
-	MeshModel *m=d_new MeshModel();
+	MeshModel *m=new MeshModel();
 	Surface *s=m->createSurface( b );
 
 	Surface::Vertex v;
@@ -96,7 +96,7 @@ MeshModel *MeshUtil::createSphere( const Brush &b,int segs ){
 
 MeshModel *MeshUtil::createCylinder( const Brush &b,int segs,bool solid ){
 
-	MeshModel *m=d_new MeshModel();
+	MeshModel *m=new MeshModel();
 	Surface::Vertex v;
 	Surface::Triangle t;
 
@@ -154,7 +154,7 @@ MeshModel *MeshUtil::createCylinder( const Brush &b,int segs,bool solid ){
 }
 
 MeshModel *MeshUtil::createCone( const Brush &b,int segs,bool solid ){
-	MeshModel *m=d_new MeshModel();
+	MeshModel *m=new MeshModel();
 	Surface::Vertex v;
 	Surface::Triangle t;
 

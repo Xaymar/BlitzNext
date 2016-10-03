@@ -40,17 +40,17 @@ int  bbMilliSecs() {
 }
 
 BBStr * bbCommandLine() {
-	return d_new BBStr(gx_runtime->commandLine());
+	return new BBStr(gx_runtime->commandLine());
 }
 
 BBStr * bbSystemProperty(BBStr *p) {
 	string t = gx_runtime->systemProperty(*p);
-	delete p; return d_new BBStr(t);
+	delete p; return new BBStr(t);
 }
 
 BBStr *  bbGetEnv(BBStr *env_var) {
 	char *p = getenv(env_var->c_str());
-	BBStr *val = d_new BBStr(p ? p : "");
+	BBStr *val = new BBStr(p ? p : "");
 	delete env_var;
 	return val;
 }
