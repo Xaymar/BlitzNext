@@ -6,6 +6,7 @@
 #include <string>
 
 #include "GraphicsRuntime.h"
+#include <windows.h>
 #include <d3d.h>
 
 #include "ddutil.h"

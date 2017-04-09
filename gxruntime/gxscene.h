@@ -1,10 +1,11 @@
 
-#include "GraphicsRuntime.h"
 
 #ifndef GXSCENE_H
 #define GXSCENE_H
 
 #include <map>
+#include "GraphicsRuntime.h"
+#include <windows.h>
 #include <d3d.h>
 
 #include "gxlight.h"

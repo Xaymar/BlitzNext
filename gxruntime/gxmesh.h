@@ -2,6 +2,8 @@
 #ifndef GXMESH_H
 #define GXMESH_H
 
+#include <windows.h>
+#include "GraphicsRuntime.h"
 #include <d3d.h>
 
 class gxGraphics;

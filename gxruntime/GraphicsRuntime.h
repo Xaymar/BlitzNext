@@ -1,4 +1,6 @@
 #pragma once
+#include <windows.h>
+
 // Direct Draw
 #define DIRECTDRAW_VERSION 0x0700
 #include <ddraw.h>
