@@ -289,10 +289,10 @@ static Object *readObject( Object *parent ){
 
 	if( !obj ) obj=new MeshModel();
 
-	obj->setName( name );
-	obj->setLocalPosition( Vector( pos[0],pos[1],pos[2] ) );
-	obj->setLocalScale( Vector( scl[0],scl[1],scl[2] ) );
-	obj->setLocalRotation( Quat( rot[0],Vector( rot[1],rot[2],rot[3] ) ) );
+	obj->SetName( name );
+	obj->SetLocalPosition( Vector( pos[0],pos[1],pos[2] ) );
+	obj->SetLocalScale( Vector( scl[0],scl[1],scl[2] ) );
+	obj->SetLocalRotation( Quat( rot[0],Vector( rot[1],rot[2],rot[3] ) ) );
 	obj->setAnimation( keys );
 
 	if( mesh ){
@@ -310,7 +310,7 @@ static Object *readObject( Object *parent ){
 		obj->setAnimator( new Animator( obj,anim_len ) );
 	}
 
-	if( parent ) obj->setParent( parent );
+	if( parent ) obj->SetParent( parent );
 
 	return obj;
 }

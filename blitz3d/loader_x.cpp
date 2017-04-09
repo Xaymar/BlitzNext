@@ -5,7 +5,11 @@
 #include "animation.h"
 #include "pivot.h"
 
-#include <dxfile.h>
+#include <windows.h>
+//#include <dxfile.h>
+#include "../gxruntime/GraphicsRuntime.h"
+#include <d3d9types.h>
+#include <d3dx9xof.h>
 #include <rmxfguid.h>
 #include <rmxftmpl.h>
 
@@ -17,7 +21,7 @@ static bool conv,flip_tris;
 static Transform conv_tform;
 static bool collapse,animonly;
 
-static void parseAnimKey( IDirectXFileData *fileData,MeshModel *e ){
+static void parseAnimKey(ID3DXFileData *fileData, MeshModel *e) {
 
 	DWORD sz;int *data;
 	if( fileData->GetData( 0,&sz,(void**)&data )<0 ) return;
@@ -66,7 +70,7 @@ static void parseAnimKey( IDirectXFileData *fileData,MeshModel *e ){
 	e->setAnimation( anim );
 }
 
-static void parseAnim( IDirectXFileData *fileData ){
+static void parseAnim(ID3DXFileData *fileData) {
 	const GUID *guid;
 	IDirectXFileObject *childObj;
 	IDirectXFileData *childData;
@@ -270,7 +274,7 @@ static void parseMesh( IDirectXFileData *fileData,MeshModel *mesh ){
 	}
 	if( !mats.size() ) mats.push_back( Brush() );
 
-	for( k=0;k<faces.size();++k ){
+	for( size_t k=0;k<faces.size();++k ){
 		const FaceX &f=faces[k];
 		int *data=f.data;
 		int cnt=*data++;if( cnt<3 ) continue;
@@ -299,7 +303,7 @@ static MeshModel *parseFrame( IDirectXFileData *fileData ){
 	char name[80];DWORD len=80;
 	if( fileData->GetName( name,&len )<0 ) return e;
 
-	e->setName( name );
+	e->SetName( name );
 	frames_map[name]=e;
 
 	//iterate through child objects...
@@ -315,13 +319,13 @@ static MeshModel *parseFrame( IDirectXFileData *fileData ){
 						Vector( data->_31,data->_32,data->_33 ) ),
 						Vector( data->_41,data->_42,data->_43 ) );
 					if( conv ) tform=conv_tform * tform * -conv_tform;
-					e->setLocalTform( tform );
+					e->SetLocalTransform( tform );
 				}
 			}else if( *guid==TID_D3DRMMesh ){
 				if( !animonly ) parseMesh( childData,e );
 			}else if( *guid==TID_D3DRMFrame ){
 				MeshModel *t=parseFrame( childData );
-				t->setParent( e );
+				t->SetParent( e );
 			}
 		}
 		childData->Release();
@@ -354,7 +358,7 @@ static MeshModel *parseFile( const string &file ){
 			if( !animonly) parseMesh( fileData,e );
 		}else if( *guid==TID_D3DRMFrame ){
 			MeshModel *t=parseFrame( fileData );
-			t->setParent( e );
+			t->SetParent( e );
 		}else if( *guid==TID_D3DRMAnimationSet ){
 			if( !collapse ) parseAnimSet( fileData );
 		}

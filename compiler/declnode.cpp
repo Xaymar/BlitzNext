@@ -6,7 +6,7 @@
 // Sequence of declarations //
 //////////////////////////////
 void DeclSeqNode::proto(DeclSeq *d, Environ *e) {
-	for (int k = 0; k < decls.size(); ++k) {
+	for (size_t k = 0; k < decls.size(); ++k) {
 		try { decls[k]->proto(d, e); } catch (Ex &x) {
 			if (x.pos < 0) x.pos = decls[k]->pos;
 			if (!x.file.size()) x.file = decls[k]->file;
@@ -16,7 +16,7 @@ void DeclSeqNode::proto(DeclSeq *d, Environ *e) {
 }
 
 void DeclSeqNode::semant(Environ *e) {
-	for (int k = 0; k < decls.size(); ++k) {
+	for (size_t k = 0; k < decls.size(); ++k) {
 		try { decls[k]->semant(e); } catch (Ex &x) {
 			if (x.pos < 0) x.pos = decls[k]->pos;
 			if (!x.file.size()) x.file = decls[k]->file;
@@ -26,7 +26,7 @@ void DeclSeqNode::semant(Environ *e) {
 }
 
 void DeclSeqNode::translate(Codegen *g) {
-	for (int k = 0; k < decls.size(); ++k) {
+	for (size_t k = 0; k < decls.size(); ++k) {
 		try { decls[k]->translate(g); } catch (Ex &x) {
 			if (x.pos < 0) x.pos = decls[k]->pos;
 			if (!x.file.size()) x.file = decls[k]->file;
@@ -36,7 +36,7 @@ void DeclSeqNode::translate(Codegen *g) {
 }
 
 void DeclSeqNode::transdata(Codegen *g) {
-	for (int k = 0; k < decls.size(); ++k) {
+	for (size_t k = 0; k < decls.size(); ++k) {
 		try { decls[k]->transdata(g); } catch (Ex &x) {
 			if (x.pos < 0) x.pos = decls[k]->pos;
 			if (!x.file.size()) x.file = decls[k]->file;
@@ -90,8 +90,7 @@ void VarDeclNode::proto(DeclSeq *d, Environ *e) {
 	if (expr) sem_var = new DeclVarNode(decl);
 }
 
-void VarDeclNode::semant(Environ *e) {
-}
+void VarDeclNode::semant(Environ *e) {}
 
 void VarDeclNode::translate(Codegen *g) {
 	if (kind & DECL_GLOBAL) {
@@ -149,7 +148,7 @@ void FuncDeclNode::translate(Codegen *g) {
 	//translate statements
 	stmts->translate(g);
 
-	for (int k = 0; k < sem_env->labels.size(); ++k) {
+	for (size_t k = 0; k < sem_env->labels.size(); ++k) {
 		if (sem_env->labels[k]->def < 0)	ex("Undefined label", sem_env->labels[k]->ref);
 	}
 
@@ -224,8 +223,7 @@ void DataDeclNode::proto(DeclSeq *d, Environ *e) {
 	if (expr->sem_type == Type::string_type) str_label = genLabel();
 }
 
-void DataDeclNode::semant(Environ *e) {
-}
+void DataDeclNode::semant(Environ *e) {}
 
 void DataDeclNode::translate(Codegen *g) {
 	if (expr->sem_type != Type::string_type) return;
@@ -275,7 +273,7 @@ void VectorDeclNode::translate(Codegen *g) {
 	VectorType *v = sem_type->vectorType();
 	g->i_data(6, v->label);
 	int sz = 1;
-	for (int k = 0; k < v->sizes.size(); ++k) sz *= v->sizes[k];
+	for (size_t k = 0; k < v->sizes.size(); ++k) sz *= v->sizes[k];
 	g->i_data(sz);
 	string t;
 	Type *type = v->elementType;

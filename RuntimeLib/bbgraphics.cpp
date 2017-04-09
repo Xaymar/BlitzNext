@@ -31,7 +31,7 @@ private:
 };
 
 //degrees to radians
-static const float dtor = 0.0174532925199432957692369076848861f;
+static const float s_degreesToRadians = 0.0174532925199432957692369076848861f;
 
 static int gx_driver;	//current graphics driver
 
@@ -992,7 +992,7 @@ void bbResizeImage(bbImage *i, float w, float h) {
 
 void bbRotateImage(bbImage *i, float d) {
 	debugImage(i);
-	d *= -dtor;
+	d *= -s_degreesToRadians;
 	bbTFormImage(i, cos(d), -sin(d), sin(d), cos(d));
 }
 

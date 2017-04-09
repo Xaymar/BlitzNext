@@ -35,7 +35,7 @@ void Animator::reset(){
 
 void Animator::addObjs( Object *obj ){
 	_objs.push_back( obj );
-	for( Entity *e=obj->children();e;e=e->successor() ){
+	for( Entity *e=obj->GetChildren();e;e=e->GetSuccessor() ){
 		addObjs( e->getObject() );
 	}
 }
@@ -87,13 +87,13 @@ void Animator::updateAnim(){
 		const Animation &keys=_anims[k].keys[_seq];
 
 		if( keys.numPositionKeys() ){
-			obj->setLocalPosition( keys.getPosition( _time ) );
+			obj->SetLocalPosition( keys.getPosition( _time ) );
 		}
 		if( keys.numScaleKeys() ){
-			obj->setLocalScale( keys.getScale( _time ) );
+			obj->SetLocalScale( keys.getScale( _time ) );
 		}
 		if( keys.numRotationKeys() ){
-			obj->setLocalRotation( keys.getRotation( _time ) );
+			obj->SetLocalRotation( keys.getRotation( _time ) );
 		}
 	}
 }
@@ -105,9 +105,9 @@ void Animator::updateTrans(){
 		Object *obj=_objs[k];
 		const Anim &anim=_anims[k];
 
-		if( anim.pos ) obj->setLocalPosition( (anim.dest_pos-anim.src_pos)*_trans_time+anim.src_pos );
-		if( anim.scl ) obj->setLocalScale( (anim.dest_scl-anim.src_scl)*_trans_time+anim.src_scl );
-		if( anim.rot ) obj->setLocalRotation( anim.src_rot.slerpTo( anim.dest_rot,_trans_time ) );
+		if( anim.pos ) obj->SetLocalPosition( (anim.dest_pos-anim.src_pos)*_trans_time+anim.src_pos );
+		if( anim.scl ) obj->SetLocalScale( (anim.dest_scl-anim.src_scl)*_trans_time+anim.src_scl );
+		if( anim.rot ) obj->SetLocalRotation( anim.src_rot.slerpTo( anim.dest_rot,_trans_time ) );
 	}
 }
 
@@ -120,15 +120,15 @@ void Animator::beginTrans(){
 		const Animation &keys=_anims[k].keys[_seq];
 
 		if( anim.pos=!!keys.numPositionKeys() ){
-			anim.src_pos=obj->getLocalPosition();
+			anim.src_pos=obj->GetLocalPosition();
 			anim.dest_pos=keys.getPosition( _time );
 		}
 		if( anim.scl=!!keys.numScaleKeys() ){
-			anim.src_scl=obj->getLocalScale();
+			anim.src_scl=obj->GetLocalScale();
 			anim.dest_scl=keys.getScale( _time );
 		}
 		if( anim.rot=!!keys.numRotationKeys() ){
-			anim.src_rot=obj->getLocalRotation();
+			anim.src_rot=obj->GetLocalRotation();
 			anim.dest_rot=keys.getRotation( _time );
 		}
 	}

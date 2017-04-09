@@ -8,16 +8,16 @@ static const int RND_M=2147483647;
 static const int RND_Q=44488;
 static const int RND_R=3399;
 
-static const float dtor=0.0174532925199432957692369076848861f;
-static const float rtod=57.2957795130823208767981548141052f;
+static const float s_degreesToRadians=0.0174532925199432957692369076848861f;
+static const float s_radiansToDegrees=57.2957795130823208767981548141052f;
 
-float bbSin( float n ){ return (float)sin(n*dtor); }
-float bbCos( float n ){ return (float)cos(n*dtor); }
-float bbTan( float n ){ return (float)tan(n*dtor); }
-float bbASin( float n ){ return (float)asin(n)*rtod; }
-float bbACos( float n ){ return (float)acos(n)*rtod; }
-float bbATan( float n ){ return (float)atan(n)*rtod; }
-float bbATan2( float n,float t ){ return (float)atan2(n,t)*rtod; }
+float bbSin( float n ){ return (float)sin(n*s_degreesToRadians); }
+float bbCos( float n ){ return (float)cos(n*s_degreesToRadians); }
+float bbTan( float n ){ return (float)tan(n*s_degreesToRadians); }
+float bbASin( float n ){ return (float)asin(n)*s_radiansToDegrees; }
+float bbACos( float n ){ return (float)acos(n)*s_radiansToDegrees; }
+float bbATan( float n ){ return (float)atan(n)*s_radiansToDegrees; }
+float bbATan2( float n,float t ){ return (float)atan2(n,t)*s_radiansToDegrees; }
 float bbSqr( float n ){ return (float)sqrt(n); }
 float bbFloor( float n ){ return (float)floor(n); }
 float bbCeil( float n ){ return (float)ceil(n); }

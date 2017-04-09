@@ -210,7 +210,7 @@ static void parseTriMesh( MeshModel *mesh ){
 
 	int k;
 
-	mesh->setWorldTform( tform );
+	mesh->SetWorldTransform( tform );
 
 	if( animonly ){
 		MeshLoader::endMesh( 0 );
@@ -245,8 +245,8 @@ static void parseObject( MeshModel *root ){
 		switch( id ){
 		case CHUNK_TRIMESH:
 			mesh=new MeshModel();
-			mesh->setName( name );
-			mesh->setParent( root );
+			mesh->SetName( name );
+			mesh->SetParent( root );
 			name_map[name]=mesh;
 			parseTriMesh( mesh );
 			break;
@@ -420,8 +420,8 @@ static void parseMeshInfo( MeshModel *root,float curr_time ){
 	MeshModel *mesh=0;
 	if( name=="$$$DUMMY" ){
 		mesh=new MeshModel();
-		mesh->setName( inst );
-		mesh->setParent( p );
+		mesh->SetName( inst );
+		mesh->SetParent( p );
 	}else{
 		map<string,MeshModel*>::const_iterator it=name_map.find( name );
 		if( it==name_map.end() ) return;
@@ -431,9 +431,9 @@ static void parseMeshInfo( MeshModel *root,float curr_time ){
 			mesh->transform( -pivot );
 		}
 		Transform t=
-		mesh->getWorldTform();
-		mesh->setParent( p );
-		mesh->setWorldTform( t );
+		mesh->GetWorldTransform();
+		mesh->SetParent( p );
+		mesh->SetWorldTransform( t );
 	}
 
 	mesh->setAnimation( anim );

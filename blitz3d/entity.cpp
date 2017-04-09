@@ -4,194 +4,194 @@
 
 //#include "stats.h"
 
-Entity *Entity::_orphans,*Entity::_last_orphan;
+Entity *Entity::_orphans, *Entity::_last_orphan;
 
-enum{
-	INVALID_LOCALTFORM=1,
-	INVALID_WORLDTFORM=2
+enum {
+	INVALID_LOCALTFORM = 1,
+	INVALID_WORLDTFORM = 2
 };
 
-void Entity::remove(){
-	if( _parent ){
-		if( _parent->_children==this ) _parent->_children=_succ;
-		if( _parent->_last_child==this ) _parent->_last_child=_pred;
-	}else{
-		if( _orphans==this ) _orphans=_succ;
-		if( _last_orphan==this ) _last_orphan=_pred;
+void Entity::RemoveParent() {
+	if (m_parent) {
+		if (m_parent->m_children == this) m_parent->m_children = m_listNext;
+		if (m_parent->m_last_child == this) m_parent->m_last_child = m_listPrev;
+	} else {
+		if (_orphans == this) _orphans = m_listNext;
+		if (_last_orphan == this) _last_orphan = m_listPrev;
 	}
-	if( _succ ) _succ->_pred=_pred;
-	if( _pred ) _pred->_succ=_succ;
+	if (m_listNext) m_listNext->m_listPrev = m_listPrev;
+	if (m_listPrev) m_listPrev->m_listNext = m_listNext;
 }
 
-void Entity::insert(){
-	_succ=0;
-	if( _parent ){
-		if( _pred=_parent->_last_child ) _pred->_succ=this;
-		else _parent->_children=this;
-		_parent->_last_child=this;
-	}else{
-		if( _pred=_last_orphan ) _pred->_succ=this;
-		else _orphans=this;
-		_last_orphan=this;
-	}
-}
-
-Entity::Entity():
-_succ(0),_pred(0),_parent(0),_children(0),_last_child(0),
-_visible(true),_enabled(true),
-local_scl(1,1,1),
-invalid(0){
-	insert();
-}
-
-Entity::Entity( const Entity &e ):
-_succ(0),_pred(0),_parent(0),_children(0),_last_child(0),
-_name(e._name),_visible(e._visible),_enabled(e._enabled),
-local_pos(e.local_pos),
-local_scl(e.local_scl),
-local_rot(e.local_rot),
-invalid( INVALID_LOCALTFORM|INVALID_WORLDTFORM ){
-	insert();
-}
-
-Entity::~Entity(){
-	while( children() ) delete children();
-	remove();
-}
-
-void Entity::invalidateWorld(){
-	if( invalid & INVALID_WORLDTFORM ) return;
-	invalid|=INVALID_WORLDTFORM;
-	for( Entity *e=_children;e;e=e->_succ ){
-		e->invalidateWorld();
+void Entity::InsertChildToParent() {
+	m_listNext = 0;
+	if (m_parent) {
+		if (m_listPrev = m_parent->m_last_child) m_listPrev->m_listNext = this;
+		else m_parent->m_children = this;
+		m_parent->m_last_child = this;
+	} else {
+		if (m_listPrev = _last_orphan) m_listPrev->m_listNext = this;
+		else _orphans = this;
+		_last_orphan = this;
 	}
 }
 
-void Entity::invalidateLocal(){
-	invalid|=INVALID_LOCALTFORM;
-	invalidateWorld();
+Entity::Entity() :
+	m_listNext(0), m_listPrev(0), m_parent(0), m_children(0), m_last_child(0),
+	m_isVisible(true), m_isEnabled(true),
+	m_localScale(1, 1, 1),
+	invalid(0) {
+	InsertChildToParent();
 }
 
-const Transform &Entity::getLocalTform()const{
-	if( invalid&INVALID_LOCALTFORM ){
-		local_tform.m=Matrix( local_rot );
-		local_tform.m.i*=local_scl.x;
-		local_tform.m.j*=local_scl.y;
-		local_tform.m.k*=local_scl.z;
-		local_tform.v=local_pos;
-		invalid&=~INVALID_LOCALTFORM;
-	}
-	return local_tform;
+Entity::Entity(const Entity &e) :
+	m_listNext(0), m_listPrev(0), m_parent(0), m_children(0), m_last_child(0),
+	m_name(e.m_name), m_isVisible(e.m_isVisible), m_isEnabled(e.m_isEnabled),
+	m_localPosition(e.m_localPosition),
+	m_localScale(e.m_localScale),
+	m_localRotation(e.m_localRotation),
+	invalid(INVALID_LOCALTFORM | INVALID_WORLDTFORM) {
+	InsertChildToParent();
 }
 
-const Transform &Entity::getWorldTform()const{
-	if( invalid&INVALID_WORLDTFORM ){
-		world_tform=_parent ? _parent->getWorldTform() * getLocalTform() : getLocalTform();
-		invalid&=~INVALID_WORLDTFORM;
-	}
-	return world_tform;
+Entity::~Entity() {
+	while (GetChildren()) delete GetChildren();
+	RemoveParent();
 }
 
-void Entity::setParent( Entity *p ){
-	if( _parent==p ) return;
-
-	remove();
-
-	_parent=p;
-
-	insert();
-
-	invalidateWorld();
-}
-
-void Entity::setName( const string &t ){
-	_name=t;
-}
-
-void Entity::setVisible( bool visible ){
-	_visible=visible;
-}
-
-void Entity::setEnabled( bool enabled ){
-	_enabled=enabled;
-}
-
-void Entity::enumVisible( vector<Object*> &out ){
-	if( !_visible ) return;
-	if( Object *o=getObject() ) out.push_back(o);
-	for( Entity *e=_children;e;e=e->_succ ){
-		e->enumVisible( out );
+void Entity::InvalidateWorldTransform() {
+	if (invalid & INVALID_WORLDTFORM) return;
+	invalid |= INVALID_WORLDTFORM;
+	for (Entity *e = m_children; e; e = e->m_listNext) {
+		e->InvalidateWorldTransform();
 	}
 }
 
-void Entity::enumEnabled( vector<Object*> &out ){
-	if( !_enabled ) return;
-	if( Object *o=getObject() ) out.push_back(o);
-	for( Entity *e=_children;e;e=e->_succ ){
-		e->enumEnabled( out );
+void Entity::invalidateLocal() {
+	invalid |= INVALID_LOCALTFORM;
+	InvalidateWorldTransform();
+}
+
+const Transform &Entity::GetLocalTransform()const {
+	if (invalid&INVALID_LOCALTFORM) {
+		m_localTransform.m = Matrix(m_localRotation);
+		m_localTransform.m.i *= m_localScale.x;
+		m_localTransform.m.j *= m_localScale.y;
+		m_localTransform.m.k *= m_localScale.z;
+		m_localTransform.v = m_localPosition;
+		invalid &= ~INVALID_LOCALTFORM;
+	}
+	return m_localTransform;
+}
+
+const Transform &Entity::GetWorldTransform()const {
+	if (invalid&INVALID_WORLDTFORM) {
+		m_worldTransform = m_parent ? m_parent->GetWorldTransform() * GetLocalTransform() : GetLocalTransform();
+		invalid &= ~INVALID_WORLDTFORM;
+	}
+	return m_worldTransform;
+}
+
+void Entity::SetParent(Entity *p) {
+	if (m_parent == p) return;
+
+	RemoveParent();
+
+	m_parent = p;
+
+	InsertChildToParent();
+
+	InvalidateWorldTransform();
+}
+
+void Entity::SetName(const string &t) {
+	m_name = t;
+}
+
+void Entity::SetVisible(bool visible) {
+	m_isVisible = visible;
+}
+
+void Entity::SetEnabled(bool enabled) {
+	m_isEnabled = enabled;
+}
+
+void Entity::EnumerateVisible(std::list<Object*> &out) {
+	if (!m_isVisible) return;
+	if (Object *o = getObject()) out.push_back(o);
+	for (Entity *e = m_children; e; e = e->m_listNext) {
+		e->EnumerateVisible(out);
 	}
 }
 
-void Entity::setLocalPosition( const Vector &v ){
-	local_pos=v;
+void Entity::EnumerateEnabled(std::list<Object*> &out) {
+	if (!m_isEnabled) return;
+	if (Object *o = getObject()) out.push_back(o);
+	for (Entity *e = m_children; e; e = e->m_listNext) {
+		e->EnumerateEnabled(out);
+	}
+}
+
+void Entity::SetLocalPosition(const Vector &v) {
+	m_localPosition = v;
 	invalidateLocal();
 }
 
-void Entity::setLocalScale( const Vector &v ){
-	local_scl=v;
+void Entity::SetLocalScale(const Vector &v) {
+	m_localScale = v;
 	invalidateLocal();
 }
 
-void Entity::setLocalRotation( const Quat &q ){
-	local_rot=q.normalized();
+void Entity::SetLocalRotation(const Quat &q) {
+	m_localRotation = q.normalized();
 	invalidateLocal();
 }
 
-void Entity::setLocalTform( const Transform &t ){
-	local_pos=t.v;
-	local_scl=Vector( t.m.i.length(),t.m.j.length(),t.m.k.length() );
-	local_rot=matrixQuat( t.m );
+void Entity::SetLocalTransform(const Transform &t) {
+	m_localPosition = t.v;
+	m_localScale = Vector(t.m.i.length(), t.m.j.length(), t.m.k.length());
+	m_localRotation = matrixQuat(t.m);
 	invalidateLocal();
 }
 
-void Entity::setWorldPosition( const Vector &v ){
-	setLocalPosition( _parent ? -_parent->getWorldTform() * v : v );
+void Entity::SetWorldPosition(const Vector &v) {
+	SetLocalPosition(m_parent ? -m_parent->GetWorldTransform() * v : v);
 }
 
-void Entity::setWorldScale( const Vector &v ){
-	setLocalScale( _parent ? v/_parent->getWorldScale() : v );
+void Entity::SetWorldScale(const Vector &v) {
+	SetLocalScale(m_parent ? v / m_parent->GetWorldScale() : v);
 }
 
-void Entity::setWorldRotation( const Quat &q ){
-	setLocalRotation( _parent ? -_parent->getWorldRotation() * q : q );
+void Entity::SetWorldRotation(const Quat &q) {
+	SetLocalRotation(m_parent ? -m_parent->GetWorldRotation() * q : q);
 }
 
-void Entity::setWorldTform( const Transform &t ){
-	setLocalTform( _parent ? -_parent->getWorldTform() * t : t );
+void Entity::SetWorldTransform(const Transform &t) {
+	SetLocalTransform(m_parent ? -m_parent->GetWorldTransform() * t : t);
 }
 
-const Vector &Entity::getLocalPosition()const{
-	return local_pos;
+const Vector &Entity::GetLocalPosition()const {
+	return m_localPosition;
 }
 
-const Vector &Entity::getLocalScale()const{
-	return local_scl;
+const Vector &Entity::GetLocalScale()const {
+	return m_localScale;
 }
 
-const Quat &Entity::getLocalRotation()const{
-	return local_rot;
+const Quat &Entity::GetLocalRotation()const {
+	return m_localRotation;
 }
 
-const Vector &Entity::getWorldPosition()const{
-	return getWorldTform().v;
+const Vector &Entity::GetWorldPosition()const {
+	return GetWorldTransform().v;
 }
 
-const Vector &Entity::getWorldScale()const{
-	world_scl=_parent ? _parent->getWorldScale() * local_scl : local_scl;
-	return world_scl;
+const Vector &Entity::GetWorldScale()const {
+	m_worldScale = m_parent ? m_parent->GetWorldScale() * m_localScale : m_localScale;
+	return m_worldScale;
 }
 
-const Quat &Entity::getWorldRotation()const{
-	world_rot=_parent ? _parent->getWorldRotation() * local_rot : local_rot;
-	return world_rot;
+const Quat &Entity::GetWorldRotation()const {
+	m_worldRotation = m_parent ? m_parent->GetWorldRotation() * m_localRotation : m_localRotation;
+	return m_worldRotation;
 }

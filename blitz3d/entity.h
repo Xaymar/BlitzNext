@@ -16,86 +16,84 @@ class Listener;
 class MeshModel;
 class MD2Model;
 
-class Entity{
-public:
+class Entity {
+	public:
 
 	Entity();
-	Entity( const Entity &e );
+	Entity(const Entity &e);
 	virtual ~Entity();
 
-	virtual Entity *clone()=0;
+	virtual Entity *clone() = 0;
 
 	//ugly casts!
-	virtual Object *getObject(){ return 0; }
-	virtual Camera *getCamera(){ return 0; }
-	virtual Light *getLight(){ return 0; }
-	virtual Model *getModel(){ return 0; }
-	virtual Mirror *getMirror(){ return 0; }
-	virtual Listener *getListener(){ return 0; }
+	virtual Object *getObject() { return nullptr; }
+	virtual Camera *getCamera() { return nullptr; }
+	virtual Light *getLight() { return nullptr; }
+	virtual Model *getModel() { return nullptr; }
+	virtual Mirror *getMirror() { return nullptr; }
+	virtual Listener *getListener() { return nullptr; }
 
-	void setName( const std::string &t );
-	void setParent( Entity *parent );
+	void SetName(const std::string &t);
+	std::string getName()const { return m_name; }
 
-	void setVisible( bool vis );
-	void setEnabled( bool ena );
+	void SetParent(Entity *parent);
+	Entity *getParent()const { return m_parent; }
 
-	bool visible()const{ return _visible; }
-	bool enabled()const{ return _enabled; }
+	void SetVisible(bool vis);
+	bool IsVisible()const { return m_isVisible; }
+	void EnumerateVisible(std::list<Object*> &out);
 
-	void enumVisible( vector<Object*> &out );
-	void enumEnabled( vector<Object*> &out );
+	void SetEnabled(bool ena);
+	bool IsEnabled()const { return m_isEnabled; }
+	void EnumerateEnabled(std::list<Object*> &out);
 
-	Entity *children()const{ return _children; }
-	Entity *successor()const{ return _succ; }
+	void SetLocalPosition(const Vector &v);
+	const Vector &GetLocalPosition()const;
+	void SetLocalScale(const Vector & v);
+	const Vector &GetLocalScale()const;
+	void SetLocalRotation(const Quat &q);
+	const Quat &GetLocalRotation()const;
+	void SetLocalTransform(const Transform &t);
+	const Transform &GetLocalTransform()const;
 
-	std::string getName()const{ return _name; }
-	Entity *getParent()const{ return _parent; }
+	void SetWorldPosition(const Vector &v);
+	const Vector &GetWorldPosition()const;
+	void SetWorldScale(const Vector &v);
+	const Vector &GetWorldScale()const;
+	void SetWorldRotation(const Quat &q);
+	const Quat &GetWorldRotation()const;
+	void SetWorldTransform(const Transform &t);
+	const Transform &GetWorldTransform()const;
 
-	void setLocalPosition( const Vector &v );
-	void setLocalScale( const Vector & v );
-	void setLocalRotation( const Quat &q );
-	void setLocalTform( const Transform &t );
+	Entity* GetChildren()const { return m_children; }
+	Entity* GetSuccessor()const { return m_listNext; }
 
-	void setWorldPosition( const Vector &v );
-	void setWorldScale( const Vector &v );
-	void setWorldRotation( const Quat &q );
-	void setWorldTform( const Transform &t );
 
-	const Vector &getLocalPosition()const;
-	const Vector &getLocalScale()const;
-	const Quat &getLocalRotation()const;
-	const Transform &getLocalTform()const;
+	static Entity* GetEntityOrphans() { return _orphans; }
 
-	const Vector &getWorldPosition()const;
-	const Vector &getWorldScale()const;
-	const Quat &getWorldRotation()const;
-	const Transform &getWorldTform()const;
+	private:
+	Entity *m_listNext, *m_listPrev, *m_parent, *m_children, *m_last_child;
 
-	static Entity *orphans(){ return _orphans; }
+	static Entity *_orphans, *_last_orphan;
 
-private:
-	Entity *_succ,*_pred,*_parent,*_children,*_last_child;
+	bool m_isVisible, m_isEnabled;
 
-	static Entity *_orphans,*_last_orphan;
-
-	bool _visible,_enabled;
-
-	std::string _name;
+	std::string m_name;
 
 	mutable int invalid;
 
-	Quat local_rot;
-	Vector local_pos,local_scl;
-	mutable Transform local_tform;
+	Quat m_localRotation;
+	Vector m_localPosition, m_localScale;
+	mutable Transform m_localTransform;
 
-	mutable Quat world_rot;
-	mutable Vector world_pos,world_scl;
-	mutable Transform world_tform;
+	mutable Quat m_worldRotation;
+	mutable Vector m_worldPosition, m_worldScale;
+	mutable Transform m_worldTransform;
 
-	void insert();
-	void remove();
+	void InsertChildToParent();
+	void RemoveParent();
 	void invalidateLocal();
-	void invalidateWorld();
+	void InvalidateWorldTransform();
 };
 
 #endif

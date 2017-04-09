@@ -50,9 +50,6 @@
     <ClCompile Include="loader_b3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="loader_x.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="md2model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -114,6 +111,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="world.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="loader_x.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -25,10 +25,10 @@ Listener::~Listener(){
 void Listener::renderListener(){
 	if( !gx_audio ) return;
 
-	const Vector &pos=getWorldTform().v;
+	const Vector &pos=GetWorldTransform().v;
 	const Vector &vel=getVelocity();
-	const Vector &forward=getWorldTform().m.k.normalized();
-	const Vector &up=getWorldTform().m.j.normalized();
+	const Vector &forward=GetWorldTransform().m.k.normalized();
+	const Vector &up=GetWorldTransform().m.j.normalized();
 
 	gx_audio->set3dListener( &pos.x,&vel.x,&forward.x,&up.x );
 }

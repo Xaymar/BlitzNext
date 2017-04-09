@@ -10,6 +10,9 @@
 #include "mirror.h"
 #include "listener.h"
 
+#define WORLD_COLLISION_TYPES	16
+#define WORLD_COLLISION_HITS	4
+
 class World{
 public:
 	//collision methods
@@ -34,7 +37,7 @@ public:
 	void capture();
 	void render( float tween );
 
-	bool checkLOS( Object *src,Object *dest );
+	bool CheckLineOfSight( Object *src,Object *dest );
 	bool hitTest( const Line &line,float radius,Object *obj,const Transform &tf,int method,Collision *curr_coll  );
 	Object *traceRay( const Line &line,float radius,ObjCollision *curr_coll );
 
@@ -43,8 +46,9 @@ private:
 		int dst_type,method,response;
 	};
 
-	vector<CollInfo> _collInfo[1000];
-	vector<Object*> _objsByType[1000];
+	vector<CollInfo> _collInfo[WORLD_COLLISION_TYPES];
+	std::list<Object*> _objsByType[WORLD_COLLISION_TYPES];
+	std::list<Object*> _objsByTypeSwappable[WORLD_COLLISION_TYPES];
 
 	void collide( Object *src );
 	void render( Camera *c,Mirror *m );

@@ -27,9 +27,9 @@ Object::~Object(){
 
 Object *Object::copy(){
 	last_copy=clone()->getObject();
-	for( Entity *e=children();e;e=e->successor() ){
+	for( Entity *e=GetChildren();e;e=e->GetSuccessor() ){
 		Object *cpy=e->getObject()->copy();
-		cpy->setParent( last_copy );
+		cpy->SetParent( last_copy );
 	}
 	if( animator ) last_copy->setAnimator( new Animator( animator ) );
 	return last_copy;
@@ -38,7 +38,7 @@ Object *Object::copy(){
 void Object::reset(){
 	colls.clear();
 	velocity=Vector();
-	prev_tform=getWorldTform();
+	prev_tform=GetWorldTransform();
 }
 
 void Object::setCollisionType( int type ){
@@ -73,26 +73,26 @@ void Object::addCollision( const ObjCollision *c ){
 }
 
 void Object::endUpdate(){
-	velocity=(getWorldTform().v-prev_tform.v)/elapsed;
-	prev_tform=getWorldTform();
+	velocity=(GetWorldTransform().v-prev_tform.v)/elapsed;
+	prev_tform=GetWorldTransform();
 }
 
 void Object::capture(){
-	capt_pos=getLocalPosition();
-	capt_scl=getLocalScale();
-	capt_rot=getLocalRotation();
+	capt_pos=GetLocalPosition();
+	capt_scl=GetLocalScale();
+	capt_rot=GetLocalRotation();
 	captured=true;
 }
 
 bool Object::beginRender( float tween ){
 	updateSounds();
 	if( tween==1 || !captured ){
-		render_tform=getWorldTform();
+		render_tform=GetWorldTransform();
 		render_tform_valid=true;
 	}else{
-		Vector pos=(getLocalPosition()-capt_pos)*tween+capt_pos;
-		Vector scl=(getLocalScale()-capt_scl)*tween+capt_scl;
-		Quat rot=capt_rot.slerpTo( getLocalRotation(),tween );
+		Vector pos=(GetLocalPosition()-capt_pos)*tween+capt_pos;
+		Vector scl=(GetLocalScale()-capt_scl)*tween+capt_scl;
+		Quat rot=capt_rot.slerpTo( GetLocalRotation(),tween );
 		tween_tform.m=Matrix( rot );
 		tween_tform.m.i*=scl.x;
 		tween_tform.m.j*=scl.y;
@@ -143,7 +143,7 @@ const Transform &Object::getPrevWorldTform()const{
 gxChannel *Object::emitSound( gxSound *sound ){
 	if( !sound ) return 0;
 
-	gxChannel *chan=sound->play3d( &getWorldTform().v.x,&velocity.x );
+	gxChannel *chan=sound->play3d( &GetWorldTransform().v.x,&velocity.x );
 	for( int k=0;k<channels.size();++k ){
 		if( chan==channels[k] ) return chan;
 		if( !channels[k] ) return channels[k]=chan;
@@ -155,7 +155,7 @@ gxChannel *Object::emitSound( gxSound *sound ){
 void Object::updateSounds(){
 	for( int k=0;k<channels.size();++k ){
 		if( gxChannel *chan=channels[k] ){
-			if( chan->isPlaying() )	chan->set3d( &getWorldTform().v.x,&velocity.x );
+			if( chan->isPlaying() )	chan->set3d( &GetWorldTransform().v.x,&velocity.x );
 			else channels[k]=0;
 		}
 	}

@@ -40,10 +40,10 @@ struct TerrainRep::Vert{
 
 	Vert(){
 	}
-	Vert( int x,int z ):x(x),z(z),v( x,curr->getHeight(x,z),z){
+	Vert( int x,int z ):x(x),z(z),v( (float)x,curr->getHeight(x,z),(float)z){
 		src_y=v.y;
 	}
-	Vert( int x,int z,float sy ):x(x),z(z),v( x,curr->getHeight(x,z),z ),src_y(sy){
+	Vert(int x, int z, float sy) :x(x), z(z), v((float)x, curr->getHeight(x, z), (float)z), src_y(sy) {
 	}
 };
 

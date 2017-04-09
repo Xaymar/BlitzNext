@@ -21,7 +21,7 @@ static vector<Filter> filters;
 static int filterFile(const string &t, int flags) {
 	//check filters...
 	string l = tolower(t);
-	for (int k = 0; k < filters.size(); ++k) {
+	for (size_t k = 0; k < filters.size(); ++k) {
 		if (l.find(filters[k].t) != string::npos) {
 			flags |= filters[k].flags;
 		}
