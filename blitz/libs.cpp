@@ -19,7 +19,7 @@ vector<UserFunc> userFuncs;
 
 static HMODULE linkerHMOD, runtimeHMOD;
 
-static Type *typeof(int c) {
+static Type *bbtypeof(int c) {
 	switch (c) {
 		case '%':return Type::int_type;
 		case '#':return Type::float_type;
@@ -31,7 +31,7 @@ static Type *typeof(int c) {
 static int curr;
 static string text;
 
-static int next(istream &in) {
+static int bbnext(istream &in) {
 
 	text = "";
 
@@ -82,16 +82,16 @@ static const char *linkRuntime() {
 		keyWords.push_back(s);
 
 		//global!
-		int start = 0, end, k;
+		size_t start = 0, end, k;
 		Type *t = Type::void_type;
-		if (!isalpha(s[0])) { start = 1; t = typeof(s[0]); }
+		if (!isalpha(s[0])) { start = 1; t = bbtypeof(s[0]); }
 		for (k = 1; k < s.size(); ++k, end = k) {
 			if (!isalnum(s[k]) && s[k] != '_') break;
 		}
 		DeclSeq *params = new DeclSeq();
 		string n = s.substr(start, end - start);
 		while (k < s.size()) {
-			Type *t = typeof(s[k++]);
+			Type *t = bbtypeof(s[k++]);
 			int from = k;
 			for (; isalnum(s[k]) || s[k] == '_'; ++k) {}
 			string str = s.substr(from, k - from);
@@ -109,7 +109,7 @@ static const char *linkRuntime() {
 						int n = atoi(s.substr(from, k - from));
 						defType = new ConstType(n);
 					} else {
-						float n = atof(s.substr(from, k - from));
+						float n = (float)atof(s.substr(from, k - from));
 						defType = new ConstType(n);
 					}
 				}
@@ -134,21 +134,20 @@ static const char *loadUserLib(const string &userlib) {
 	string lib = "";
 	ifstream in(t.c_str());
 
-	next(in);
+	bbnext(in);
 	while (curr) {
-
 		if (curr == '.') {
 
-			if (next(in) != -1) return "expecting identifier after '.'";
+			if (bbnext(in) != -1) return "expecting identifier after '.'";
 
 			if (text == "lib") {
-				if (next(in) != -2) return "expecting string after lib directive";
+				if (bbnext(in) != -2) return "expecting string after lib directive";
 				lib = text;
 
 			} else {
 				return "unknown decl directive";
 			}
-			next(in);
+			bbnext(in);
 
 		} else if (curr == -1) {
 
@@ -161,31 +160,31 @@ static const char *loadUserLib(const string &userlib) {
 			_ulibkws.insert(lower_id);
 
 			Type *ty = 0;
-			switch (next(in)) {
+			switch (bbnext(in)) {
 				case '%':ty = Type::int_type; break;
 				case '#':ty = Type::float_type; break;
 				case '$':ty = Type::string_type; break;
 			}
-			if (ty) next(in);
+			if (ty) bbnext(in);
 			else ty = Type::void_type;
 
 			DeclSeq *params = new DeclSeq();
 
 			if (curr != '(') return "expecting '(' after function identifier";
-			next(in);
+			bbnext(in);
 			if (curr != ')') {
 				for (;;) {
 					if (curr != -1) break;
 					string arg = text;
 
 					Type *ty = 0;
-					switch (next(in)) {
+					switch (bbnext(in)) {
 						case '%':ty = Type::int_type; break;
 						case '#':ty = Type::float_type; break;
 						case '$':ty = Type::string_type; break;
 						case '*':ty = Type::null_type; break;
 					}
-					if (ty) next(in);
+					if (ty) bbnext(in);
 					else ty = Type::int_type;
 
 					ConstType *defType = 0;
@@ -193,7 +192,7 @@ static const char *loadUserLib(const string &userlib) {
 					Decl *d = params->insertDecl(arg, ty, DECL_PARAM, defType);
 
 					if (curr != ',') break;
-					next(in);
+					bbnext(in);
 				}
 			}
 			if (curr != ')') return "expecting ')' after function decl";
@@ -204,11 +203,11 @@ static const char *loadUserLib(const string &userlib) {
 
 			runtimeEnviron->funcDecls->insertDecl(lower_id, fn, DECL_FUNC);
 
-			if (next(in) == ':') {	//real name?
-				next(in);
+			if (bbnext(in) == ':') {	//real name?
+				bbnext(in);
 				if (curr != -1 && curr != -2) return "expecting identifier or string after alias";
 				id = text;
-				next(in);
+				bbnext(in);
 			}
 
 			userFuncs.push_back(UserFunc(lower_id, id, lib));
