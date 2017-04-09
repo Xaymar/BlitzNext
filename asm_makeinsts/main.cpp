@@ -43,7 +43,7 @@ static const char *optype( const string &s ){
 	return 0;
 }
 
-void main(){
+void __cdecl main() {
 
 	string name,lhs,rhs,byte,bytes,flags,last;
 
@@ -118,7 +118,7 @@ void main(){
 		if( fail ) continue;
 
 		if( flags.find( "0|" )==0 ) flags=flags.substr( 2 );
-		for( int k=0;k<name.size();++k ) name[k]=tolower( name[k] );
+		for( size_t k=0;k<name.size();++k ) name[k]=tolower( name[k] );
 
 		if( name==last ) name="0";
 		else{
