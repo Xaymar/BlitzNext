@@ -5,14 +5,14 @@
 #include "GraphicsRuntime.h"
 
 class gxGraphics;
-typedef IDirectDrawSurface7 ddSurf;
+
 
 struct ddUtil{
 
-	static void buildMipMaps( ddSurf *surf );
-	static void copy( ddSurf *dest,int dx,int dy,int dw,int dh,ddSurf *src,int sx,int sy,int sw,int sh );
-	static ddSurf *loadSurface( const std::string &f,int flags,gxGraphics *gfx );
-	static ddSurf *createSurface( int width,int height,int flags,gxGraphics *gfx );
+	static void buildMipMaps( IDirectDrawSurface7 *surf );
+	static void copy( IDirectDrawSurface7 *dest,int dx,int dy,int dw,int dh,IDirectDrawSurface7 *src,int sx,int sy,int sw,int sh );
+	static IDirectDrawSurface7 *loadSurface( const std::string &f,int flags,gxGraphics *gfx );
+	static IDirectDrawSurface7 *createSurface( int width,int height,int flags,gxGraphics *gfx );
 };
 
 class PixelFormat{

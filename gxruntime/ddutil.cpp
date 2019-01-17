@@ -16,7 +16,8 @@ static void calcShifts(unsigned mask, unsigned char *shr, unsigned char *shl) {
 	if (mask) {
 		for (*shl = 0; !(mask & 1); ++*shl, mask >>= 1) {}
 		for (*shr = 8; mask & 1; --*shr, mask >>= 1) {}
-	} else *shr = *shl = 0;
+	}
+	else *shr = *shl = 0;
 }
 
 PixelFormat::~PixelFormat() {
@@ -64,15 +65,16 @@ static void adjustTexSize(int *width, int *height, IDirect3DDevice7 *dir3dDev, b
 		*width = *height = 256;
 		return;
 	}
-	
+
 	int w = *width, h = *height, min, max;
 
-    if( ddDesc.dpcTriCaps.dwTextureCaps & D3DPTEXTURECAPS_POW2 || ddDesc.dpcTriCaps.dwTextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL || forcePOT){
+	if (ddDesc.dpcTriCaps.dwTextureCaps & D3DPTEXTURECAPS_POW2 || ddDesc.dpcTriCaps.dwTextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL || forcePOT) {
 		// DirectX Device doesn't support Non Power-Of-Two Textures.
 
 		for (w = 1; w < *width; w <<= 1) {}
 		for (h = 1; h < *height; h <<= 1) {}
-	} else if (ddDesc.dpcTriCaps.dwTextureCaps & D3DPTEXTURECAPS_SQUAREONLY) {
+	}
+	else if (ddDesc.dpcTriCaps.dwTextureCaps & D3DPTEXTURECAPS_SQUAREONLY) {
 		// DirectX Device only supports Square Textures;
 
 		if (w > h) h = w;
@@ -96,7 +98,7 @@ static void adjustTexSize(int *width, int *height, IDirect3DDevice7 *dir3dDev, b
 	*width = w; *height = h;
 }
 
-static ddSurf *createSurface(int width, int height, int pitch, void *bits, IDirectDraw7 *dirDraw) {
+static IDirectDrawSurface7 *createSurface(int width, int height, int pitch, void *bits, IDirectDraw7 *dirDraw) {
 	DDSURFACEDESC2 desc = { sizeof(desc) };
 	desc.dwFlags = DDSD_WIDTH | DDSD_HEIGHT | DDSD_LPSURFACE | DDSD_PITCH | DDSD_PIXELFORMAT | DDSD_CAPS;
 	desc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
@@ -109,12 +111,12 @@ static ddSurf *createSurface(int width, int height, int pitch, void *bits, IDire
 	desc.ddpfPixelFormat.dwGBitMask = 0x00ff00;
 	desc.ddpfPixelFormat.dwBBitMask = 0x0000ff;
 	desc.ddpfPixelFormat.dwRGBAlphaBitMask = 0xff000000;
-	ddSurf *surf;
+	IDirectDrawSurface7 *surf;
 	if (dirDraw->CreateSurface(&desc, &surf, 0) >= 0) return surf;
 	return 0;
 }
 
-static void buildMask(ddSurf *surf) {
+static void buildMask(IDirectDrawSurface7 *surf) {
 	DDSURFACEDESC2 desc = { sizeof(desc) };
 	surf->Lock(0, &desc, DDLOCK_WAIT, 0);
 	unsigned char *surf_p = (unsigned char*)desc.lpSurface;
@@ -134,7 +136,7 @@ static void buildMask(ddSurf *surf) {
 	surf->Unlock(0);
 }
 
-static void buildAlpha(ddSurf *surf, bool whiten) {
+static void buildAlpha(IDirectDrawSurface7 *surf, bool whiten) {
 
 	DDSURFACEDESC2 desc = { sizeof(desc) };
 	surf->Lock(0, &desc, DDLOCK_WAIT, 0);
@@ -156,7 +158,7 @@ static void buildAlpha(ddSurf *surf, bool whiten) {
 	surf->Unlock(0);
 }
 
-void ddUtil::buildMipMaps(ddSurf *surf) {
+void ddUtil::buildMipMaps(IDirectDrawSurface7 *surf) {
 
 	DDSURFACEDESC2 desc = { sizeof(desc) };
 	surf->GetSurfaceDesc(&desc);
@@ -193,7 +195,8 @@ void ddUtil::buildMipMaps(ddSurf *surf) {
 				src_p += src_desc.lPitch * 2;
 				dest_p += dest_desc.lPitch;
 			}
-		} else if (src_desc.dwHeight == 1) {
+		}
+		else if (src_desc.dwHeight == 1) {
 			for (DWORD x = 0; x < dest_desc.dwWidth; ++x) {
 				unsigned p1 = src_fmt.getPixel(src_p);
 				unsigned p2 = src_fmt.getPixel(src_p + src_fmt.getPitch());
@@ -205,7 +208,8 @@ void ddUtil::buildMipMaps(ddSurf *surf) {
 				src_p += src_fmt.getPitch() * 2;
 				dest_p += dest_fmt.getPitch();
 			}
-		} else {
+		}
+		else {
 			for (DWORD y = 0; y < dest_desc.dwHeight; ++y) {
 				unsigned char *src_t = src_p;
 				unsigned char *dest_t = dest_p;
@@ -238,7 +242,7 @@ void ddUtil::buildMipMaps(ddSurf *surf) {
 	}
 }
 
-void ddUtil::copy(ddSurf *dest, int dx, int dy, int dw, int dh, ddSurf *src, int sx, int sy, int sw, int sh) {
+void ddUtil::copy(IDirectDrawSurface7 *dest, int dx, int dy, int dw, int dh, IDirectDrawSurface7 *src, int sx, int sy, int sw, int sh) {
 
 	DDSURFACEDESC2 src_desc = { sizeof(src_desc) };
 	src->Lock(0, &src_desc, DDLOCK_WAIT, 0);
@@ -266,32 +270,65 @@ void ddUtil::copy(ddSurf *dest, int dx, int dy, int dw, int dh, ddSurf *src, int
 	dest->Unlock(0);
 }
 
-ddSurf *ddUtil::createSurface(int w, int h, int flags, gxGraphics *gfx) {
-
+IDirectDrawSurface7 *ddUtil::createSurface(int w, int h, int flags, gxGraphics *gfx) {
+	int hi = flags & gxCanvas::CANVAS_TEX_HICOLOR ? 1 : 0;
 	DDSURFACEDESC2 desc = { sizeof(desc) };
 
+	// Texture Size
 	desc.dwFlags = DDSD_CAPS;
-
-	int hi = flags & gxCanvas::CANVAS_TEX_HICOLOR ? 1 : 0;
-
 	if (w) { desc.dwWidth = w; desc.dwFlags |= DDSD_WIDTH; }
 	if (h) { desc.dwHeight = h; desc.dwFlags |= DDSD_HEIGHT; }
 
-	if (flags & gxCanvas::CANVAS_TEX_MASK) {
-		desc.dwFlags |= DDSD_PIXELFORMAT;
-		desc.ddpfPixelFormat = gfx->texRGBMaskFmt[hi];
-	} else if (flags & gxCanvas::CANVAS_TEX_RGB) {
-		desc.dwFlags |= DDSD_PIXELFORMAT;
-		desc.ddpfPixelFormat = (flags&gxCanvas::CANVAS_TEX_ALPHA) ? gfx->texRGBAlphaFmt[hi] : gfx->texRGBFmt[hi];
-	} else if (flags & gxCanvas::CANVAS_TEX_ALPHA) {
-		desc.dwFlags |= DDSD_PIXELFORMAT;
-		desc.ddpfPixelFormat = gfx->texAlphaFmt[hi];
-	} else if (flags & gxCanvas::CANVAS_TEXTURE) {
-		desc.dwFlags |= DDSD_PIXELFORMAT;
-		desc.ddpfPixelFormat = gfx->primFmt;
+	// Format
+	if (flags & gxCanvas::CANVAS_TEXTURE) {
+		// Flags guaranteed:
+		// - CANVAS_TEX_RGB
+		// - CANVAS_TEX_ALPHA
+		// - CANVAS_TEXTURE
+		desc.dwFlags |= DDSCAPS_3DDEVICE | DDSD_PIXELFORMAT;
+		desc.ddsCaps.dwCaps |= DDSCAPS_TEXTURE | DDSCAPS_VIDEOMEMORY;
+		if (flags & gxCanvas::CANVAS_TEXTURE) {
+			desc.ddpfPixelFormat = gfx->primFmt;
+		}
+		else {
+			desc.ddpfPixelFormat = gfx->texRGBAlphaFmt[hi];
+		}
+	}
+	else {
+		if (flags & gxCanvas::CANVAS_TEX_MASK) {
+			desc.dwFlags |= DDSD_PIXELFORMAT;
+			desc.ddpfPixelFormat = gfx->texRGBMaskFmt[hi];
+		}
+		else if (flags & gxCanvas::CANVAS_TEX_RGB) {
+			desc.dwFlags |= DDSD_PIXELFORMAT;
+			desc.ddpfPixelFormat = (flags&gxCanvas::CANVAS_TEX_ALPHA) ? gfx->texRGBAlphaFmt[hi] : gfx->texRGBFmt[hi];
+		}
+		else if (flags & gxCanvas::CANVAS_TEX_ALPHA) {
+			desc.dwFlags |= DDSD_PIXELFORMAT;
+			desc.ddpfPixelFormat = gfx->texAlphaFmt[hi];
+		}
+		else if (flags & gxCanvas::CANVAS_TEXTURE) {
+			desc.dwFlags |= DDSD_PIXELFORMAT;
+			desc.ddpfPixelFormat = gfx->primFmt;
+		}
 	}
 
-	if (flags & gxCanvas::CANVAS_TEXTURE) {
+	// Cube Map
+	if (flags & (gxCanvas::CANVAS_TEX_CUBE)) {
+		desc.ddsCaps.dwCaps |= DDSCAPS_COMPLEX;
+		desc.ddsCaps.dwCaps2 |= DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_ALLFACES;
+	}
+
+	// Video Memory
+	if (!(flags & gxCanvas::CANVAS_TEX_VIDMEM)) {
+		desc.ddsCaps.dwCaps2 |= DDSCAPS2_TEXTUREMANAGE;
+		if (flags & gxCanvas::CANVAS_TEX_MIPMAP) {
+			desc.ddsCaps.dwCaps |= DDSCAPS_MIPMAP | DDSCAPS_COMPLEX;
+		}
+	}
+
+	// Texture Move
+	if ((flags & gxCanvas::CANVAS_TEXTURE) || (flags & gxCanvas::CANVAS_3DRENDER)) {
 		desc.ddsCaps.dwCaps |= DDSCAPS_TEXTURE;
 		if (!(flags & gxCanvas::CANVAS_TEX_VIDMEM)) {
 			desc.ddsCaps.dwCaps2 |= DDSCAPS2_TEXTUREMANAGE;
@@ -304,7 +341,8 @@ ddSurf *ddUtil::createSurface(int w, int h, int flags, gxGraphics *gfx) {
 			desc.ddsCaps.dwCaps2 |= DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_ALLFACES;
 		}
 		adjustTexSize((int*)&desc.dwWidth, (int*)&desc.dwHeight, gfx->dir3dDev, !(flags & (gxCanvas::CANVAS_TEX_NPOT)));
-	} else {
+	}
+	else {
 		desc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
 		if (flags & gxCanvas::CANVAS_HIGHCOLOR) {
 			desc.dwFlags |= DDSD_PIXELFORMAT;
@@ -316,17 +354,16 @@ ddSurf *ddUtil::createSurface(int w, int h, int flags, gxGraphics *gfx) {
 			desc.ddpfPixelFormat.dwGBitMask = 0x00ff00;
 			desc.ddpfPixelFormat.dwBBitMask = 0x0000ff;
 			desc.ddpfPixelFormat.dwRGBAlphaBitMask = 0xff000000;
-		} else if (flags & gxCanvas::CANVAS_NONDISPLAY) {
+		}
+		else if (flags & gxCanvas::CANVAS_NONDISPLAY) {
 			desc.ddsCaps.dwCaps |= DDSCAPS_SYSTEMMEMORY;
 		}
 	}
 
-	if (flags & gxCanvas::CANVAS_3DRENDER) {
-		desc.ddsCaps.dwCaps = DDSCAPS_3DDEVICE | DDSCAPS_LOCALVIDMEM;
+	IDirectDrawSurface7 *surf;
+	if (gfx->dirDraw->CreateSurface(&desc, &surf, 0) >= 0) {
+		return surf;
 	}
-	
-	ddSurf *surf;
-	if (gfx->dirDraw->CreateSurface(&desc, &surf, 0) >= 0) return surf;
 	if (desc.ddsCaps.dwCaps & DDSCAPS_OFFSCREENPLAIN) {
 		if (!(desc.ddsCaps.dwCaps & DDSCAPS_SYSTEMMEMORY)) {
 			//try again in system memory!
@@ -334,6 +371,7 @@ ddSurf *ddUtil::createSurface(int w, int h, int flags, gxGraphics *gfx) {
 			if (gfx->dirDraw->CreateSurface(&desc, &surf, 0) >= 0) return surf;
 		}
 	}
+
 	return 0;
 }
 
@@ -455,12 +493,12 @@ IDirectDrawSurface7 *loadDXTC(const char* filename, gxGraphics *gfx) {
 	return newSurf;
 }
 
-ddSurf *ddUtil::loadSurface(const std::string &f, int flags, gxGraphics *gfx) {
+IDirectDrawSurface7 *ddUtil::loadSurface(const std::string &f, int flags, gxGraphics *gfx) {
 
 	int i = f.find(".dds");
 	if (i != string::npos && i + 4 == f.size()) {
 		//dds file!
-		ddSurf *surf = loadDXTC(f.c_str(), gfx);
+		IDirectDrawSurface7 *surf = loadDXTC(f.c_str(), gfx);
 		return surf;
 	}
 
@@ -486,7 +524,7 @@ ddSurf *ddUtil::loadSurface(const std::string &f, int flags, gxGraphics *gfx) {
 	int pitch = FreeImage_GetPitch(dib);
 	void *bits = FreeImage_GetBits(dib);
 
-	ddSurf *src = ::createSurface(width, height, pitch, bits, gfx->dirDraw);
+	IDirectDrawSurface7 *src = ::createSurface(width, height, pitch, bits, gfx->dirDraw);
 	if (!src) {
 		FreeImage_Unload(dib);
 		return 0;
@@ -495,10 +533,12 @@ ddSurf *ddUtil::loadSurface(const std::string &f, int flags, gxGraphics *gfx) {
 	if (flags & gxCanvas::CANVAS_TEX_ALPHA) {
 		if (flags & gxCanvas::CANVAS_TEX_MASK) {
 			buildMask(src);
-		} else if (!trans) {
+		}
+		else if (!trans) {
 			buildAlpha(src, (flags & gxCanvas::CANVAS_TEX_RGB) ? false : true);
 		}
-	} else {
+	}
+	else {
 		unsigned char *p = (unsigned char *)bits;
 		for (int k = 0; k < height; ++k) {
 			unsigned char *t = p + 3;
@@ -509,7 +549,7 @@ ddSurf *ddUtil::loadSurface(const std::string &f, int flags, gxGraphics *gfx) {
 		}
 	}
 
-	ddSurf *dest = createSurface(width, height, flags, gfx);
+	IDirectDrawSurface7 *dest = createSurface(width, height, flags, gfx);
 	if (!dest) {
 		src->Release();
 		FreeImage_Unload(dib);
