@@ -136,165 +136,186 @@ static void demoError() {
 }
 
 int main(int argc, char *argv[]) {
+	try {
 
-	string in_file, out_file, args;
+		string in_file, out_file, args;
 
-	bool debug = false, quiet = false, veryquiet = false, compileonly = false;
-	bool dumpkeys = false, dumphelp = false, showhelp = false, dumpasm = false;
-	bool versinfo = false;
+		bool debug = false, quiet = false, veryquiet = false, compileonly = false;
+		bool dumpkeys = false, dumphelp = false, showhelp = false, dumpasm = false;
+		bool versinfo = false;
 
-	for (int k = 1; k < argc; ++k) {
-		string t = argv[k];
-		t = tolower(t);
+		for (int k = 1; k < argc; ++k) {
+			string t = argv[k];
+			t = tolower(t);
 
-		if (t == "-h") {
-			showhelp = true;
-		} else if (t == "-a") {
-			dumpasm = true;
-		} else if (t == "-q") {
-			quiet = true;
-		} else if (t == "+q") {
-			quiet = veryquiet = true;
-		} else if (t == "-c") {
-			compileonly = true;
-		} else if (t == "-d") {
-			debug = true;
-		} else if (t == "-k") {
-			dumpkeys = true;
-		} else if (t == "+k") {
-			dumpkeys = dumphelp = true;
-		} else if (t == "-v") {
-			versinfo = true;
-		} else if (t == "-o") {
-			if (out_file.size() || k == argc - 1)
-				usageErr();
+			if (t == "-h") {
+				showhelp = true;
+			}
+			else if (t == "-a") {
+				dumpasm = true;
+			}
+			else if (t == "-q") {
+				quiet = true;
+			}
+			else if (t == "+q") {
+				quiet = veryquiet = true;
+			}
+			else if (t == "-c") {
+				compileonly = true;
+			}
+			else if (t == "-d") {
+				debug = true;
+			}
+			else if (t == "-k") {
+				dumpkeys = true;
+			}
+			else if (t == "+k") {
+				dumpkeys = dumphelp = true;
+			}
+			else if (t == "-v") {
+				versinfo = true;
+			}
+			else if (t == "-o") {
+				if (out_file.size() || k == argc - 1)
+					usageErr();
 
-			out_file = argv[++k];
-		} else {
-			if (in_file.size() || t[0] == '-' || t[0] == '+')
-				usageErr();
+				out_file = argv[++k];
+			}
+			else {
+				if (in_file.size() || t[0] == '-' || t[0] == '+')
+					usageErr();
 
-			in_file = argv[k];
-			for (++k; k < argc; ++k) {
-				string t = argv[k];
-				if (t.find(' ') != string::npos) t = '\"' + t + '\"';
-				if (args.size()) args += ' ';
-				args += t;
+				in_file = argv[k];
+				for (++k; k < argc; ++k) {
+					string t = argv[k];
+					if (t.find(' ') != string::npos) t = '\"' + t + '\"';
+					if (args.size()) args += ' ';
+					args += t;
+				}
 			}
 		}
-	}
 
-	if (out_file.size() && !in_file.size()) usageErr();
+		if (out_file.size() && !in_file.size()) usageErr();
 
-	if (const char *er = openLibs()) err(er);
+		if (const char *er = openLibs()) err(er);
 
-	if (const char *er = linkLibs()) err(er);
+		if (const char *er = linkLibs()) err(er);
 
-	if (showhelp) showHelp();
-	if (dumpkeys) dumpKeys(true, true, dumphelp);
-	if (versinfo) versInfo();
+		if (showhelp) showHelp();
+		if (dumpkeys) dumpKeys(true, true, dumphelp);
+		if (versinfo) versInfo();
 
-	if (!in_file.size()) {
+		if (!in_file.size()) {
+			return 0;
+		}
+
+		if (in_file[0] == '\"') {
+			if ((in_file.size() < 3) || (in_file[in_file.size() - 1] != '\"')) {
+				usageErr();
+			}
+			in_file = in_file.substr(1, in_file.size() - 2);
+		}
+
+		ifstream in(in_file.c_str());
+		if (!in) err("Unable to open input file");
+		if (!quiet) {
+			showInfo();
+			cout << "Compiling \"" << in_file << "\"" << endl;
+		}
+
+		int n = in_file.rfind('/');
+		if (n == string::npos) n = in_file.rfind('\\');
+		if (n != string::npos) {
+			if (!n || in_file[n - 1] == ':') ++n;
+			SetCurrentDirectory(in_file.substr(0, n).c_str());
+		}
+
+		ProgNode *prog = 0;
+		Environ *v_environ = 0;
+		Module *module = 0;
+
+		try {
+			//parse
+			if (!veryquiet) cout << "Parsing..." << endl;
+			Toker toker(in);
+			Parser parser(toker);
+			prog = parser.parse(in_file);
+
+			//semant
+			if (!veryquiet) cout << "Generating..." << endl;
+			v_environ = prog->semant(runtimeEnviron);
+
+			//translate
+			if (!veryquiet) cout << "Translating..." << endl;
+			qstreambuf qbuf;
+			iostream asmcode(&qbuf);
+			Codegen_x86 codegen(asmcode, debug);
+
+			prog->translate(&codegen, userFuncs);
+
+			if (dumpasm) {
+				cout << endl << string(qbuf.data(), qbuf.size()) << endl;
+			}
+
+			//assemble
+			if (!veryquiet) cout << "Assembling..." << endl;
+			module = linkerLib->createModule();
+			Assem_x86 assem(asmcode, module);
+			assem.assemble();
+
+		}
+		catch (Ex &x) {
+
+			string file = '\"' + x.file + '\"';
+			int row = ((x.pos >> 16) & 65535) + 1, col = (x.pos & 65535) + 1;
+			cout << file << ":" << row << ":" << col << ":" << row << ":" << col << ":" << x.ex << endl;
+			exit(-1);
+		}
+
+		delete prog;
+
+		if (out_file.size()) {
+			if (!veryquiet) cout << "Creating executable \"" << out_file << "\"..." << endl;
+			if (!module->createExe(out_file.c_str(), (home + "/bin/runtime.dll").c_str())) {
+				err("Error creating executable");
+			}
+		}
+		else if (!compileonly) {
+			void *entry = module->link(runtimeModule);
+			if (!entry) return 0;
+
+			HMODULE dbgHandle = 0;
+			Debugger *debugger = 0;
+
+			if (debug) {
+				dbgHandle = LoadLibrary((home + "\\debugger.dll").c_str());
+				if (dbgHandle) {
+					typedef Debugger *(_cdecl*GetDebugger)(Module*, Environ*);
+					GetDebugger gd = (GetDebugger)GetProcAddress(dbgHandle, "debuggerGetDebugger");
+					if (gd) debugger = gd(module, v_environ);
+				}
+				if (!debugger) err("Error launching debugger");
+			}
+
+			if (!veryquiet) cout << "Executing..." << endl;
+
+			runtimeLib->execute((void(*)())entry, args.c_str(), debugger);
+
+			if (dbgHandle) FreeLibrary(dbgHandle);
+		}
+
+		delete module;
+		delete v_environ;
+
+		closeLibs();
+
 		return 0;
 	}
+	catch (std::exception& e) {
+		std::cout << "Unexpected exception: " << e.what() << std::endl;
 
-	if (in_file[0] == '\"') {
-		if ((in_file.size() < 3) || (in_file[in_file.size() - 1] != '\"')) {
-			usageErr();
-}
-		in_file = in_file.substr(1, in_file.size() - 2);
 	}
-
-	ifstream in(in_file.c_str());
-	if (!in) err("Unable to open input file");
-	if (!quiet) {
-		showInfo();
-		cout << "Compiling \"" << in_file << "\"" << endl;
+	catch (...) {
+		std::cout << "Unexpected error." << std::endl;
 	}
-
-	int n = in_file.rfind('/');
-	if (n == string::npos) n = in_file.rfind('\\');
-	if (n != string::npos) {
-		if (!n || in_file[n - 1] == ':') ++n;
-		SetCurrentDirectory(in_file.substr(0, n).c_str());
-	}
-
-	ProgNode *prog = 0;
-	Environ *v_environ = 0;
-	Module *module = 0;
-
-	try {
-		//parse
-		if (!veryquiet) cout << "Parsing..." << endl;
-		Toker toker(in);
-		Parser parser(toker);
-		prog = parser.parse(in_file);
-
-		//semant
-		if (!veryquiet) cout << "Generating..." << endl;
-		v_environ = prog->semant(runtimeEnviron);
-
-		//translate
-		if (!veryquiet) cout << "Translating..." << endl;
-		qstreambuf qbuf;
-		iostream asmcode(&qbuf);
-		Codegen_x86 codegen(asmcode, debug);
-
-		prog->translate(&codegen, userFuncs);
-
-		if (dumpasm) {
-			cout << endl << string(qbuf.data(), qbuf.size()) << endl;
-		}
-
-		//assemble
-		if (!veryquiet) cout << "Assembling..." << endl;
-		module = linkerLib->createModule();
-		Assem_x86 assem(asmcode, module);
-		assem.assemble();
-
-	} catch (Ex &x) {
-
-		string file = '\"' + x.file + '\"';
-		int row = ((x.pos >> 16) & 65535) + 1, col = (x.pos & 65535) + 1;
-		cout << file << ":" << row << ":" << col << ":" << row << ":" << col << ":" << x.ex << endl;
-		exit(-1);
-	}
-
-	delete prog;
-
-	if (out_file.size()) {
-		if (!veryquiet) cout << "Creating executable \"" << out_file << "\"..." << endl;
-		if (!module->createExe(out_file.c_str(), (home + "/bin/runtime.dll").c_str())) {
-			err("Error creating executable");
-		}
-	} else if (!compileonly) {
-		void *entry = module->link(runtimeModule);
-		if (!entry) return 0;
-
-		HMODULE dbgHandle = 0;
-		Debugger *debugger = 0;
-
-		if (debug) {
-			dbgHandle = LoadLibrary((home + "\\debugger.dll").c_str());
-			if (dbgHandle) {
-				typedef Debugger *(_cdecl*GetDebugger)(Module*, Environ*);
-				GetDebugger gd = (GetDebugger)GetProcAddress(dbgHandle, "debuggerGetDebugger");
-				if (gd) debugger = gd(module, v_environ);
-			}
-			if (!debugger) err("Error launching debugger");
-		}
-
-		if (!veryquiet) cout << "Executing..." << endl;
-
-		runtimeLib->execute((void(*)())entry, args.c_str(), debugger);
-
-		if (dbgHandle) FreeLibrary(dbgHandle);
-	}
-
-	delete module;
-	delete v_environ;
-
-	closeLibs();
-
-	return 0;
 }
