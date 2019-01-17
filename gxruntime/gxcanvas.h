@@ -7,17 +7,17 @@
 class gxFont;
 class gxGraphics;
 
-typedef IDirectDrawSurface7 ddSurf;
+
 
 class gxCanvas {
 public:
-	gxCanvas(gxGraphics *graphics, ddSurf *surface, int flags);
+	gxCanvas(gxGraphics *graphics, IDirectDrawSurface7 *surface, int flags);
 	~gxCanvas();
 
 	void backup()const;
 	void restore()const;
-	ddSurf *getSurface()const;
-	ddSurf *getTexSurface()const;
+	IDirectDrawSurface7 *getSurface()const;
+	IDirectDrawSurface7 *getTexSurface()const;
 	void setModify(int n);
 	int getModify()const;
 
@@ -32,10 +32,10 @@ private:
 	int flags, cube_mode;
 	gxGraphics *graphics;
 
-	ddSurf *main_surf, *surf, *z_surf, *cube_surfs[6];
+	IDirectDrawSurface7 *main_surf, *surf, *z_surf, *cube_surfs[6];
 
 	mutable int mod_cnt;
-	mutable ddSurf *t_surf;
+	mutable IDirectDrawSurface7 *t_surf;
 
 	mutable int locked_pitch, locked_cnt, lock_mod_cnt, remip_cnt;
 	mutable unsigned char *locked_surf;
@@ -68,13 +68,11 @@ public:
 		CANVAS_TEX_VIDMEM = 0x0100,
 		CANVAS_TEX_HICOLOR = 0x0200,
 		CANVAS_TEX_NPOT = 0x0400, // 1024
+		CANVAS_3DRENDER = 0x0800, // 2048
 
 		CANVAS_TEXTURE = 0x10000,
 		CANVAS_NONDISPLAY = 0x20000,
 		CANVAS_HIGHCOLOR = 0x40000,
-
-		CANVAS_3DRENDER = 0x1000, // 4096
-		CANVAS_3DZRENDER = 0x2000, // 8192
 	};
 
 	enum {

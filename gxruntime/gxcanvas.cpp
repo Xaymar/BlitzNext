@@ -106,6 +106,20 @@ gxCanvas::gxCanvas(gxGraphics *g, IDirectDrawSurface7 *s, int f) :
 	surf->GetSurfaceDesc(&desc);
 	format.setFormat(desc.ddpfPixelFormat);
 
+	// Create Z-Buffer
+	if (flags & CANVAS_3DRENDER) {
+		DDSURFACEDESC2 zdesc = { sizeof(zdesc) };
+		zdesc.dwWidth = desc.dwWidth;
+		zdesc.dwHeight = desc.dwHeight;
+		zdesc.ddpfPixelFormat = g->zbuffFmt;
+		zdesc.dwFlags = DDSD_PIXELFORMAT | DDSD_WIDTH | DDSD_HEIGHT | DDSD_CAPS;
+		zdesc.ddsCaps.dwCaps = DDSCAPS_VIDEOMEMORY | DDSCAPS_3DDEVICE | DDSD_PIXELFORMAT | DDSD_WIDTH | DDSD_HEIGHT | DDSCAPS_ZBUFFER;
+
+		if (g->dirDraw->CreateSurface(&zdesc, &z_surf, 0) >= 0) {
+			surf->AddAttachedSurface(z_surf);
+		}
+	}
+
 	clip_rect.left = clip_rect.top = 0;
 	clip_rect.right = desc.dwWidth;
 	clip_rect.bottom = desc.dwHeight;
@@ -157,11 +171,11 @@ void gxCanvas::restore()const {
 	if (surf->Blt(0, t_surf, 0, DDBLT_WAIT, 0) < 0) return;
 }
 
-ddSurf *gxCanvas::getSurface()const {
+IDirectDrawSurface7 *gxCanvas::getSurface()const {
 	return surf;
 }
 
-ddSurf *gxCanvas::getTexSurface()const {
+IDirectDrawSurface7 *gxCanvas::getTexSurface()const {
 	if (mod_cnt == remip_cnt) return main_surf;
 	ddUtil::buildMipMaps(surf);
 	remip_cnt = mod_cnt;
@@ -190,7 +204,7 @@ void gxCanvas::updateBitMask(const RECT &r)const {
 	unsigned *dest_row = cm_mask + t.top*cm_pitch + t.left / 32;
 	unsigned mask_argb = format.toARGB(mask_surf) & 0xffffff;
 
-#ifdef DEBUG_BITMASK
+#ifdef _DEBUG_BITMASK
 	unsigned *cm_mask_end = cm_mask + cm_pitch*clip_rect.bottom;
 #endif
 
@@ -204,7 +218,7 @@ void gxCanvas::updateBitMask(const RECT &r)const {
 				mask = (mask << 1) | (pix != mask_argb);
 				src += format.getPitch();
 			}
-		#ifdef DEBUG_BITMASK
+		#ifdef _DEBUG_BITMASK
 			if (dest < cm_mask || dest >= cm_mask_end) {
 				gx_runtime->debugError("gxCanvas::updateBitMask dest out of range");
 			}
@@ -565,7 +579,7 @@ bool gxCanvas::collide(int x1, int y1, const gxCanvas *i2, int x2, int y2, bool 
 	int cnt = stopx / 32 - startx / 32;
 	unsigned lwm = LWMS[stopx & 31];
 
-#ifdef DEBUG_BITMASK
+#ifdef _DEBUG_BITMASK
 	unsigned *cm_mask_end1 = i1->cm_mask + i1_pitch*i1->clip_rect.bottom;
 	unsigned *cm_mask_end2 = i2->cm_mask + i2_pitch*i2->clip_rect.bottom;
 #endif
@@ -575,7 +589,7 @@ bool gxCanvas::collide(int x1, int y1, const gxCanvas *i2, int x2, int y2, bool 
 		unsigned p = 0;
 		unsigned *row1 = s1, *row2 = s2;
 		for (int x = 0; x < cnt; ++x) {
-		#ifdef DEBUG_BITMASK
+		#ifdef _DEBUG_BITMASK
 			if (row1 < i1->cm_mask || row2 < i2->cm_mask) {
 				gx_runtime->debugError("gxCanvas::collide row underflow");
 			}
@@ -587,7 +601,7 @@ bool gxCanvas::collide(int x1, int y1, const gxCanvas *i2, int x2, int y2, bool 
 			if (((n >> shr) | p) & *row1++) return true;
 			p = shl < 32 ? n << shl : 0;
 		}
-	#ifdef DEBUG_BITMASK
+	#ifdef _DEBUG_BITMASK
 		if (row1 < i1->cm_mask || row2 < i2->cm_mask) {
 			gx_runtime->debugError("gxCanvas::collide row underflow");
 		}
