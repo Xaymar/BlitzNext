@@ -190,7 +190,7 @@ void gxGraphics::closeMovie(gxMovie *m) {
 }
 
 gxCanvas *gxGraphics::createCanvas(int w, int h, int flags) {
-	ddSurf *s = ddUtil::createSurface(w, h, flags, this);
+	IDirectDrawSurface7 *s = ddUtil::createSurface(w, h, flags, this);
 	if (!s) return 0;
 	gxCanvas *c = new gxCanvas(this, s, flags);
 	canvas_set.insert(c);
@@ -199,7 +199,7 @@ gxCanvas *gxGraphics::createCanvas(int w, int h, int flags) {
 }
 
 gxCanvas *gxGraphics::loadCanvas(const string &f, int flags) {
-	ddSurf *s = ddUtil::loadSurface(f, flags, this);
+	IDirectDrawSurface7 *s = ddUtil::loadSurface(f, flags, this);
 	if (!s) return 0;
 	gxCanvas *c = new gxCanvas(this, s, flags);
 	canvas_set.insert(c);
@@ -311,7 +311,7 @@ gxFont *gxGraphics::loadFont(const string &f, int height, int flags) {
 	int cw = max_x, ch = y + height;
 
 	if (gxCanvas *c = createCanvas(cw, ch, 0)) {
-		ddSurf *surf = c->getSurface();
+		IDirectDrawSurface7 *surf = c->getSurface();
 
 		HDC surf_hdc;
 		if (surf->GetDC(&surf_hdc) >= 0) {

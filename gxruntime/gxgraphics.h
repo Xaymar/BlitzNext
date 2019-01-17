@@ -54,8 +54,8 @@ private:
 	gxMesh *dummy_mesh;
 
 	DDSURFACEDESC2 initDesc(int w, int h, int flags);
-	ddSurf *createSurface(int width, int height, int flags);
-	ddSurf *loadSurface(const std::string &f, int flags);
+	IDirectDrawSurface7 *createSurface(int width, int height, int flags);
+	IDirectDrawSurface7 *loadSurface(const std::string &f, int flags);
 
 	std::set<gxFont*> font_set;
 	std::set<gxCanvas*> canvas_set;
