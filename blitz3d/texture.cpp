@@ -32,7 +32,7 @@ static int filterFile(const string &t, int flags) {
 struct Texture::Rep {
 
 	int ref_cnt;
-	CachedTexture cached_tex;
+	CachedTextureFactory cached_tex;
 	vector<gxCanvas*> tex_frames;
 
 	int tex_blend, tex_flags;
@@ -154,7 +154,7 @@ int Texture::getCanvasFlags()const {
 	return rep && rep->tex_frames.size() ? rep->tex_frames[0]->getFlags() : 0;
 }
 
-CachedTexture *Texture::getCachedTexture()const {
+CachedTextureFactory *Texture::getCachedTexture()const {
 	return rep ? &rep->cached_tex : 0;
 }
 

@@ -4,30 +4,30 @@
 
 #include "../gxruntime/gxcanvas.h"
 
-class CachedTexture{
+class CachedTextureFactory{
 public:
-	CachedTexture( int w,int h,int flags,int cnt );
-	CachedTexture( const string &f,int flags,int w,int h,int first,int cnt );
-	CachedTexture( const CachedTexture &t );
-	~CachedTexture();
+	CachedTextureFactory( int w,int h,int flags,int cnt );
+	CachedTextureFactory( const string &f,int flags,int w,int h,int first,int cnt );
+	CachedTextureFactory( const CachedTextureFactory &t );
+	~CachedTextureFactory();
 
-	CachedTexture &operator=( const CachedTexture &t );
+	CachedTextureFactory &operator=( const CachedTextureFactory &t );
 
 	string getName()const;
 
 	const vector<gxCanvas*> &getFrames()const;
 
-	bool operator<( const CachedTexture &t )const{ return rep<t.rep; }
+	bool operator<( const CachedTextureFactory &t )const{ return rep<t.rep; }
 
 	static void setPath( const string &t );
 
 private:
-	struct Rep;
-	Rep *rep;
+	struct CachedTexture;
+	CachedTexture *rep;
 
-	Rep *findRep( const string &f,int flags,int w,int h,int first,int cnt );
+	CachedTexture *findRep( const string &f,int flags,int w,int h,int first,int cnt );
 
-	static set<Rep*> rep_set;
+	static set<CachedTexture*> rep_set;
 };
 
 #endif

@@ -30,7 +30,7 @@ public:
 	const gxScene::Matrix *getMatrix()const;
 	int getBlend()const;
 	int getFlags()const;
-	CachedTexture *getCachedTexture()const;
+	CachedTextureFactory *getCachedTexture()const;
 
 	bool isTransparent()const;
 	bool operator<( const Texture &t )const;
