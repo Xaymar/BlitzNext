@@ -48,6 +48,7 @@ static unsigned curr_clsColor;
 
 static vector<GfxMode> gfx_modes;
 
+#ifdef _DEBUG
 static inline void debugImage(bbImage *i, int frame = 0) {
 	if (debug) {
 		if (!image_set.count(i)) ThrowRuntimeException("Image does not exist");
@@ -82,6 +83,13 @@ static inline void debugMode(int n) {
 		}
 	}
 }
+#else
+#define debugImage
+#define debugFont
+#define debugCanvas
+#define debugDriver
+#define debugMode 
+#endif
 
 void bbFreeImage(bbImage *i);
 

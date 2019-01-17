@@ -55,166 +55,96 @@ static Loader_B3D loader_b3d;
 
 static map<string, Transform> loader_mat_map;
 
+#ifdef _DEBUG
 static inline void debug3d() {
-	#ifdef DEBUG
 	if (debug && !gx_scene) ThrowRuntimeException("3D Graphics mode not set");
-	#else
-	return;
-	#endif
 }
 static inline void debugTexture(Texture *t) {
-	#ifdef DEBUG
 	if (debug && !texture_set.count(t)) ThrowRuntimeException("Texture does not exist");
-	#else
-	return;
-	#endif
 }
 static inline void debugBrush(Brush *b) {
-	#ifdef DEBUG
 	if (debug && !brush_set.count(b)) ThrowRuntimeException("Brush does not exist");
-	#else
-	return;
-	#endif
 }
 static inline void debugEntity(Entity *e) {
-	#ifdef DEBUG
 	if (debug && !entity_set.count(e)) ThrowRuntimeException("Entity does not exist");
-	#else
-	return;
-	#endif
 }
 static inline void debugParent(Entity *e) {
-	#ifdef DEBUG
 	if (debug) {
 		debug3d();
 		if (e && !entity_set.count(e)) ThrowRuntimeException("Parent entity does not exist");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugMesh(MeshModel *m) {
-	#ifdef DEBUG
 	if (debug) {
 		debugEntity(m); if (!m->getMeshModel()) ThrowRuntimeException("Entity is not a mesh");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugObject(Object *o) {
-	#ifdef DEBUG
 	if (debug) {
 		debugEntity(o); if (!o->getObject()) ThrowRuntimeException("Entity is not an object");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugColl(Object *o, int index) {
-	#ifdef DEBUG
 	if (debug) {
 		debugObject(o);
 		if (index<1 || index>o->getCollisions().size()) ThrowRuntimeException("Collision index out of range");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugCamera(Camera *c) {
-	#ifdef DEBUG
 	if (debug) {
 		debugEntity(c); if (!c->getCamera()) ThrowRuntimeException("Entity is not a camera");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugLight(Light *l) {
-	#ifdef DEBUG
 	if (debug) {
 		debugEntity(l); if (!l->getLight()) ThrowRuntimeException("Entity is not a light");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugModel(Model *m) {
-	#ifdef DEBUG
 	if (debug) {
 		debugEntity(m); if (!m->getModel()) ThrowRuntimeException("Entity is not a model");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugSprite(Sprite *s) {
-	#ifdef DEBUG
 	if (debug) {
 		debugModel(s); if (!s->getSprite()) ThrowRuntimeException("Entity is not a sprite");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugMD2(MD2Model *m) {
-	#ifdef DEBUG
 	if (debug) {
 		debugModel(m); if (!m->getMD2Model()) ThrowRuntimeException("Entity is not an MD2 Model");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugBSP(Q3BSPModel *m) {
-	#ifdef DEBUG
 	if (debug) {
 		debugModel(m); if (!m->getBSPModel()) ThrowRuntimeException("Entity is not a BSP Model");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugTerrain(Terrain *t) {
-	#ifdef DEBUG
 	if (debug) {
 		debugModel(t); if (!t->getTerrain()) ThrowRuntimeException("Entity is not a terrain");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugSegs(int n) {
-	#ifdef DEBUG
 	if (debug) {
 		debug3d();
 		if (n < 3 || n>50) ThrowRuntimeException("Illegal number of segments");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugVertex(Surface *s, int n) {
-	#ifdef DEBUG
 	if (debug) {
 		debug3d();
 		if (n < 0 || n >= s->numVertices()) ThrowRuntimeException("Vertex index out of range");
 	}
-	#else
-	return;
-	#endif
 }
 static inline void debugVertex(Surface *s, int n, int t) {
-	#ifdef DEBUG
 	if (debug) {
 		debug3d();
 		if (n < 0 || n >= s->numVertices()) ThrowRuntimeException("Vertex index out of range");
 		if (t < 0 || t>1) ThrowRuntimeException("Texture coordinate set out of range");
 	}
-	#else
-	return;
-	#endif
 }
+#endif
 
 static Entity *loadEntity(string t, int hint) {
 	t = tolower(t);
@@ -234,9 +164,9 @@ static Entity *loadEntity(string t, int hint) {
 
 	const Transform &conv = loader_mat_map[ext];
 
-	CachedTexture::setPath(filenamepath(t));
+	CachedTextureFactory::setPath(filenamepath(t));
 	Entity *e = l->load(t, conv, hint);
-	CachedTexture::setPath("");
+	CachedTextureFactory::setPath("");
 	return e;
 }
 
@@ -254,7 +184,9 @@ static void collapseMesh(MeshModel *mesh, Entity *e) {
 }
 
 static void insert(Entity *e) {
+#ifdef _DEBUG
 	if (debug) entity_set.insert(e);
+#endif
 	e->SetVisible(true);
 	e->SetEnabled(true);
 	e->getObject()->reset();
@@ -274,7 +206,9 @@ static void erase(Entity *e) {
 		erase(p);
 	}
 	if (e->getListener()) listener = 0;
+#ifdef _DEBUG
 	if (debug) entity_set.erase(e);
+#endif
 }
 
 static Entity *findChild(Entity *e, const string &t) {
@@ -295,60 +229,82 @@ void  bbLoaderMatrix(BBStr *ext, float xx, float xy, float xz, float yx, float y
 }
 
 int   bbHWTexUnits() {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	return gx_scene->hwTexUnits();
 }
 
 int	  bbGfxDriverCaps3D() {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	return gx_scene->gfxDriverCaps3D();
 }
 
 void  bbHWMultiTex(int enable) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	gx_scene->setHWMultiTex(!!enable);
 }
 
 void  bbWBuffer(int enable) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	gx_scene->setWBuffer(!!enable);
 }
 
 void  bbDither(int enable) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	gx_scene->setDither(!!enable);
 }
 
 void  bbAntiAlias(int enable) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	gx_scene->setAntialias(!!enable);
 }
 
 void  bbWireFrame(int enable) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	gx_scene->setWireframe(!!enable);
 }
 
 void  bbAmbientLight(float r, float g, float b) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	Vector t(r*s_colorToFloat, g*s_colorToFloat, b*s_colorToFloat);
 	gx_scene->setAmbient(&(t.x));
 }
 
 void  bbClearCollisions() {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	world->clearCollisions();
 }
 
 void  bbCollisions(int src_type, int dest_type, int method, int response) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	world->addCollision(src_type, dest_type, method, response);
 }
 
 static int update_ms;
 
 void  bbUpdateWorld(float elapsed) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 
 	#ifndef BETA
 	world->update(elapsed);
@@ -361,12 +317,16 @@ void  bbUpdateWorld(float elapsed) {
 }
 
 void  bbCaptureWorld() {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	world->capture();
 }
 
 void  bbRenderWorld(float tween) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 
 	#ifndef BETA
 	tri_count = gx_scene->getTrianglesDrawn();
@@ -429,7 +389,9 @@ float  bbStats3D(int n) {
 //Note: modify canvas->backup() to NOT release backup image!
 //
 Texture *  bbLoadTexture(BBStr *file, int flags) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	Texture *t = new Texture(*file, flags); delete file;
 	if (!t->getCanvas(0)) { delete t; return 0; }
 	texture_set.insert(t);
@@ -437,7 +399,9 @@ Texture *  bbLoadTexture(BBStr *file, int flags) {
 }
 
 Texture *  bbLoadAnimTexture(BBStr *file, int flags, int w, int h, int first, int cnt) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	Texture *t = new Texture(*file, flags, w, h, first, cnt);
 	delete file;
 	if (!t->getCanvas(0)) {
@@ -449,12 +413,14 @@ Texture *  bbLoadAnimTexture(BBStr *file, int flags, int w, int h, int first, in
 }
 
 Texture *  bbCreateTexture(int w, int h, int flags, int frames) {
+#ifdef _DEBUG
 	if (debug) {
 		debug3d();
 		if (frames <= 0) {
 			ThrowRuntimeException("Illegal number of texture frames");
 		}
 	}
+#endif
 	Texture *t = new Texture(w, h, flags, frames);
 	texture_set.insert(t);
 	return t;
@@ -462,60 +428,82 @@ Texture *  bbCreateTexture(int w, int h, int flags, int frames) {
 
 void  bbFreeTexture(Texture *t) {
 	if (!t) return;
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	if (texture_set.erase(t)) delete t;
 }
 
 void  bbTextureBlend(Texture *t, int blend) {
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	t->setBlend(blend);
 }
 
 void  bbTextureCoords(Texture *t, int flags) {
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	t->setFlags(flags);
 }
 
 void  bbScaleTexture(Texture *t, float u_scale, float v_scale) {
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	t->setScale(1 / u_scale, 1 / v_scale);
 }
 
 void  bbRotateTexture(Texture *t, float angle) {
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	t->setRotation(-angle*s_degreesToRadians);
 }
 
 void  bbPositionTexture(Texture *t, float u_pos, float v_pos) {
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	t->setPosition(-u_pos, -v_pos);
 }
 
 int  bbTextureWidth(Texture *t) {
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	return t->getCanvas(0)->getWidth();
 }
 
 int  bbTextureHeight(Texture *t) {
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	return t->getCanvas(0)->getHeight();
 }
 
 BBStr *bbTextureName(Texture *t) {
+#ifdef _DEBUG
 	debugTexture(t);
-	CachedTexture *c = t->getCachedTexture();
+#endif
+	CachedTextureFactory *c = t->getCachedTexture();
 	return c ? new BBStr(c->getName().c_str()) : new BBStr("");
 }
 
 void bbSetCubeFace(Texture *t, int face) {
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	if (gxCanvas *c = t->getCanvas(0)) {
 		c->setCubeFace(face);
 	}
 }
 
 void bbSetCubeMode(Texture *t, int mode) {
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	if (gxCanvas *c = t->getCanvas(0)) {
 		c->setCubeMode(mode);
 	}
@@ -523,7 +511,9 @@ void bbSetCubeMode(Texture *t, int mode) {
 
 gxCanvas *bbTextureBuffer(Texture *t, int frame) {
 	//v1.04
+#ifdef _DEBUG
 	debugTexture(t);
+#endif
 	if (gxCanvas *c = t->getCanvas(frame)) {
 		if (c->getDepth()) return c;
 	}
@@ -538,12 +528,16 @@ gxCanvas *bbTextureBuffer(Texture *t, int frame) {
 }
 
 void  bbClearTextureFilters() {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	Texture::clearFilters();
 }
 
 void  bbTextureFilter(BBStr *t, int flags) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	Texture::addFilter(*t, flags);
 	delete t;
 }
@@ -552,7 +546,9 @@ void  bbTextureFilter(BBStr *t, int flags) {
 // BRUSH COMMANDS //
 ////////////////////
 Brush *  bbCreateBrush(float r, float g, float b) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	Brush *br = new Brush();
 	br->setColor(Vector(r*s_colorToFloat, g*s_colorToFloat, b*s_colorToFloat));
 	brush_set.insert(br);
@@ -560,7 +556,9 @@ Brush *  bbCreateBrush(float r, float g, float b) {
 }
 
 Brush *  bbLoadBrush(BBStr *file, int flags, float u_scale, float v_scale) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 	Texture t(*file, flags);
 	delete file; if (!t.getCanvas(0)) return 0;
 	if (u_scale != 1 || v_scale != 1) t.setScale(1 / u_scale, 1 / v_scale);
@@ -572,45 +570,61 @@ Brush *  bbLoadBrush(BBStr *file, int flags, float u_scale, float v_scale) {
 
 void  bbFreeBrush(Brush *b) {
 	if (!b) return;
+#ifdef _DEBUG
 	debugBrush(b);
+#endif
 	if (brush_set.erase(b)) delete b;
 }
 
 void  bbBrushColor(Brush *br, float r, float g, float b) {
+#ifdef _DEBUG
 	debugBrush(br);
+#endif
 	br->setColor(Vector(r*s_colorToFloat, g*s_colorToFloat, b*s_colorToFloat));
 }
 
 void  bbBrushAlpha(Brush *b, float alpha) {
+#ifdef _DEBUG
 	debugBrush(b);
+#endif
 	b->setAlpha(alpha);
 }
 
 void  bbBrushShininess(Brush *b, float n) {
+#ifdef _DEBUG
 	debugBrush(b);
+#endif
 	b->setShininess(n);
 }
 
 void  bbBrushTexture(Brush *b, Texture *t, int frame, int index) {
+#ifdef _DEBUG
 	debugBrush(b);
 	debugTexture(t);
+#endif
 	b->setTexture(index, *t, frame);
 }
 
 Texture *bbGetBrushTexture(Brush *b, int index) {
+#ifdef _DEBUG
 	debugBrush(b);
+#endif
 	Texture *tex = new Texture(b->getTexture(index));
 	texture_set.insert(tex);
 	return tex;
 }
 
 void  bbBrushBlend(Brush *b, int blend) {
+#ifdef _DEBUG
 	debugBrush(b);
+#endif
 	b->setBlend(blend);
 }
 
 void  bbBrushFX(Brush *b, int fx) {
+#ifdef _DEBUG
 	debugBrush(b);
+#endif
 	b->setFX(fx);
 }
 
@@ -618,13 +632,17 @@ void  bbBrushFX(Brush *b, int fx) {
 // MESH COMMANDS //
 ///////////////////
 Entity *  bbCreateMesh(Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	MeshModel *m = new MeshModel();
 	return insertEntity(m, p);
 }
 
 Entity *  bbLoadMesh(BBStr *f, Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	Entity *e = loadEntity(f->c_str(), MeshLoader::HINT_COLLAPSE);
 	delete f;
 
@@ -635,7 +653,9 @@ Entity *  bbLoadMesh(BBStr *f, Entity *p) {
 }
 
 Entity *  bbLoadAnimMesh(BBStr *f, Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	Entity *e = loadEntity(f->c_str(), 0);
 	delete f;
 
@@ -647,32 +667,42 @@ Entity *  bbLoadAnimMesh(BBStr *f, Entity *p) {
 }
 
 Entity *  bbCreateCube(Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	Entity *e = MeshUtil::createCube(Brush());
 	return insertEntity(e, p);
 }
 
 Entity *  bbCreateSphere(int segs, Entity *p) {
+#ifdef _DEBUG
 	if (debug) { debugParent(p); if (segs < 2 || segs>100) ThrowRuntimeException("Illegal number of segments"); }
+#endif
 	Entity *e = MeshUtil::createSphere(Brush(), segs);
 	return insertEntity(e, p);
 }
 
 Entity *  bbCreateCylinder(int segs, int solid, Entity *p) {
+#ifdef _DEBUG
 	if (debug) { debugParent(p); if (segs < 3 || segs>100) ThrowRuntimeException("Illegal number of segments"); }
+#endif
 	Entity *e = MeshUtil::createCylinder(Brush(), segs, !!solid);
 	return insertEntity(e, p);
 }
 
 Entity *  bbCreateCone(int segs, int solid, Entity *p) {
+#ifdef _DEBUG
 	if (debug) { debugParent(p); if (segs < 3 || segs>100) ThrowRuntimeException("Illegal number of segments"); }
+#endif
 	Entity *e = MeshUtil::createCone(Brush(), segs, !!solid);
 	return insertEntity(e, p);
 }
 
 Entity *  bbCopyMesh(MeshModel *m, Entity *p) {
+#ifdef _DEBUG
 	debugMesh(m);
 	debugParent(p);
+#endif
 
 	MeshModel *t = new MeshModel();
 	t->add(*m);
@@ -680,22 +710,30 @@ Entity *  bbCopyMesh(MeshModel *m, Entity *p) {
 }
 
 void  bbScaleMesh(MeshModel *m, float x, float y, float z) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	m->transform(scaleMatrix(x, y, z));
 }
 
 void  bbRotateMesh(MeshModel *m, float x, float y, float z) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	m->transform(rotationMatrix(x*s_degreesToRadians, y*s_degreesToRadians, z*s_degreesToRadians));
 }
 
 void  bbPositionMesh(MeshModel *m, float x, float y, float z) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	m->transform(Vector(x, y, z));
 }
 
 void  bbFitMesh(MeshModel *m, float x, float y, float z, float w, float h, float d, int uniform) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	Box box(Vector(x, y, z));
 	box.update(Vector(x + w, y + h, z + d));
 	const Box &curr_box = m->getBox();
@@ -720,61 +758,80 @@ void  bbFitMesh(MeshModel *m, float x, float y, float z, float w, float h, float
 }
 
 void  bbFlipMesh(MeshModel *m) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	m->flipTriangles();
 }
 
 void  bbPaintMesh(MeshModel *m, Brush *b) {
+#ifdef _DEBUG
 	if (debug) { debugMesh(m); debugBrush(b); }
+#endif
 	m->paint(*b);
 }
 
 void  bbAddMesh(MeshModel *src, MeshModel *dest) {
+#ifdef _DEBUG
 	if (debug) {
 		debugMesh(src); debugMesh(dest);
 		if (src == dest) ThrowRuntimeException("A mesh cannot be added to itself");
 	}
-
+#endif
 	dest->add(*src);
 }
 
 void  bbUpdateNormals(MeshModel *m) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	m->updateNormals();
 }
 
 void  bbLightMesh(MeshModel *m, float r, float g, float b, float range, float x, float y, float z) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	MeshUtil::lightMesh(m, Vector(x, y, z), Vector(r*s_colorToFloat, g*s_colorToFloat, b*s_colorToFloat), range);
 }
 
 float  bbMeshWidth(MeshModel *m) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	return m->getBox().width();
 }
 
 float  bbMeshHeight(MeshModel *m) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	return m->getBox().height();
 }
 
 float  bbMeshDepth(MeshModel *m) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	return m->getBox().depth();
 }
 
 int  bbMeshesIntersect(MeshModel *a, MeshModel *b) {
+#ifdef _DEBUG
 	if (debug) { debugMesh(a); debugMesh(b); }
+#endif
 	return a->intersects(*b);
 }
 
 int  bbCountSurfaces(MeshModel *m) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	return m->getSurfaces().size();
 }
 
 Surface *  bbGetSurface(MeshModel *m, int index) {
-	#ifdef DEBUG
+	#ifdef _DEBUG
 	if (debug) {
 		debugMesh(m);
 		if ((size_t)index<1 || index>m->getSurfaces().size()) {
@@ -786,7 +843,9 @@ Surface *  bbGetSurface(MeshModel *m, int index) {
 }
 
 void bbMeshCullBox(MeshModel *m, float x, float y, float z, float width, float height, float depth) {
+#ifdef _DEBUG
 	debugMesh(m);
+#endif
 	m->setCullBox(Box(Vector(x, y, z), Vector(x + width, y + height, z + depth)));
 }
 
@@ -795,12 +854,16 @@ void bbMeshCullBox(MeshModel *m, float x, float y, float z, float width, float h
 // SURFACE COMMANDS //
 //////////////////////
 Surface *  bbFindSurface(MeshModel *m, Brush *b) {
+#ifdef _DEBUG
 	if (debug) { debugMesh(m); debugBrush(b); }
+#endif
 	return m->findSurface(*b);
 }
 
 Surface *  bbCreateSurface(MeshModel *m, Brush *b) {
+#ifdef _DEBUG
 	if (debug) { debugMesh(m); if (b) debugBrush(b); }
+#endif
 	Surface *s = b ? m->createSurface(*b) : m->createSurface(Brush());
 	return s;
 }
@@ -812,7 +875,9 @@ Brush *bbGetSurfaceBrush(Surface *s) {
 }
 
 Brush *bbGetEntityBrush(Model *m) {
+#ifdef _DEBUG
 	debugModel(m);
+#endif
 	Brush *br = new Brush(m->getBrush());
 	brush_set.insert(br);
 	return br;
@@ -823,7 +888,9 @@ void  bbClearSurface(Surface *s, int verts, int tris) {
 }
 
 void  bbPaintSurface(Surface *s, Brush *b) {
+#ifdef _DEBUG
 	debugBrush(b);
+#endif
 	s->setBrush(*b);
 }
 
@@ -873,55 +940,81 @@ int  bbCountTriangles(Surface *s) {
 }
 
 float  bbVertexX(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return s->getVertex(n).coords.x;
 }
 float  bbVertexY(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return s->getVertex(n).coords.y;
 }
 float  bbVertexZ(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return s->getVertex(n).coords.z;
 }
 float  bbVertexNX(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return s->getVertex(n).normal.x;
 }
 float  bbVertexNY(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return s->getVertex(n).normal.y;
 }
 float  bbVertexNZ(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return s->getVertex(n).normal.z;
 }
 float  bbVertexRed(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return (float)((s->getVertex(n).color & 0xff0000) >> 16);
 }
 float  bbVertexGreen(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return (float)((s->getVertex(n).color & 0xff00) >> 8);
 }
 float  bbVertexBlue(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return (float)(s->getVertex(n).color & 0xff);
 }
 float  bbVertexAlpha(Surface *s, int n) {
+#ifdef _DEBUG
 	debugVertex(s, n);
+#endif
 	return (float)(((s->getVertex(n).color & 0xff000000) >> 24) / 255.0f);
 }
 float  bbVertexU(Surface *s, int n, int t) {
+#ifdef _DEBUG
 	debugVertex(s, n, t);
+#endif
 	return s->getVertex(n).tex_coords[t][0];
 }
 float  bbVertexV(Surface *s, int n, int t) {
+#ifdef _DEBUG
 	debugVertex(s, n, t);
+#endif
 	return s->getVertex(n).tex_coords[t][1];
 }
 float  bbVertexW(Surface *s, int n, int t) {
+#ifdef _DEBUG
 	debugVertex(s, n, t);
+#endif
 	return 1;
 }
 int  bbTriangleVertex(Surface *s, int n, int v) {
@@ -932,7 +1025,9 @@ int  bbTriangleVertex(Surface *s, int n, int v) {
 // CAMERA COMMANDS //
 /////////////////////
 Entity *  bbCreateCamera(Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	int x, y, w, h;
 	gx_canvas->getViewport(&x, &y, &w, &h);
 	Camera *c = new Camera();
@@ -941,52 +1036,72 @@ Entity *  bbCreateCamera(Entity *p) {
 }
 
 void  bbCameraZoom(Camera *c, float zoom) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	c->setZoom(zoom);
 }
 
 void  bbCameraRange(Camera *c, float nr, float fr) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	c->setRange(nr, fr);
 }
 
 void  bbCameraClsColor(Camera *c, float r, float g, float b) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	c->setClsColor(Vector(r*s_colorToFloat, g*s_colorToFloat, b*s_colorToFloat));
 }
 
 void  bbCameraClsMode(Camera *c, int cls_color, int cls_zbuffer) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	c->setClsMode(cls_color ? true : false, cls_zbuffer ? true : false);
 }
 
 void  bbCameraProjMode(Camera *c, int mode) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	c->setProjMode(mode);
 }
 
 void  bbCameraViewport(Camera *c, int x, int y, int w, int h) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	c->setViewport(x, y, w, h);
 }
 
 void  bbCameraFogRange(Camera *c, float nr, float fr) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	c->setFogRange(nr, fr);
 }
 
 void  bbCameraFogColor(Camera *c, float r, float g, float b) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	c->setFogColor(Vector(r*s_colorToFloat, g*s_colorToFloat, b*s_colorToFloat));
 }
 
 void  bbCameraFogMode(Camera *c, int mode) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	c->setFogMode(mode);
 }
 
 int  bbCameraProject(Camera *c, float x, float y, float z) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 	Vector v = -c->GetWorldTransform()*Vector(x, y, z);
 	const Frustum &f = c->getFrustum();
 	if (c->getProjMode() == Camera::PROJ_ORTHO) {
@@ -1036,7 +1151,9 @@ static Object *doPick(const Line &l, float radius) {
 }
 
 Entity *  bbCameraPick(Camera *c, float x, float y) {
+#ifdef _DEBUG
 	debugCamera(c);
+#endif
 
 	int vp_x, vp_y, vp_w, vp_h;
 	c->getViewport(&vp_x, &vp_y, &vp_w, &vp_h);
@@ -1060,7 +1177,9 @@ Entity *  bbCameraPick(Camera *c, float x, float y) {
 }
 
 Entity *  bbLinePick(float x, float y, float z, float dx, float dy, float dz, float radius) {
+#ifdef _DEBUG
 	debug3d();
+#endif
 
 	Line l(Vector(x, y, z), Vector(dx, dy, dz));
 
@@ -1068,7 +1187,9 @@ Entity *  bbLinePick(float x, float y, float z, float dx, float dy, float dz, fl
 }
 
 Entity *  bbEntityPick(Object *src, float range) {
+#ifdef _DEBUG
 	debugEntity(src);
+#endif
 
 	Line l(src->GetWorldPosition(), src->GetWorldTransform().m.k * range);
 
@@ -1076,13 +1197,17 @@ Entity *  bbEntityPick(Object *src, float range) {
 }
 
 int  bbEntityVisible(Object *src, Object *dest) {
+#ifdef _DEBUG
 	if (debug) { debugObject(src); debugObject(dest); }
+#endif
 
 	return world->CheckLineOfSight(src, dest) ? 1 : 0;
 }
 
 int  bbEntityInView(Entity *e, Camera *c) {
+#ifdef _DEBUG
 	if (debug) { debugEntity(e); debugCamera(c); }
+#endif
 	if (Model *p = e->getModel()) {
 		if (MeshModel *m = p->getMeshModel()) {
 			const Box &b = m->getBox();
@@ -1142,23 +1267,31 @@ int  bbPickedTriangle() {
 // LIGHT COMMANDS //
 ////////////////////
 Entity *  bbCreateLight(int type, Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	Light *t = new Light(type);
 	return insertEntity(t, p);
 }
 
 void  bbLightColor(Light *light, float r, float g, float b) {
+#ifdef _DEBUG
 	debugLight(light);
+#endif
 	light->setColor(Vector(r*s_colorToFloat, g*s_colorToFloat, b*s_colorToFloat));
 }
 
 void  bbLightRange(Light *light, float range) {
+#ifdef _DEBUG
 	debugLight(light);
+#endif
 	light->setRange(range);
 }
 
 void  bbLightConeAngles(Light *light, float inner, float outer) {
+#ifdef _DEBUG
 	debugLight(light);
+#endif
 	inner *= s_degreesToRadians;
 	outer *= s_degreesToRadians;
 	if (inner < 0) inner = 0;
@@ -1172,7 +1305,9 @@ void  bbLightConeAngles(Light *light, float inner, float outer) {
 // PIVOT COMMANDS //
 ////////////////////
 Entity *  bbCreatePivot(Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	Pivot *t = new Pivot();
 	return insertEntity(t, p);
 }
@@ -1181,14 +1316,18 @@ Entity *  bbCreatePivot(Entity *p) {
 // SPRITE COMMANDS //
 /////////////////////
 Entity *  bbCreateSprite(Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	Sprite *s = new Sprite();
 	s->setFX(gxScene::FX_FULLBRIGHT);
 	return insertEntity(s, p);
 }
 
 Entity *  bbLoadSprite(BBStr *file, int flags, Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	Texture t(*file, flags);
 	delete file; if (!t.getCanvas(0)) return 0;
 	Sprite *s = new Sprite();
@@ -1203,22 +1342,30 @@ Entity *  bbLoadSprite(BBStr *file, int flags, Entity *p) {
 }
 
 void  bbRotateSprite(Sprite *s, float angle) {
+#ifdef _DEBUG
 	debugSprite(s);
+#endif
 	s->setRotation(angle*s_degreesToRadians);
 }
 
 void  bbScaleSprite(Sprite *s, float x, float y) {
+#ifdef _DEBUG
 	debugSprite(s);
+#endif
 	s->setScale(x, y);
 }
 
 void  bbHandleSprite(Sprite *s, float x, float y) {
+#ifdef _DEBUG
 	debugSprite(s);
+#endif
 	s->setHandle(x, y);
 }
 
 void  bbSpriteViewMode(Sprite *s, int mode) {
+#ifdef _DEBUG
 	debugSprite(s);
+#endif
 	s->setViewmode(mode);
 }
 
@@ -1226,7 +1373,9 @@ void  bbSpriteViewMode(Sprite *s, int mode) {
 // MIRROR COMMANDS //
 /////////////////////
 Entity *  bbCreateMirror(Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	Mirror *t = new Mirror();
 	return insertEntity(t, p);
 }
@@ -1235,10 +1384,12 @@ Entity *  bbCreateMirror(Entity *p) {
 // PLANE COMMANDS //
 ////////////////////
 Entity *  bbCreatePlane(int segs, Entity *p) {
+#ifdef _DEBUG
 	if (debug) {
 		debugParent(p);
 		if (segs < 1 || segs>20) ThrowRuntimeException("Illegal number of segments");
 	}
+#endif
 	PlaneModel *t = new PlaneModel(segs);
 	return insertEntity(t, p);
 }
@@ -1247,29 +1398,39 @@ Entity *  bbCreatePlane(int segs, Entity *p) {
 // MD2 COMMANDS //
 //////////////////
 Entity *  bbLoadMD2(BBStr *file, Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	MD2Model *t = new MD2Model(*file); delete file;
 	if (!t->getValid()) { delete t; return 0; }
 	return insertEntity(t, p);
 }
 
 void  bbAnimateMD2(MD2Model *m, int mode, float speed, int first, int last, float trans) {
+#ifdef _DEBUG
 	debugMD2(m);
+#endif
 	m->startMD2Anim(first, last, mode, speed, trans);
 }
 
 float  bbMD2AnimTime(MD2Model *m) {
+#ifdef _DEBUG
 	debugMD2(m);
+#endif
 	return m->getMD2AnimTime();
 }
 
 int  bbMD2AnimLength(MD2Model *m) {
+#ifdef _DEBUG
 	debugMD2(m);
+#endif
 	return m->getMD2AnimLength();
 }
 
 int  bbMD2Animating(MD2Model *m) {
+#ifdef _DEBUG
 	debugMD2(m);
+#endif
 	return m->getMD2Animating();
 }
 
@@ -1277,10 +1438,12 @@ int  bbMD2Animating(MD2Model *m) {
 // BSP Commands //
 //////////////////
 Entity *  bbLoadBSP(BBStr *file, float gam, Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
-	CachedTexture::setPath(filenamepath(*file));
+#endif
+	CachedTextureFactory::setPath(filenamepath(*file));
 	Q3BSPModel *t = new Q3BSPModel(*file, gam); delete file;
-	CachedTexture::setPath("");
+	CachedTextureFactory::setPath("");
 
 	if (!t->isValid()) { delete t; return 0; }
 
@@ -1288,12 +1451,16 @@ Entity *  bbLoadBSP(BBStr *file, float gam, Entity *p) {
 }
 
 void  bbBSPAmbientLight(Q3BSPModel *t, float r, float g, float b) {
+#ifdef _DEBUG
 	debugBSP(t);
+#endif
 	t->setAmbient(Vector(r*s_colorToFloat, g*s_colorToFloat, b*s_colorToFloat));
 }
 
 void  bbBSPLighting(Q3BSPModel *t, int lmap) {
+#ifdef _DEBUG
 	debugBSP(t);
+#endif
 	t->setLighting(!!lmap);
 }
 
@@ -1319,7 +1486,9 @@ static Vector terrainVector(Terrain *t, float x, float y, float z) {
 }
 
 Entity *  bbCreateTerrain(int n, Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	int shift = 0;
 	while ((1 << shift) < n) ++shift;
 	if ((1 << shift) != n) ThrowRuntimeException("Illegal terrain size");
@@ -1328,7 +1497,9 @@ Entity *  bbCreateTerrain(int n, Entity *p) {
 }
 
 Entity *  bbLoadTerrain(BBStr *file, Entity *p) {
+#ifdef _DEBUG
 	debugParent(p);
+#endif
 	gxCanvas *c = gx_graphics->loadCanvas(*file, gxCanvas::CANVAS_HIGHCOLOR);
 	if (!c) ThrowRuntimeException("Unable to load heightmap image");
 	int w = c->getWidth(), h = c->getHeight();
@@ -1352,42 +1523,58 @@ Entity *  bbLoadTerrain(BBStr *file, Entity *p) {
 }
 
 void  bbTerrainDetail(Terrain *t, int n, int m) {
+#ifdef _DEBUG
 	debugTerrain(t);
+#endif
 	t->setDetail(n, !!m);
 }
 
 void  bbTerrainShading(Terrain *t, int enable) {
+#ifdef _DEBUG
 	debugTerrain(t);
+#endif
 	t->setShading(!!enable);
 }
 
 float  bbTerrainX(Terrain *t, float x, float y, float z) {
+#ifdef _DEBUG
 	debugTerrain(t);
+#endif
 	return terrainVector(t, x, y, z).x;
 }
 
 float  bbTerrainY(Terrain *t, float x, float y, float z) {
+#ifdef _DEBUG
 	debugTerrain(t);
+#endif
 	return terrainVector(t, x, y, z).y;
 }
 
 float  bbTerrainZ(Terrain *t, float x, float y, float z) {
+#ifdef _DEBUG
 	debugTerrain(t);
+#endif
 	return terrainVector(t, x, y, z).z;
 }
 
 int  bbTerrainSize(Terrain *t) {
+#ifdef _DEBUG
 	debugTerrain(t);
+#endif
 	return t->getSize();
 }
 
 float  bbTerrainHeight(Terrain *t, int x, int z) {
+#ifdef _DEBUG
 	debugTerrain(t);
+#endif
 	return t->getHeight(x, z);
 }
 
 void  bbModifyTerrain(Terrain *t, int x, int z, float h, int realtime) {
+#ifdef _DEBUG
 	debugTerrain(t);
+#endif
 	t->setHeight(x, z, h, !!realtime);
 }
 
@@ -1395,19 +1582,23 @@ void  bbModifyTerrain(Terrain *t, int x, int z, float h, int realtime) {
 // AUDIO COMMANDS //
 ////////////////////
 Entity *  bbCreateListener(Entity *p, float roll, float dopp, float dist) {
+#ifdef _DEBUG
 	if (debug) {
 		debugParent(p);
 		if (listener) ThrowRuntimeException("Listener already created");
 	}
+#endif
 	listener = new Listener(roll, dopp, dist);
 	return insertEntity(listener, p);
 }
 
 gxChannel *  bbEmitSound(gxSound *sound, Object *o) {
+#ifdef _DEBUG
 	if (debug) {
 		debugObject(o);
 		if (!listener) ThrowRuntimeException("No Listener created");
 	}
+#endif
 	return o->emitSound(sound);
 }
 
@@ -1415,10 +1606,12 @@ gxChannel *  bbEmitSound(gxSound *sound, Object *o) {
 // ENTITY COMMANDS //
 /////////////////////
 Entity *  bbCopyEntity(Entity *e, Entity *p) {
+#ifdef _DEBUG
 	if (debug) {
 		debugEntity(e);
 		debugParent(p);
 	}
+#endif
 	Entity *t = e->getObject()->copy();
 	if (!t) return 0;
 	return insertEntity(t, p);
@@ -1426,27 +1619,34 @@ Entity *  bbCopyEntity(Entity *e, Entity *p) {
 
 void  bbFreeEntity(Entity *e) {
 	if (!e) return;
+#ifdef _DEBUG
 	if (debug) {
 		debugEntity(e);
 		erase(e);
 	}
+#endif
 	delete e;
 }
 
 void  bbHideEntity(Entity *e) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	e->SetEnabled(false);
 	e->SetVisible(false);
 }
 
 void  bbShowEntity(Entity *e) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	e->SetVisible(true);
 	e->SetEnabled(true);
 	e->getObject()->reset();
 }
 
 void  bbEntityParent(Entity *e, Entity *p, int global) {
+#ifdef _DEBUG
 	if (debug) {
 		debugEntity(e);
 		debugParent(p);
@@ -1458,6 +1658,7 @@ void  bbEntityParent(Entity *e, Entity *p, int global) {
 			t = t->getParent();
 		}
 	}
+#endif
 
 	if (e->getParent() == p) return;
 
@@ -1472,21 +1673,27 @@ void  bbEntityParent(Entity *e, Entity *p, int global) {
 }
 
 int  bbCountChildren(Entity *e) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	int n = 0;
 	for (Entity *p = e->GetChildren(); p; p = p->GetSuccessor()) ++n;
 	return n;
 }
 
 Entity *  bbGetChild(Entity *e, int index) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	Entity *p = e->GetChildren();
 	while (--index && p) p = p->GetSuccessor();
 	return p;
 }
 
 Entity *  bbFindChild(Entity *e, BBStr *t) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	e = findChild(e, *t);
 	delete t;
 	return e;
@@ -1496,7 +1703,9 @@ Entity *  bbFindChild(Entity *e, BBStr *t) {
 // ANIMATION COMMANDS //
 ////////////////////////
 int  bbLoadAnimSeq(Object *o, BBStr *f) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	if (Animator *anim = o->getAnimator()) {
 		Entity *t = loadEntity(f->c_str(), MeshLoader::HINT_ANIMONLY);
 		delete f;
@@ -1514,7 +1723,9 @@ int  bbLoadAnimSeq(Object *o, BBStr *f) {
 }
 
 void  bbSetAnimTime(Object *o, float time, int seq) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	if (Animator *anim = o->getAnimator()) {
 		anim->setAnimTime(time, seq);
 	} else {
@@ -1523,7 +1734,9 @@ void  bbSetAnimTime(Object *o, float time, int seq) {
 }
 
 void  bbAnimate(Object *o, int mode, float speed, int seq, float trans) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	if (Animator *anim = o->getAnimator()) {
 		anim->animate(mode, speed, seq, trans);
 	} else {
@@ -1532,7 +1745,9 @@ void  bbAnimate(Object *o, int mode, float speed, int seq, float trans) {
 }
 
 void  bbSetAnimKey(Object *o, int frame, int pos_key, int rot_key, int scl_key) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	Animation anim = o->getAnimation();
 	if (pos_key) anim.setPositionKey(frame, o->GetLocalPosition());
 	if (rot_key) anim.setRotationKey(frame, o->GetLocalRotation());
@@ -1541,7 +1756,9 @@ void  bbSetAnimKey(Object *o, int frame, int pos_key, int rot_key, int scl_key) 
 }
 
 int  bbExtractAnimSeq(Object *o, int first, int last, int seq) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	if (Animator *anim = o->getAnimator()) {
 		anim->extractSeq(first, last, seq);
 		return anim->numSeqs() - 1;
@@ -1550,7 +1767,9 @@ int  bbExtractAnimSeq(Object *o, int first, int last, int seq) {
 }
 
 int  bbAddAnimSeq(Object *o, int length) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	Animator *anim = o->getAnimator();
 	if (anim) {
 		anim->addSeq(length);
@@ -1562,25 +1781,33 @@ int  bbAddAnimSeq(Object *o, int length) {
 }
 
 int  bbAnimSeq(Object *o) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	if (Animator *anim = o->getAnimator()) return anim->animSeq();
 	return -1;
 }
 
 float  bbAnimTime(Object *o) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	if (Animator *anim = o->getAnimator()) return anim->animTime();
 	return -1;
 }
 
 int  bbAnimLength(Object *o) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	if (Animator *anim = o->getAnimator()) return anim->animLen();
 	return -1;
 }
 
 int  bbAnimating(Object *o) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	if (Animator *anim = o->getAnimator()) return anim->animating();
 	return 0;
 }
@@ -1589,56 +1816,74 @@ int  bbAnimating(Object *o) {
 // ENTITY SPECIAL FX COMMANDS //
 ////////////////////////////////
 void  bbPaintEntity(Model *m, Brush *b) {
+#ifdef _DEBUG
 	if (debug) {
 		debugModel(m);
 		debugBrush(b);
 	}
+#endif
 	m->setBrush(*b);
 }
 
 void  bbEntityColor(Model *m, float r, float g, float b) {
+#ifdef _DEBUG
 	debugModel(m);
+#endif
 	m->setColor(Vector(r*s_colorToFloat, g*s_colorToFloat, b*s_colorToFloat));
 }
 
 void  bbEntityAlpha(Model *m, float alpha) {
+#ifdef _DEBUG
 	debugModel(m);
+#endif
 	m->setAlpha(alpha);
 }
 
 void  bbEntityShininess(Model *m, float shininess) {
+#ifdef _DEBUG
 	debugModel(m);
+#endif
 	m->setShininess(shininess);
 }
 
 void  bbEntityTexture(Model *m, Texture *t, int frame, int index) {
+#ifdef _DEBUG
 	debugModel(m);
 	debugTexture(t);
+#endif
 	m->setTexture(index, *t, frame);
 }
 
 void  bbEntityBlend(Model *m, int blend) {
+#ifdef _DEBUG
 	debugModel(m);
+#endif
 	m->setBlend(blend);
 }
 
 void  bbEntityFX(Model *m, int fx) {
+#ifdef _DEBUG
 	debugModel(m);
+#endif
 	m->setFX(fx);
 }
 
 void  bbEntityAutoFade(Model *m, float nr, float fr) {
+#ifdef _DEBUG
 	debugModel(m);
+#endif
 	m->setAutoFade(nr, fr);
 }
 
 void  bbEntityOrder(Object *o, int n) {
+#ifdef _DEBUG
 	if (debug) {
 		debugEntity(o);
 		if (!o->getModel() && !o->getCamera()) {
 			ThrowRuntimeException("Entity is not a model or camera");
 		}
 	}
+#endif
 	o->setOrder(n);
 }
 
@@ -1646,65 +1891,85 @@ void  bbEntityOrder(Object *o, int n) {
 // ENTITY PROPERTY COMMANDS //
 //////////////////////////////
 float  bbEntityX(Entity *e, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	return global ? e->GetWorldPosition().x : e->GetLocalPosition().x;
 }
 
 float  bbEntityY(Entity *e, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	return global ? e->GetWorldPosition().y : e->GetLocalPosition().y;
 }
 
 float  bbEntityZ(Entity *e, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	return global ? e->GetWorldPosition().z : e->GetLocalPosition().z;
 }
 
 float  bbEntityPitch(Entity *e, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	return quatPitch(global ? e->GetWorldRotation() : e->GetLocalRotation()) * s_radiansToDegrees;
 }
 
 float  bbEntityYaw(Entity *e, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	return quatYaw(global ? e->GetWorldRotation() : e->GetLocalRotation()) * s_radiansToDegrees;
 }
 
 float  bbEntityRoll(Entity *e, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	return quatRoll(global ? e->GetWorldRotation() : e->GetLocalRotation()) * s_radiansToDegrees;
 }
 
 float  bbGetMatElement(Entity *e, int row, int col) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	return row < 3 ? e->GetWorldTransform().m[row][col] : e->GetWorldTransform().v[col];
 }
 
 void  bbTFormPoint(float x, float y, float z, Entity *src, Entity *dest) {
+#ifdef _DEBUG
 	if (debug) {
 		if (src) debugEntity(src);
 		if (dest) debugEntity(dest);
 	}
+#endif
 	tformed = Vector(x, y, z);
 	if (src) tformed = src->GetWorldTransform() * tformed;
 	if (dest) tformed = -dest->GetWorldTransform() * tformed;
 }
 
 void  bbTFormVector(float x, float y, float z, Entity *src, Entity *dest) {
+#ifdef _DEBUG
 	if (debug) {
 		if (src) debugEntity(src);
 		if (dest) debugEntity(dest);
 	}
+#endif
 	tformed = Vector(x, y, z);
 	if (src) tformed = src->GetWorldTransform().m * tformed;
 	if (dest) tformed = -dest->GetWorldTransform().m * tformed;
 }
 
 void  bbTFormNormal(float x, float y, float z, Entity *src, Entity *dest) {
+#ifdef _DEBUG
 	if (debug) {
 		if (src) debugEntity(src);
 		if (dest) debugEntity(dest);
 	}
+#endif
 	tformed = Vector(x, y, z);
 	if (src) tformed = (src->GetWorldTransform().m).cofactor() * tformed;
 	if (dest) tformed = (-dest->GetWorldTransform().m).cofactor() * tformed;
@@ -1753,7 +2018,9 @@ float  bbDeltaPitch(Entity *src, Entity *dest) {
 // ENTITY COLLISION COMMANDS //
 ///////////////////////////////
 void  bbResetEntity(Object *o) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	o->reset();
 }
 
@@ -1766,10 +2033,12 @@ static void entityType(Entity *e, int type) {
 }
 
 void  bbEntityType(Object *o, int type, int recurs) {
+#ifdef _DEBUG
 	if (debug) {
 		debugObject(o);
 		if (type < 0 || type>999) ThrowRuntimeException("EntityType ID must be in the range 0...999");
 	}
+#endif
 	if (recurs) entityType(o, type);
 	else {
 		o->setCollisionType(type);
@@ -1778,36 +2047,48 @@ void  bbEntityType(Object *o, int type, int recurs) {
 }
 
 void  bbEntityPickMode(Object *o, int mode, int obs) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	o->setPickGeometry(mode);
 	o->setObscurer(!!obs);
 }
 
 Entity *  bbGetParent(Entity *e) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	return e->getParent();
 }
 
 int  bbGetEntityType(Object *o) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	return o->getCollisionType();
 }
 
 void  bbEntityRadius(Object *o, float x_radius, float y_radius) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	Vector radii(x_radius, y_radius ? y_radius : x_radius, x_radius);
 	o->setCollisionRadii(radii);
 }
 
 void  bbEntityBox(Object *o, float x, float y, float z, float w, float h, float d) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	Box b(Vector(x, y, z));
 	b.update(Vector(x + w, y + h, z + d));
 	o->setCollisionBox(b);
 }
 
 Object *  bbEntityCollided(Object *o, int type) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	Object::Collisions::const_iterator it;
 	const Object::Collisions &c = o->getCollisions();
 	for (it = c.begin(); it != c.end(); ++it) {
@@ -1818,63 +2099,87 @@ Object *  bbEntityCollided(Object *o, int type) {
 }
 
 int  bbCountCollisions(Object *o) {
+#ifdef _DEBUG
 	debugObject(o);
+#endif
 	return o->getCollisions().size();
 }
 
 float  bbCollisionX(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->coords.x;
 }
 
 float  bbCollisionY(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->coords.y;
 }
 
 float  bbCollisionZ(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->coords.z;
 }
 
 float  bbCollisionNX(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->collision.normal.x;
 }
 
 float  bbCollisionNY(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->collision.normal.y;
 }
 
 float  bbCollisionNZ(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->collision.normal.z;
 }
 
 float  bbCollisionTime(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->collision.time;
 }
 
 Object *  bbCollisionEntity(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->with;
 }
 
 void *  bbCollisionSurface(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->collision.surface;
 }
 
 int  bbCollisionTriangle(Object *o, int index) {
+#ifdef _DEBUG
 	debugColl(o, index);
+#endif
 	return o->getCollisions()[index - 1]->collision.index;
 }
 
 float  bbEntityDistance(Entity *src, Entity *dest) {
+#ifdef _DEBUG
 	debugEntity(src);
 	debugEntity(dest);
+#endif
 	return src->GetWorldPosition().distance(dest->GetWorldPosition());
 }
 
@@ -1882,47 +2187,61 @@ float  bbEntityDistance(Entity *src, Entity *dest) {
 // ENTITY TRANSFORMATION COMMANDS //
 ////////////////////////////////////
 void  bbMoveEntity(Entity *e, float x, float y, float z) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	e->SetLocalPosition(e->GetLocalPosition() + e->GetLocalRotation()*Vector(x, y, z));
 }
 
 void  bbTurnEntity(Entity *e, float p, float y, float r, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	global ?
 		e->SetWorldRotation(rotationQuat(p*s_degreesToRadians, y*s_degreesToRadians, r*s_degreesToRadians)*e->GetWorldRotation()) :
 		e->SetLocalRotation(e->GetLocalRotation()*rotationQuat(p*s_degreesToRadians, y*s_degreesToRadians, r*s_degreesToRadians));
 }
 
 void  bbTranslateEntity(Entity *e, float x, float y, float z, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	global ?
 		e->SetWorldPosition(e->GetWorldPosition() + Vector(x, y, z)) :
 		e->SetLocalPosition(e->GetLocalPosition() + Vector(x, y, z));
 }
 
 void  bbPositionEntity(Entity *e, float x, float y, float z, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	global ?
 		e->SetWorldPosition(Vector(x, y, z)) :
 		e->SetLocalPosition(Vector(x, y, z));
 }
 
 void  bbScaleEntity(Entity *e, float x, float y, float z, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	global ?
 		e->SetWorldScale(Vector(x, y, z)) :
 		e->SetLocalScale(Vector(x, y, z));
 }
 
 void  bbRotateEntity(Entity *e, float p, float y, float r, int global) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	global ?
 		e->SetWorldRotation(rotationQuat(p*s_degreesToRadians, y*s_degreesToRadians, r*s_degreesToRadians)) :
 		e->SetLocalRotation(rotationQuat(p*s_degreesToRadians, y*s_degreesToRadians, r*s_degreesToRadians));
 }
 
 void  bbPointEntity(Entity *e, Entity *t, float roll) {
+#ifdef _DEBUG
 	if (debug) { debugEntity(e); debugEntity(t); }
+#endif
 	Vector v = t->GetWorldTransform().v - e->GetWorldTransform().v;
 	e->SetWorldRotation(rotationQuat(v.pitch(), v.yaw(), roll*s_degreesToRadians));
 }
@@ -1956,18 +2275,24 @@ void  bbAlignToVector(Entity *e, float nx, float ny, float nz, int axis, float r
 // ENTITY MISC COMMANDS //
 //////////////////////////
 void  bbNameEntity(Entity *e, BBStr *t) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	e->SetName(*t);
 	delete t;
 }
 
 BBStr *  bbEntityName(Entity *e) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	return new BBStr(e->getName());
 }
 
 BBStr *bbEntityClass(Entity *e) {
+#ifdef _DEBUG
 	debugEntity(e);
+#endif
 	const char *p = "Pivot";
 	if (e->getLight()) p = "Light";
 	else if (e->getCamera()) p = "Camera";

@@ -301,11 +301,13 @@ int bbCountHostIPs(BBStr *host) {
 }
 
 int bbHostIP(int index) {
+#ifdef _DEBUG
 	if (debug) {
 		if (index<1 || index>host_ips.size()) {
 			ThrowRuntimeException("Host index out of range");
 		}
 	}
+#endif
 	return host_ips[index - 1];
 }
 
