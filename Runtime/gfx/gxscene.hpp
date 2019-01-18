@@ -1,10 +1,11 @@
 #pragma once
-#include <d3d.h>
 #include <map>
-#include <Windows.h>
 #include "graphicsruntime.hpp"
 #include <vector>
 #include <set>
+
+#include <Windows.h>
+#include <d3d.h>
 
 class gxCanvas;
 class gxMesh;
