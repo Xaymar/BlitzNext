@@ -1,7 +1,7 @@
 
-#include "std.h"
-#include "gxgraphics.h"
-#include "gxruntime.h"
+#include "std.hpp"
+#include "gxgraphics.hpp"
+#include "gxruntime.hpp"
 
 extern gxRuntime *gx_runtime;
 

@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "asmcoder.h"
+#include "asmcoder.hpp"
 
 void (__fastcall *plot)(void *s,int argb);
 int	(__fastcall *point)(void*s);

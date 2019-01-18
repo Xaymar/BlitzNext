@@ -1,8 +1,8 @@
 
-#include "std.h"
-#include "gxscene.h"
-#include "gxgraphics.h"
-#include "gxruntime.h"
+#include "std.hpp"
+#include "gxscene.hpp"
+#include "gxgraphics.hpp"
+#include "gxruntime.hpp"
 
 static bool can_wb;
 static int  hw_tex_stages,tex_stages;

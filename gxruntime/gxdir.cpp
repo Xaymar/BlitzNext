@@ -1,6 +1,6 @@
 
-#include "std.h"
-#include "gxdir.h"
+#include "std.hpp"
+#include "gxdir.hpp"
 
 gxDir::gxDir( HANDLE h,const WIN32_FIND_DATA &f ):handle(h),findData(f){
 }

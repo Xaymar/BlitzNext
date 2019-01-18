@@ -1,8 +1,8 @@
 #pragma once
 
-#include "std.h"
-#include "gxinput.h"
-#include "gxruntime.h"
+#include "std.hpp"
+#include "gxinput.hpp"
+#include "gxruntime.hpp"
 
 static const int QUE_SIZE = 32;
 

@@ -1,8 +1,8 @@
 
-#include "std.h"
-#include "gxfont.h"
-#include "gxcanvas.h"
-#include "gxgraphics.h"
+#include "std.hpp"
+#include "gxfont.hpp"
+#include "gxcanvas.hpp"
+#include "gxgraphics.hpp"
 
 gxFont::gxFont( gxGraphics *g,gxCanvas *c,int w,int h,int b,int e,int d,int *os,int *ws ):
 graphics(g),canvas(c),

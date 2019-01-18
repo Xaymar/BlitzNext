@@ -1,6 +1,7 @@
 
-#include "std.h"
-#include "gxmusic.h"
+#include "std.hpp"
+#include "gxmusic.hpp"
+#include <fmod.h>
 
 gxMusic::gxMusic( gxAudio *a,FMUSIC_MODULE *m,FSOUND_STREAM *s ):
 audio(a),module(m),stream(s),stream_channel(-1){

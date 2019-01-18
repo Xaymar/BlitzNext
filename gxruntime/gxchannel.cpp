@@ -1,6 +1,6 @@
 
-#include "std.h"
-#include "gxchannel.h"
+#include "std.hpp"
+#include "gxchannel.hpp"
 
 gxChannel::~gxChannel(){
 }

@@ -1,8 +1,8 @@
 
-#include "std.h"
-#include "gxlight.h"
-#include "gxscene.h"
-#include "gxgraphics.h"
+#include "std.hpp"
+#include "gxlight.hpp"
+#include "gxscene.hpp"
+#include "gxgraphics.hpp"
 
 const float PI=3.14159265359f;	//180 degrees
 const float TWOPI=PI*2.0f;		//360 degrees

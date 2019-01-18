@@ -1,6 +1,6 @@
 
-#include "std.h"
-#include "gxfilesystem.h"
+#include "std.hpp"
+#include "gxfilesystem.hpp"
 
 static set<gxDir*> dir_set;
 

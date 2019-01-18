@@ -1,6 +1,7 @@
 
-#include "std.h"
-#include "gxaudio.h"
+#include "std.hpp"
+#include "gxaudio.hpp"
+#include <fmod.h>
 
 struct StaticChannel : public gxChannel{
 	virtual void play()=0;

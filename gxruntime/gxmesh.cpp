@@ -1,9 +1,9 @@
 
-#include "std.h"
-#include "gxmesh.h"
-#include "gxgraphics.h"
+#include "std.hpp"
+#include "gxmesh.hpp"
+#include "gxgraphics.hpp"
 
-#include "gxruntime.h"
+#include "gxruntime.hpp"
 
 extern gxRuntime *gx_runtime;
 

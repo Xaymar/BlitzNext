@@ -1,8 +1,8 @@
 
 #pragma warning( disable:4786 )
 
-#include "bbruntime_dll.h"
-#include "../debugger/debugger.h"
+#include "bbruntime_dll.hpp"
+#include "../debugger/debugger.hpp"
 
 
 using namespace std;
@@ -11,7 +11,7 @@ using namespace std;
 #include <eh.h>
 #include <float.h>
 
-#include "../RuntimeLib/bbruntime.h"
+#include "bbruntime.hpp"
 
 class DummyDebugger : public Debugger{
 public:

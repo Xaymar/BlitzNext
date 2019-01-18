@@ -1,10 +1,12 @@
 #pragma once 
 
-#include "GraphicsRuntime.h"
-#include "std.h"
-#include "gxruntime.h"
-#include "zmouse.h"
-#include "windows.h"
+#include "GraphicsRuntime.hpp"
+#include "std.hpp"
+#include "gxruntime.hpp"
+#include <zmouse.h>
+#include <windows.h>
+#include <fmod.h>
+#include <shellapi.h>
 
 struct gxRuntime::GfxMode {
 	DDSURFACEDESC2 desc;
@@ -53,7 +55,7 @@ static int mod_cnt;
 static MMRESULT timerID;
 static IDirectDrawClipper *clipper;
 static IDirectDrawSurface7 *primSurf;
-static Debugger *debugger;
+//static Debugger *debugger;
 
 static set<gxTimer*> timers;
 
@@ -64,11 +66,11 @@ enum {
 ////////////////////
 // STATIC STARTUP //
 ////////////////////
-gxRuntime *gxRuntime::openRuntime(HINSTANCE hinst, const string &cmd_line, Debugger *d) {
+gxRuntime *gxRuntime::openRuntime(HINSTANCE hinst, const string &cmd_line, void* d) {
 	if (runtime) return 0;
 
 	//create debugger
-	debugger = d;
+	//debugger = d;
 
 	//create WNDCLASS
 	WNDCLASS wndclass;
@@ -204,7 +206,7 @@ void gxRuntime::suspend() {
 
 	if (gfx_mode == 3) ShowCursor(1);
 
-	if (debugger) debugger->debugStop();
+	//if (debugger) debugger->debugStop();
 }
 
 ////////////
@@ -219,7 +221,7 @@ void gxRuntime::resume() {
 	suspended = false;
 	busy = false;
 
-	if (debugger) debugger->debugRun();
+	//if (debugger) debugger->debugRun();
 }
 
 ///////////////////
@@ -505,7 +507,7 @@ bool gxRuntime::idle() {
 				if (suspended) forceResume();
 				break;
 			case WM_END:
-				debugger = 0;
+				//debugger = 0;
 				run_flag = false;
 				break;
 			default:
@@ -533,61 +535,61 @@ bool gxRuntime::delay(int ms) {
 // DEBUGSTMT //
 ///////////////
 void gxRuntime::debugStmt(int pos, const char *file) {
-	if (debugger) debugger->debugStmt(pos, file);
+	//if (debugger) debugger->debugStmt(pos, file);
 }
 
 ///////////////
 // DEBUGSTOP //
 ///////////////
 void gxRuntime::debugStop() {
-	if (!suspended) forceSuspend();
+	//if (!suspended) forceSuspend();
 }
 
 ////////////////
 // DEBUGENTER //
 ////////////////
 void gxRuntime::debugEnter(void *frame, void *env, const char *func) {
-	if (debugger) debugger->debugEnter(frame, env, func);
+	//if (debugger) debugger->debugEnter(frame, env, func);
 }
 
 ////////////////
 // DEBUGLEAVE //
 ////////////////
 void gxRuntime::debugLeave() {
-	if (debugger) debugger->debugLeave();
+	//if (debugger) debugger->debugLeave();
 }
 
 ////////////////
 // DEBUGERROR //
 ////////////////
 void gxRuntime::debugError(const char *t) {
-	if (!debugger) return;
-	Debugger *d = debugger;
+	/*if (!debugger) return;
+	void*d = debugger;
 	asyncEnd();
 	if (!suspended) {
 		forceSuspend();
 	}
-	d->debugMsg(t, true);
+	d->debugMsg(t, true);*/
 }
 
 ///////////////
 // DEBUGINFO //
 ///////////////
 void gxRuntime::debugInfo(const char *t) {
-	if (!debugger) return;
+	/*if (!debugger) return;
 	Debugger *d = debugger;
 	asyncEnd();
 	if (!suspended) {
 		forceSuspend();
 	}
-	d->debugMsg(t, false);
+	d->debugMsg(t, false);*/
 }
 
 //////////////
 // DEBUGLOG //
 //////////////
 void gxRuntime::debugLog(const char *t) {
-	if (debugger) debugger->debugLog(t);
+	//if (debugger) debugger->debugLog(t);
 }
 
 /////////////////////////

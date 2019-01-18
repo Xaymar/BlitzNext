@@ -1,0 +1,113 @@
+project(gxruntime)
+
+add_library(${PROJECT_NAME} STATIC
+	"asmcoder.hpp"
+	"asmcoder.cpp"
+	"ddutil.hpp"
+	"ddutil.cpp"
+	"graphicsruntime.hpp"
+	"gxaudio.hpp"
+	"gxaudio.cpp"
+	"gxcanvas.hpp"
+	"gxcanvas.cpp"
+	"gxchannel.hpp"
+	"gxchannel.cpp"
+	"gxdevice.hpp"
+	"gxdevice.cpp"
+	"gxdir.hpp"
+	"gxdir.cpp"
+	"gxfilesystem.hpp"
+	"gxfilesystem.cpp"
+	"gxfont.hpp"
+	"gxfont.cpp"
+	"gxgraphics.hpp"
+	"gxgraphics.cpp"
+	"gxinput.hpp"
+	"gxinput.cpp"
+	"gxlight.hpp"
+	"gxlight.cpp"
+	"gxmesh.hpp"
+	"gxmesh.cpp"
+	"gxmovie.hpp"
+	"gxmovie.cpp"
+	"gxmusic.hpp"
+	"gxmusic.cpp"
+	"gxruntime.hpp"
+	"gxruntime.cpp"
+	"gxscene.hpp"
+	"gxscene.cpp"
+	"gxsound.hpp"
+	"gxsound.cpp"
+	"gxtimer.hpp"
+	"gxtimer.cpp"
+	"std.hpp"
+	"std.cpp"
+)
+
+target_link_libraries(${PROJECT_NAME}
+	PRIVATE
+		stdutil
+	PUBLIC 
+		shell32
+		winmm
+		${fmod_LIBRARIES}
+		${FreeImage_LIBRARIES}
+)
+
+target_include_directories(${PROJECT_NAME}
+	PRIVATE
+		"${fmod_INCLUDE_DIRS}"
+		"${FreeImage_INCLUDE_DIRS}"
+	PUBLIC
+		${PROJECT_SOURCE_DIR}
+)
+
+if (WIN32)
+	target_compile_definitions(${PROJECT_NAME}
+		PRIVATE
+			_CRT_SECURE_NO_WARNINGS
+			# windows.hpp
+			WIN32_LEAN_AND_MEAN
+			NOGPICAPMASKS
+			#NOVIRTUALKEYCODES
+			#NOWINMESSAGES
+			#NOWINSTYLES
+			#NOSYSMETRICS
+			NOMENUS
+			NOICONS
+			#NOKEYSTATES
+			NOSYSCOMMANDS
+			NORASTEROPS
+			#NOSHOWWINDOW
+			NOATOM
+			NOCLIPBOARD
+			NOCOLOR
+			NOCTLMGR
+			NODRAWTEXT
+			#NOGDI
+			NOKERNEL
+			#NOUSER
+			NONLS
+			#NOMB
+			NOMEMMGR
+			NOMETAFILE
+			#NOMSG
+			NOOPENFILE
+			NOSCROLL
+			NOSERVICE
+			NOSOUND
+			#NOTEXTMETRIC
+			NOWH
+			#NOWINOFFSETS
+			NOCOMM
+			NOKANJI
+			NOHELP
+			NOPROFILER
+			NODEFERWINDOWPOS
+			NOMCX
+			NOIME
+			NOMDI
+			NOMINMAX
+			NOINOUT
+	)
+endif()

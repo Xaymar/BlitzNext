@@ -1,13 +1,13 @@
 
-#include "GraphicsRuntime.h"
-#include "std.h"
-#include "ddutil.h"
-#include "asmcoder.h"
-#include "gxcanvas.h"
-#include "gxruntime.h"
+#include "GraphicsRuntime.hpp"
+#include "std.hpp"
+#include "ddutil.hpp"
+#include "asmcoder.hpp"
+#include "gxcanvas.hpp"
+#include "gxruntime.hpp"
 
 #define FREEIMAGE_LIB
-#include "..\#ThirdParty\FreeImage\Dist\x32\freeimage.h"
+#include <freeimage.h>
 
 extern gxRuntime *gx_runtime;
 static AsmCoder asm_coder;

@@ -1,0 +1,138 @@
+project(runtime_blitz3d)
+
+add_library(${PROJECT_NAME} STATIC
+	"animation.cpp"
+	"animation.hpp"
+	"animator.cpp"
+	"animator.hpp"
+	"blitz3d.hpp"
+	"brush.cpp"
+	"brush.hpp"
+	"cachedtexture.cpp"
+	"cachedtexture.hpp"
+	"camera.cpp"
+	"camera.hpp"
+	"collision.cpp"
+	"collision.hpp"
+	"entity.cpp"
+	"entity.hpp"
+	"frustum.cpp"
+	"frustum.hpp"
+	"geom.cpp"
+	"geom.hpp"
+	"light.cpp"
+	"light.hpp"
+	"listener.cpp"
+	"listener.hpp"
+	"loader_3ds.cpp"
+	"loader_3ds.hpp"
+	"loader_b3d.cpp"
+	"loader_b3d.hpp"
+#	"loader_x.cpp"
+#	"loader_x.hpp"
+	"md2model.cpp"
+	"md2model.hpp"
+	"md2norms.cpp"
+	"md2norms.hpp"
+	"md2rep.cpp"
+	"md2rep.hpp"
+	"meshcollider.cpp"
+	"meshcollider.hpp"
+	"meshloader.cpp"
+	"meshloader.hpp"
+	"meshmodel.cpp"
+	"meshmodel.hpp"
+	"meshutil.cpp"
+	"meshutil.hpp"
+	"mirror.cpp"
+	"mirror.hpp"
+	"model.cpp"
+	"model.hpp"
+	"object.cpp"
+	"object.hpp"
+	"pivot.cpp"
+	"pivot.hpp"
+	"planemodel.cpp"
+	"planemodel.hpp"
+	"q3bspmodel.cpp"
+	"q3bspmodel.hpp"
+	"q3bsprep.cpp"
+	"q3bsprep.hpp"
+	"rendercontext.hpp"
+	"sprite.cpp"
+	"sprite.hpp"
+	"std.cpp"
+	"std.hpp"
+	"surface.cpp"
+	"surface.hpp"
+	"terrain.cpp"
+	"terrain.hpp"
+	"terrainrep.cpp"
+	"terrainrep.hpp"
+	"texture.cpp"
+	"texture.hpp"
+	"world.cpp"
+	"world.hpp"
+)
+
+target_link_libraries(${PROJECT_NAME}
+	PRIVATE
+		config
+		gxruntime
+		stdutil
+	PUBLIC
+)
+
+target_include_directories(${PROJECT_NAME}
+	PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
+if (WIN32)
+	target_compile_definitions(${PROJECT_NAME}
+		PRIVATE
+			_CRT_SECURE_NO_WARNINGS
+			# windows.h
+			WIN32_LEAN_AND_MEAN
+			NOGPICAPMASKS
+			NOVIRTUALKEYCODES
+			NOWINMESSAGES
+			NOWINSTYLES
+			NOSYSMETRICS
+			NOMENUS
+			NOICONS
+			NOKEYSTATES
+			NOSYSCOMMANDS
+			NORASTEROPS
+			NOSHOWWINDOW
+			NOATOM
+			NOCLIPBOARD
+			NOCOLOR
+			NOCTLMGR
+			NODRAWTEXT
+			#NOGDI
+			NOKERNEL
+			#NOUSER
+			NONLS
+			NOMB
+			NOMEMMGR
+			NOMETAFILE
+			NOMINMAX
+			#NOMSG
+			NOOPENFILE
+			NOSCROLL
+			NOSERVICE
+			NOSOUND
+			NOTEXTMETRIC
+			NOWH
+			NOWINOFFSETS
+			NOCOMM
+			NOKANJI
+			NOHELP
+			NOPROFILER
+			NODEFERWINDOWPOS
+			NOMCX
+			NOIME
+			NOMDI
+			NOINOUT
+	)
+endif()

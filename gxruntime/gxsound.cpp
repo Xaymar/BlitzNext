@@ -1,7 +1,8 @@
 
-#include "std.h"
-#include "gxsound.h"
-#include "gxaudio.h"
+#include "std.hpp"
+#include "gxsound.hpp"
+#include "gxaudio.hpp"
+#include <fmod.h>
 
 gxSound::gxSound( gxAudio *a,FSOUND_SAMPLE *s ):
 audio(a),sample(s),defs_valid(true){

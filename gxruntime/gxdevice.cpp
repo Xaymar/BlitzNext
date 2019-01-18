@@ -1,7 +1,7 @@
 
-#include "std.h"
-#include "gxdevice.h"
-#include "gxruntime.h"
+#include "std.hpp"
+#include "gxdevice.hpp"
+#include "gxruntime.hpp"
 
 gxDevice::gxDevice(){
 	reset();
