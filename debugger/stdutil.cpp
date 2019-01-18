@@ -1,24 +1,28 @@
 
 #include "stdafx.hpp"
 
-int atoi( const string &s ){
-	return atoi( s.c_str() );
+int atoi(const string& s)
+{
+	return atoi(s.c_str());
 }
 
-double atof( const string &s ){
-	return atof( s.c_str() );
+double atof(const string& s)
+{
+	return atof(s.c_str());
 }
 
-string itoa( int n ){
-	char buff[32]; _itoa( n,buff,10 );
-	return string( buff );
+string itoa(int n)
+{
+	char buff[32];
+	_itoa(n, buff, 10);
+	return string(buff);
 }
 
 //static int _finite( double n ){		// definition: exponent anything but 2047.
 //
 //	int e;					// 11 bit exponent
-//	const int eMax = 2047;	// 0x7ff, all bits = 1	
-//	
+//	const int eMax = 2047;	// 0x7ff, all bits = 1
+//
 //	int *pn = (int *) &n;
 //
 //	e = *++pn;				// Intel order!
@@ -30,8 +34,8 @@ string itoa( int n ){
 //static int _isnan( double n ){		// definition: exponent 2047, nonzero fraction.
 //
 //	int e;					// 11 bit exponent
-//	const int eMax = 2047;	// 0x7ff, all bits = 1	
-//	
+//	const int eMax = 2047;	// 0x7ff, all bits = 1
+//
 //	int *pn = (int *) &n;
 //
 //	e = *++pn;				// Intel order!
@@ -50,64 +54,60 @@ string itoa( int n ){
 /////////////
 //By FLOYD!//
 /////////////
-string ftoa( float n ){
+string ftoa(float n)
+{
+	static const int digits = 6;
 
-	static const int digits=6;
+	int eNeg = -4, ePos = 8; // limits for e notation.
 
-	int eNeg = -4, ePos = 8;	// limits for e notation.
-
-	char buffer[50]; // from MSDN example, 25 would probably suffice
+	char   buffer[50]; // from MSDN example, 25 would probably suffice
 	string t;
-	int dec, sign;
+	int    dec, sign;
 
-	if ( _finite( n ) ){
+	if (_finite(n)) {
+		//		if ( digits < 1 ) digits = 1;	// less than one digit is nonsense
+		//		if ( digits > 8 ) digits = 8;	// practical maximum for float
 
-//		if ( digits < 1 ) digits = 1;	// less than one digit is nonsense
-//		if ( digits > 8 ) digits = 8;	// practical maximum for float
-		
-		t = _ecvt( n, digits, &dec, &sign );
+		t = _ecvt(n, digits, &dec, &sign);
 
-		if ( dec <= eNeg + 1 || dec > ePos ){
-
-			_gcvt( n, digits, buffer );
+		if (dec <= eNeg + 1 || dec > ePos) {
+			_gcvt(n, digits, buffer);
 			t = buffer;
 			return t;
 		}
-		
+
 		// Here is the tricky case. We want a nicely formatted
 		// number with no e-notation or multiple trailing zeroes.
-	
-		if ( dec <= 0 ){
 
-			t = "0." + string( -dec, '0' ) + t;
-			dec = 1;	// new location for decimal point
+		if (dec <= 0) {
+			t   = "0." + string(-dec, '0') + t;
+			dec = 1; // new location for decimal point
 
-		}
-		else if( dec < digits ){
+		} else if (dec < digits) {
+			t = t.substr(0, dec) + "." + t.substr(dec);
 
-			t = t.substr( 0, dec ) + "." + t.substr( dec );
-
-		}
-		else{
-
-			t = t + string( dec - digits, '0' ) + ".0";
+		} else {
+			t = t + string(dec - digits, '0') + ".0";
 			dec += dec - digits;
-
 		}
-	
+
 		// Finally, trim off excess zeroes.
 
-		int dp1 = dec + 1, p = t.length();	
-		while( --p > dp1 && t[p] == '0' );
-		t = string( t, 0, ++p );
+		int dp1 = dec + 1, p = t.length();
+		while (--p > dp1 && t[p] == '0')
+			;
+		t = string(t, 0, ++p);
 
 		return sign ? "-" + t : t;
 
-	}	// end of finite case
+	} // end of finite case
 
-	if ( _isnan( n ) )	return "NaN";
-	if ( n > 0.0 )		return "Infinity";
-	if ( n < 0.0 )		return "-Infinity";
+	if (_isnan(n))
+		return "NaN";
+	if (n > 0.0)
+		return "Infinity";
+	if (n < 0.0)
+		return "-Infinity";
 
 	abort();
 }
@@ -149,34 +149,44 @@ string ftoa( float n ){
 }
 */
 
-string tolower( const string &s ){
-	string t=s;
-	for( int k=0;k<t.size();++k ) t[k]=tolower(t[k]);
+string tolower(const string& s)
+{
+	string t = s;
+	for (int k = 0; k < t.size(); ++k)
+		t[k] = tolower(t[k]);
 	return t;
 }
 
-string toupper( const string &s ){
-	string t=s;
-	for( int k=0;k<t.size();++k ) t[k]=toupper(t[k]);
+string toupper(const string& s)
+{
+	string t = s;
+	for (int k = 0; k < t.size(); ++k)
+		t[k] = toupper(t[k]);
 	return t;
 }
 
-string fullfilename( const string &t ){
-	char buff[MAX_PATH+1],*p;
-	GetFullPathName( t.c_str(),MAX_PATH,buff,&p );
+string fullfilename(const string& t)
+{
+	char buff[MAX_PATH + 1], *p;
+	GetFullPathName(t.c_str(), MAX_PATH, buff, &p);
 	return string(buff);
 }
 
-string filenamepath( const string &t ){
-	char buff[MAX_PATH+1],*p;
-	GetFullPathName( t.c_str(),MAX_PATH,buff,&p );
-	if( !p ) return "";
-	*p=0;return string(buff);
+string filenamepath(const string& t)
+{
+	char buff[MAX_PATH + 1], *p;
+	GetFullPathName(t.c_str(), MAX_PATH, buff, &p);
+	if (!p)
+		return "";
+	*p = 0;
+	return string(buff);
 }
 
-string filenamefile( const string &t ){
-	char buff[MAX_PATH+1],*p;
-	GetFullPathName( t.c_str(),MAX_PATH,buff,&p );
-	if( !p ) return "";
-	return string( p );
+string filenamefile(const string& t)
+{
+	char buff[MAX_PATH + 1], *p;
+	GetFullPathName(t.c_str(), MAX_PATH, buff, &p);
+	if (!p)
+		return "";
+	return string(p);
 }

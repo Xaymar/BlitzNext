@@ -1,50 +1,50 @@
 
-#include "stdafx.hpp"
-#include "debugger.hpp"
 #include "debuggerapp.hpp"
-#include "resource.hpp"
+#include "debugger.hpp"
 #include "prefs.hpp"
+#include "resource.hpp"
+#include "stdafx.hpp"
 
 DebuggerApp debuggerApp;
 
-DebuggerApp::~DebuggerApp(){
-}
+DebuggerApp::~DebuggerApp() {}
 
-BOOL DebuggerApp::InitInstance(){
-
+BOOL DebuggerApp::InitInstance()
+{
 	AfxInitRichEdit();
 
-	main_frame=new MainFrame();
+	main_frame = new MainFrame();
 
-	m_pMainWnd=main_frame;
+	m_pMainWnd = main_frame;
 
 	RECT rect;
-	SystemParametersInfo( SPI_GETWORKAREA,0,&rect,0 );
+	SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
 
-	int x=rect.left;
-	int w=rect.right-x;
-	int h=240;
-	int y=rect.bottom-h;
+	int x = rect.left;
+	int w = rect.right - x;
+	int h = 240;
+	int y = rect.bottom - h;
 
-	main_frame->Create( 0,"Blitz Debugger",
-		WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN,
-		CRect( x,y,x+w,y+h ) );
-	main_frame->ShowWindow( SW_SHOW );
+	main_frame->Create(0, "Blitz Debugger", WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CRect(x, y, x + w, y + h));
+	main_frame->ShowWindow(SW_SHOW);
 	main_frame->UpdateWindow();
 
 	return TRUE;
 }
 
-int DebuggerApp::ExitInstance(){
+int DebuggerApp::ExitInstance()
+{
 	main_frame->DestroyWindow();
 	return 0;
 }
 
-MainFrame *DebuggerApp::mainFrame(){
+MainFrame* DebuggerApp::mainFrame()
+{
 	return debuggerApp.main_frame;
 }
 
-Debugger * _cdecl debuggerGetDebugger( void *mod,void *env ){
-	debuggerApp.mainFrame()->setRuntime( mod,env );
+Debugger* _cdecl debuggerGetDebugger(void* mod, void* env)
+{
+	debuggerApp.mainFrame()->setRuntime(mod, env);
 	return debuggerApp.mainFrame();
 }
