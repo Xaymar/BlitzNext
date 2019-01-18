@@ -1,6 +1,7 @@
 project(runtime)
 
 add_subdirectory(lib)
+add_subdirectory(gfx)
 add_subdirectory(blitz3d)
 
 add_library(${PROJECT_NAME} MODULE
@@ -13,8 +14,10 @@ add_library(${PROJECT_NAME} MODULE
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 		runtime_lib
-		gxruntime
+		runtime_gfx
 		stdutil
+		${fmod_LIBRARIES}
+		${FreeImage_LIBRARIES}
 )
 
 #target_include_directories(${PROJECT_NAME}
