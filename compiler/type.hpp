@@ -2,7 +2,7 @@
 #ifndef TYPE_H
 #define TYPE_H
 
-#include "decl.h"
+#include "decl.hpp"
 
 struct FuncType;
 struct ArrayType;

@@ -2,8 +2,8 @@
 #ifndef STD_COMPILER_H
 #define STD_COMPILER_H
 
-#include "../config/config.h"
-#include "../stdutil/stdutil.h"
+#include "config.hpp"
+#include "stdutil.hpp"
 
 #include <set>
 #include <map>

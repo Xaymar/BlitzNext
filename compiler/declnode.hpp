@@ -24,8 +24,8 @@ struct DeclSeqNode : public Node{
 	int  size(){ return decls.size(); }
 };
 
-#include "exprnode.h"
-#include "stmtnode.h"
+#include "exprnode.hpp"
+#include "stmtnode.hpp"
 
 //'kind' shouldn't really be in Parser...
 //should probably be LocalDeclNode,GlobalDeclNode,ParamDeclNode

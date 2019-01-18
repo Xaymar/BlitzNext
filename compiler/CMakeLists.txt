@@ -1,0 +1,98 @@
+project(compiler)
+
+add_library(${PROJECT_NAME} MODULE
+	"assem.hpp"
+	"codegen.hpp"
+	"compiler.cpp"
+	"compiler.hpp"
+	"decl.cpp"
+	"decl.hpp"
+	"declnode.cpp"
+	"declnode.hpp"
+	"environ.cpp"
+	"environ.hpp"
+	"ex.hpp"
+	"exprnode.cpp"
+	"exprnode.hpp"
+	"label.hpp"
+	"node.cpp"
+	"node.hpp"
+	"nodes.hpp"
+	"parser.cpp"
+	"parser.hpp"
+	"prognode.cpp"
+	"prognode.hpp"
+	"std.cpp"
+	"std.hpp"
+	"stmtnode.cpp"
+	"stmtnode.hpp"
+	"stringmap.hpp"
+	"toker.cpp"
+	"toker.hpp"
+	"type.cpp"
+	"type.hpp"
+	"var.hpp"
+	"varnode.cpp"
+	"varnode.hpp"
+)
+
+target_link_libraries(${PROJECT_NAME}
+	PRIVATE
+		config
+		stdutil
+)
+
+target_include_directories(${PROJECT_NAME}
+	PUBLIC
+		${PROJECT_SOURCE_DIR}
+)
+
+if (WIN32)
+	target_compile_definitions(${PROJECT_NAME}
+		PRIVATE
+			_CRT_SECURE_NO_WARNINGS
+			# windows.h
+			WIN32_LEAN_AND_MEAN
+			NOGPICAPMASKS
+			NOVIRTUALKEYCODES
+			NOWINMESSAGES
+			NOWINSTYLES
+			NOSYSMETRICS
+			NOMENUS
+			NOICONS
+			NOKEYSTATES
+			NOSYSCOMMANDS
+			NORASTEROPS
+			NOSHOWWINDOW
+			NOATOM
+			NOCLIPBOARD
+			NOCOLOR
+			NOCTLMGR
+			NODRAWTEXT
+			NOGDI
+			NOKERNEL
+			NOUSER
+			NONLS
+			NOMB
+			NOMEMMGR
+			NOMETAFILE
+			NOMINMAX
+			NOMSG
+			NOOPENFILE
+			NOSCROLL
+			NOSERVICE
+			NOSOUND
+			NOTEXTMETRIC
+			NOWH
+			NOWINOFFSETS
+			NOCOMM
+			NOKANJI
+			NOHELP
+			NOPROFILER
+			NODEFERWINDOWPOS
+			NOMCX
+			NOIME
+			NOMDI
+			NOINOUT
+	)
+endif()

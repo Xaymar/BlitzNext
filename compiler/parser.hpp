@@ -8,8 +8,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "toker.h"
-#include "nodes.h"
+#include "toker.hpp"
+#include "nodes.hpp"
 
 class Parser{
 public:

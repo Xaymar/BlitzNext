@@ -1,7 +1,7 @@
 
-#include "std.h"
+#include "std.hpp"
 #include <cstdlib>
-#include "parser.h"
+#include "parser.hpp"
 
 #ifdef DEMO
 static const int TEXTLIMIT=16384;

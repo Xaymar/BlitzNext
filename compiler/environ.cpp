@@ -1,6 +1,6 @@
 
-#include "std.h"
-#include "environ.h"
+#include "std.hpp"
+#include "environ.hpp"
 
 Environ::Environ( const string &f,Type *r,int l,Environ *gs )
 :funcLabel(f),returnType(r),level(l),globals(gs){

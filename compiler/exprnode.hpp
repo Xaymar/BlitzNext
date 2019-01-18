@@ -2,7 +2,7 @@
 #ifndef EXPRNODE_H
 #define EXPRNODE_H
 
-#include "node.h"
+#include "node.hpp"
 
 struct ConstNode;	//is constant int,float or string
 
@@ -30,7 +30,7 @@ struct ExprSeqNode : public Node {
 	void castTo(Type *t, Environ *e);
 };
 
-#include "varnode.h"
+#include "varnode.hpp"
 
 struct CastNode : public ExprNode {
 	ExprNode *expr;

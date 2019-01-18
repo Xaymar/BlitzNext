@@ -2,7 +2,7 @@
 #ifndef STMTNODE_H
 #define STMTNODE_H
 
-#include "node.h"
+#include "node.hpp"
 
 struct StmtNode : public Node{
 	int pos;	//offset in source stream
@@ -26,8 +26,8 @@ struct StmtSeqNode : public Node{
 	static void reset( const string &file,const string &lab );
 };
 
-#include "exprnode.h"
-#include "declnode.h"
+#include "exprnode.hpp"
+#include "declnode.hpp"
 
 struct IncludeNode : public StmtNode{
 	string file,label;

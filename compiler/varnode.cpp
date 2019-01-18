@@ -1,6 +1,6 @@
 
-#include "std.h"
-#include "nodes.h"
+#include "std.hpp"
+#include "nodes.hpp"
 
 //////////////////////////////////
 // Common get/set for variables //

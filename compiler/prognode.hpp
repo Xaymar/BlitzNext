@@ -2,8 +2,8 @@
 #ifndef PROGNODE_H
 #define PROGNODE_H
 
-#include "node.h"
-#include "codegen.h"
+#include "node.hpp"
+#include "codegen.hpp"
 
 struct UserFunc{
 	string ident,proc,lib;

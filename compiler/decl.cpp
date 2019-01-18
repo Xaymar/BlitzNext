@@ -1,7 +1,7 @@
 
-#include "std.h"
-#include "decl.h"
-#include "type.h"
+#include "std.hpp"
+#include "decl.hpp"
+#include "type.hpp"
 
 Decl::~Decl(){
 }

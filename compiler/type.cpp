@@ -1,6 +1,6 @@
 
-#include "std.h"
-#include "type.h"
+#include "std.hpp"
+#include "type.hpp"
 
 static struct v_type : public Type{
 	bool canCastTo( Type *t ){

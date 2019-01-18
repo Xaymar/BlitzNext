@@ -2,7 +2,7 @@
 #ifndef CODEGEN_H
 #define CODEGEN_H
 
-#include "std.h"
+#include "std.hpp"
 
 enum{
 	IR_JUMP,IR_JUMPT,IR_JUMPF,IR_JUMPGE,

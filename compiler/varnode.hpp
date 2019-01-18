@@ -2,7 +2,7 @@
 #ifndef VARNODE_H
 #define VARNODE_H
 
-#include "varnode.h"
+#include "varnode.hpp"
 
 struct VarNode : public Node{
 	Type *sem_type;
@@ -17,7 +17,7 @@ struct VarNode : public Node{
 	virtual TNode *translate( Codegen *g )=0;
 };
 
-#include "decl.h"
+#include "decl.hpp"
 
 struct DeclVarNode : public VarNode{
 	Decl *sem_decl;
