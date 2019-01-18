@@ -1,8 +1,9 @@
-
 #include "gxscene.hpp"
 #include "gxgraphics.hpp"
 #include "gxruntime.hpp"
-#include "std.hpp"
+#include "gxcanvas.hpp"
+#include "gxlight.hpp"
+#include "gxmesh.hpp"
 
 static bool      can_wb;
 static int       hw_tex_stages, tex_stages;
@@ -627,7 +628,7 @@ void gxScene::setRenderState(const RenderState& rs)
 	}
 }
 
-bool gxScene::begin(const vector<gxLight*>& lights)
+bool gxScene::begin(const std::vector<gxLight*>& lights)
 {
 	if (dir3dDev->BeginScene() != D3D_OK)
 		return false;

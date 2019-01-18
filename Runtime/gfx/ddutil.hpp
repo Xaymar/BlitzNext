@@ -1,8 +1,6 @@
-
-#ifndef DDUTIL_H
-#define DDUTIL_H
-
-#include "GraphicsRuntime.hpp"
+#pragma once
+#include <string>
+#include "graphicsruntime.hpp"
 
 class gxGraphics;
 
@@ -64,5 +62,3 @@ class PixelFormat {
 		return point(p);
 	}
 };
-
-#endif

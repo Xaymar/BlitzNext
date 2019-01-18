@@ -1,9 +1,7 @@
 #pragma once
+#include "graphicsruntime.hpp"
 
-#include "GraphicsRuntime.hpp"
-#include "gxdevice.hpp"
-#include "std.hpp"
-
+class gxDevice;
 class gxRuntime;
 
 class gxInput {

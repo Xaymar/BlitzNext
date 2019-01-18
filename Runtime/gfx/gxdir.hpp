@@ -1,9 +1,6 @@
-
-#ifndef GXDIR_H
-#define GXDIR_H
-
+#pragma once
 #include <string>
-#include <windows.h>
+#include <Windows.h>
 
 class gxDir {
 	public:
@@ -18,5 +15,3 @@ class gxDir {
 	public:
 	std::string getNextFile();
 };
-
-#endif

@@ -1,9 +1,5 @@
-
-#ifndef GXFILESYSTEM_H
-#define GXFILESYSTEM_H
-
+#pragma once
 #include <string>
-
 #include "gxdir.hpp"
 
 class gxFileSystem {
@@ -31,5 +27,3 @@ class gxFileSystem {
 	gxDir* verifyDir(gxDir* d);
 	void   closeDir(gxDir* dir);
 };
-
-#endif

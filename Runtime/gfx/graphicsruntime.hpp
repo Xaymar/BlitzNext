@@ -1,5 +1,5 @@
 #pragma once
-#include <windows.h>
+#include <Windows.h>
 
 // Direct Draw
 #define DIRECTDRAW_VERSION 0x0700

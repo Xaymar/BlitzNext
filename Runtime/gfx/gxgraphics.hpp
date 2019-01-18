@@ -1,23 +1,17 @@
-
-#ifndef GXGRAPHICS_H
-#define GXGRAPHICS_H
-
+#pragma once
 #include <set>
 #include <string>
-
 #include <d3d.h>
-#include <windows.h>
-#include "GraphicsRuntime.hpp"
-
+#include <Windows.h>
+#include "graphicsruntime.hpp"
 #include "ddutil.hpp"
 
-#include "gxcanvas.hpp"
-#include "gxfont.hpp"
-#include "gxmesh.hpp"
-#include "gxmovie.hpp"
-#include "gxscene.hpp"
-
+class gxCanvas;
+class gxFont;
+class gxMesh;
+class gxMovie;
 class gxRuntime;
+class gxScene;
 
 class gxGraphics {
 	private:
@@ -122,5 +116,3 @@ class gxGraphics {
 	gxMesh* verifyMesh(gxMesh* mesh);
 	void    freeMesh(gxMesh* mesh);
 };
-
-#endif

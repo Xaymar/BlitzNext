@@ -1,10 +1,8 @@
-
-#ifndef GXSOUND_H
-#define GXSOUND_H
-
-#include "gxchannel.hpp"
+#pragma once;
 
 class gxAudio;
+class gxChannel;
+
 struct FSOUND_SAMPLE;
 
 class gxSound {
@@ -34,5 +32,3 @@ class gxSound {
 	void setVolume(float volume);
 	void setPan(float pan);
 };
-
-#endif

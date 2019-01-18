@@ -1,8 +1,9 @@
-#pragma once
-
 #include "gxinput.hpp"
+#include "gxdevice.hpp"
 #include "gxruntime.hpp"
-#include "std.hpp"
+#include "gxgraphics.hpp"
+
+#include <mmsystem.h>
 
 static const int QUE_SIZE = 32;
 
@@ -149,7 +150,7 @@ class Joystick : public Device {
 
 static Keyboard*         keyboard;
 static Mouse*            mouse;
-static vector<Joystick*> joysticks;
+static std::vector<Joystick*> joysticks;
 
 static Keyboard* createKeyboard(gxInput* input)
 {

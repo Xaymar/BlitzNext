@@ -1,12 +1,11 @@
-
 #include "ddutil.hpp"
-#include "GraphicsRuntime.hpp"
+#include "graphicsruntime.hpp"
 #include "asmcoder.hpp"
 #include "gxcanvas.hpp"
 #include "gxruntime.hpp"
-#include "std.hpp"
+#include "gxgraphics.hpp"
 
-#define FREEIMAGE_LIB
+//#define FREEIMAGE_LIB
 #include <freeimage.h>
 
 extern gxRuntime* gx_runtime;
@@ -100,7 +99,7 @@ static void adjustTexSize(int* width, int* height, IDirect3DDevice7* dir3dDev, b
 	}
 
 	//check aspect ratio
-	if (max = ddDesc.dwMaxTextureAspectRatio) {
+	if ((max = ddDesc.dwMaxTextureAspectRatio) && max > 0) {
 		int asp = w > h ? w / h : h / w;
 		if (asp > max) {
 			if (w > h)
@@ -267,33 +266,33 @@ void ddUtil::buildMipMaps(IDirectDrawSurface7* surf)
 	}
 }
 
-void ddUtil::copy(IDirectDrawSurface7* dest, int dx, int dy, int dw, int dh, IDirectDrawSurface7* src, int sx, int sy,
-				  int sw, int sh)
+void ddUtil::copy(IDirectDrawSurface7* dst_surface, int dx, int dy, int dw, int dh, IDirectDrawSurface7* src_surface,
+				  int sx, int sy, int sw, int sh)
 {
 	DDSURFACEDESC2 src_desc = {sizeof(src_desc)};
-	src->Lock(0, &src_desc, DDLOCK_WAIT, 0);
-	PixelFormat    src_fmt(src_desc.ddpfPixelFormat);
-	unsigned char* src_p = (unsigned char*)src_desc.lpSurface;
-	src_p += src_desc.lPitch * sy + src_fmt.getPitch() * sx;
+	src_surface->Lock(0, &src_desc, DDLOCK_WAIT, 0);
+	PixelFormat    src_format(src_desc.ddpfPixelFormat);
+	unsigned char* src_memory = (unsigned char*)src_desc.lpSurface;
+	src_memory += src_desc.lPitch * sy + src_format.getPitch() * sx;
 
-	DDSURFACEDESC2 dest_desc = {sizeof(dest_desc)};
-	dest->Lock(0, &dest_desc, DDLOCK_WAIT, 0);
-	PixelFormat    dest_fmt(dest_desc.ddpfPixelFormat);
-	unsigned char* dest_p = (unsigned char*)dest_desc.lpSurface;
-	dest_p += dest_desc.lPitch * dy + dest_fmt.getPitch() * dx;
+	DDSURFACEDESC2 dst_desc = {sizeof(dst_desc)};
+	dst_surface->Lock(0, &dst_desc, DDLOCK_WAIT, 0);
+	PixelFormat    dst_format(dst_desc.ddpfPixelFormat);
+	unsigned char* dst_memory = (unsigned char*)dst_desc.lpSurface;
+	dst_memory += dst_desc.lPitch * dy + dst_format.getPitch() * dx;
 
 	for (int y = 0; y < dh; ++y) {
-		unsigned char* dest = dest_p;
-		unsigned char* src  = src_p + src_desc.lPitch * (y * sh / dh);
+		unsigned char* dst = dst_memory;
+		unsigned char* src = src_memory + src_desc.lPitch * (y * sh / dh);
 		for (int x = 0; x < dw; ++x) {
-			dest_fmt.setPixel(dest, src_fmt.getPixel(src + src_fmt.getPitch() * (x * sw / dw)));
-			dest += dest_fmt.getPitch();
+			dst_format.setPixel(dst, src_format.getPixel(src + src_format.getPitch() * (x * sw / dw)));
+			dst += dst_format.getPitch();
 		}
-		dest_p += dest_desc.lPitch;
+		dst_memory += dst_desc.lPitch;
 	}
 
-	src->Unlock(0);
-	dest->Unlock(0);
+	src_surface->Unlock(0);
+	dst_surface->Unlock(0);
 }
 
 IDirectDrawSurface7* ddUtil::createSurface(int w, int h, int flags, gxGraphics* gfx)
@@ -524,7 +523,7 @@ IDirectDrawSurface7* loadDXTC(const char* filename, gxGraphics* gfx)
 IDirectDrawSurface7* ddUtil::loadSurface(const std::string& f, int flags, gxGraphics* gfx)
 {
 	int i = f.find(".dds");
-	if (i != string::npos && i + 4 == f.size()) {
+	if (i != std::string::npos && i + 4 == f.size()) {
 		//dds file!
 		IDirectDrawSurface7* surf = loadDXTC(f.c_str(), gfx);
 		return surf;
@@ -534,7 +533,7 @@ IDirectDrawSurface7* ddUtil::loadSurface(const std::string& f, int flags, gxGrap
 	FREE_IMAGE_FORMAT fmt = FreeImage_GetFileType(f.c_str(), f.size());
 	if (fmt == FIF_UNKNOWN) {
 		int n = f.find(".");
-		if (n == string::npos)
+		if (n == std::string::npos)
 			return 0;
 		fmt = FreeImage_GetFileType(f.c_str());
 		if (fmt == FIF_UNKNOWN)

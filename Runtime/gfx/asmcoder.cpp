@@ -4,13 +4,10 @@
 // testroutine for asmcoder class
 // see asmcoder.h for readme
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
+#include "asmcoder.hpp"
+#include <Windows.h>
 #include <stdio.h>
 #include <time.h>
-
-#include "asmcoder.hpp"
 
 void(__fastcall* plot)(void* s, int argb);
 int(__fastcall* point)(void* s);
@@ -62,8 +59,6 @@ void main()
 	delete coder;
 	return;
 }
-
-//	void (__fastcall *plot)(int x,int y,int argb,Surface *s)=(void (__fastcall *)(int,int,int,Surface*))code;
 
 void ortest()
 {

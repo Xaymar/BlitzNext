@@ -1,6 +1,4 @@
-
-#ifndef GXMUSIC_H
-#define GXMUSIC_H
+#pragma once
 
 class gxAudio;
 
@@ -21,14 +19,16 @@ class gxMusic {
 
 	/***** GX INTERFACE *****/
 	public:
+
 	//modifiers
 	void play();
+
 	void stop();
+
 	void setPaused(bool paused);
+
 	void setVolume(float volume);
 
 	//accessors
 	bool isPlaying() const;
 };
-
-#endif

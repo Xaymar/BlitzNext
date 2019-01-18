@@ -1,6 +1,4 @@
-
-#ifndef GXDEVICE_H
-#define GXDEVICE_H
+#pragma once
 
 class gxDevice {
 	public:
@@ -34,5 +32,3 @@ class gxDevice {
 
 	float getAxisState(int axis);
 };
-
-#endif

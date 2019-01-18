@@ -1,16 +1,15 @@
-
-#ifndef GXRUNTIME_H
-#define GXRUNTIME_H
-
+#pragma once
+#include "graphicsruntime.hpp"
 #include <string>
 #include <vector>
-#include <windows.h>
 
-#include "gxaudio.hpp"
-#include "gxfilesystem.hpp"
-#include "gxgraphics.hpp"
-#include "gxinput.hpp"
-#include "gxtimer.hpp"
+#include <Windows.h>
+
+class gxAudio;
+class gxInput;
+class gxGraphics;
+class gxFileSystem;
+class gxTimer;
 
 class gxRuntime {
 	/***** INTERNAL INTERFACE *****/
@@ -139,5 +138,3 @@ class gxRuntime {
 
 	OSVERSIONINFO osinfo;
 };
-
-#endif

@@ -1,10 +1,7 @@
-
-#ifndef GXMESH_H
-#define GXMESH_H
-
+#pragma once
 #include <d3d.h>
-#include <windows.h>
-#include "GraphicsRuntime.hpp"
+#include <Windows.h>
+#include "graphicsruntime.hpp"
 
 class gxGraphics;
 
@@ -81,5 +78,3 @@ class gxMesh {
 		tri_indices[n * 3 + 2] = v2;
 	}
 };
-
-#endif

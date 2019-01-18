@@ -1,7 +1,7 @@
-
 #include "gxtimer.hpp"
 #include "gxruntime.hpp"
-#include "std.hpp"
+
+#include <mmsystem.h>
 
 gxTimer::gxTimer(gxRuntime* rt, int hertz) : runtime(rt), ticks_get(0), ticks_put(0)
 {

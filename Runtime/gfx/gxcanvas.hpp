@@ -1,7 +1,5 @@
-
-#ifndef GXCANVAS_H
-#define GXCANVAS_H
-
+#pragma once
+#include "graphicsruntime.hpp"
 #include "ddutil.hpp"
 
 class gxFont;
@@ -140,5 +138,3 @@ class gxCanvas {
 	unsigned getColor() const;
 	unsigned getClsColor() const;
 };
-
-#endif

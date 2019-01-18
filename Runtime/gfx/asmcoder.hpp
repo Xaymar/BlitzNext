@@ -43,8 +43,7 @@ ToDo:
 
 */
 
-#ifndef ASMCODER_H
-#define ASMCODER_H
+#pragma once
 
 class IA32 {
 	public:
@@ -524,5 +523,3 @@ class AsmCoder : IA32 {
 		return off;
 	}
 };
-
-#endif

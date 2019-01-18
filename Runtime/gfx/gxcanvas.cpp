@@ -1,9 +1,8 @@
-
 #include "gxcanvas.hpp"
 #include "asmcoder.hpp"
 #include "gxgraphics.hpp"
 #include "gxruntime.hpp"
-#include "std.hpp"
+#include "gxfont.hpp"
 
 #define DEBUG_BITMASK
 
@@ -662,7 +661,7 @@ void gxCanvas::blit(int x, int y, gxCanvas* src, int src_x, int src_y, int src_w
 	damage(dest_r);
 }
 
-void gxCanvas::text(int x, int y, const string& t)
+void gxCanvas::text(int x, int y, const std::string& t)
 {
 	int ty = y + origin_y;
 	if (ty >= viewport.bottom)

@@ -1,8 +1,7 @@
-
 #include "gxfilesystem.hpp"
-#include "std.hpp"
+#include <set>
 
-static set<gxDir*> dir_set;
+static std::set<gxDir*> dir_set;
 
 gxFileSystem::gxFileSystem()
 {
@@ -35,7 +34,7 @@ bool gxFileSystem::deleteFile(const std::string& file)
 	return DeleteFile(file.c_str()) ? true : false;
 }
 
-bool gxFileSystem::copyFile(const std::string& src, const string& dest)
+bool gxFileSystem::copyFile(const std::string& src, const std::string& dest)
 {
 	return CopyFile(src.c_str(), dest.c_str(), false) ? true : false;
 }
@@ -50,12 +49,12 @@ bool gxFileSystem::setCurrentDir(const std::string& dir)
 	return SetCurrentDirectory(dir.c_str()) ? true : false;
 }
 
-string gxFileSystem::getCurrentDir() const
+std::string gxFileSystem::getCurrentDir() const
 {
 	char buff[MAX_PATH];
 	if (!GetCurrentDirectory(MAX_PATH, buff))
 		return "";
-	string t = buff;
+	std::string t = buff;
 	if (t.size() && t[t.size() - 1] != '\\')
 		t += '\\';
 	return t;
@@ -80,7 +79,7 @@ int gxFileSystem::getFileType(const std::string& name) const
 
 gxDir* gxFileSystem::openDir(const std::string& name, int flags)
 {
-	string t = name;
+	std::string t = name;
 	if (t[t.size() - 1] == '\\')
 		t += "*";
 	else
@@ -94,6 +93,7 @@ gxDir* gxFileSystem::openDir(const std::string& name, int flags)
 	}
 	return 0;
 }
+
 gxDir* gxFileSystem::verifyDir(gxDir* d)
 {
 	return dir_set.count(d) ? d : 0;

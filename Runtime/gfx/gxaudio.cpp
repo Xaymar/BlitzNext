@@ -1,7 +1,15 @@
-
 #include "gxaudio.hpp"
+#include "gxchannel.hpp"
+#include "gxsound.hpp"
+#include <set>
+#include <vector>
+#include <map>
+
+#include <stdutil.hpp>
+
+extern "C" {
 #include <fmod.h>
-#include "std.hpp"
+}
 
 struct StaticChannel : public gxChannel {
 	virtual void play() = 0;
@@ -162,13 +170,13 @@ struct MusicChannel : public StaticChannel {
 	FMUSIC_MODULE* module;
 };
 
-static set<gxSound*>               sound_set;
-static vector<gxChannel*>          channels;
-static map<string, StaticChannel*> songs;
+static std::set<gxSound*>               sound_set;
+static std::vector<gxChannel*>     channels;
+static std::map<std::string, StaticChannel*> songs;
 static CDChannel*                  cdChannel;
 
 static int                   next_chan;
-static vector<SoundChannel*> soundChannels;
+static std::vector<SoundChannel*> soundChannels;
 
 static gxChannel* allocSoundChannel(int n)
 {
@@ -245,7 +253,7 @@ void gxAudio::pause() {}
 
 void gxAudio::resume() {}
 
-gxSound* gxAudio::loadSound(const string& f, bool use3d)
+gxSound* gxAudio::loadSound(const std::string& f, bool use3d)
 {
 	int flags = FSOUND_NORMAL | (use3d ? FSOUND_FORCEMONO : FSOUND_2D);
 
@@ -289,18 +297,19 @@ void gxAudio::set3dListener(const float pos[3], const float vel[3], const float 
 	FSOUND_Update();
 }
 
-gxChannel* gxAudio::playFile(const string& t, bool use_3d)
+gxChannel* gxAudio::playFile(const std::string& t, bool use_3d)
 {
-	string                                f    = tolower(t);
+	std::string                                     f    = tolower(t);
 	StaticChannel*                        chan = 0;
-	map<string, StaticChannel*>::iterator it   = songs.find(f);
+	std::map<std::string, StaticChannel*>::iterator it   = songs.find(f);
 	if (it != songs.end()) {
 		chan = it->second;
 		chan->play();
 		return chan;
-	} else if (f.find(".raw") != string::npos || f.find(".wav") != string::npos || f.find(".mp2") != string::npos
-			   || f.find(".mp3") != string::npos || f.find(".ogg") != string::npos || f.find(".wma") != string::npos
-			   || f.find(".asf") != string::npos) {
+	} else if (f.find(".raw") != std::string::npos || f.find(".wav") != std::string::npos
+			   || f.find(".mp2") != std::string::npos || f.find(".mp3") != std::string::npos
+			   || f.find(".ogg") != std::string::npos || f.find(".wma") != std::string::npos
+			   || f.find(".asf") != std::string::npos) {
 		FSOUND_STREAM* stream = FSOUND_Stream_Open(f.c_str(), use_3d, 0, 0);
 		if (!stream)
 			return 0;

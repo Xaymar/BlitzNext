@@ -1,7 +1,5 @@
-
 #include "gxmovie.hpp"
 #include "gxgraphics.hpp"
-#include "std.hpp"
 
 gxMovie::gxMovie(gxGraphics* g, IMultiMediaStream* mm) : gfx(g), mm_stream(mm), playing(true)
 {

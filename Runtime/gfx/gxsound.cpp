@@ -1,8 +1,9 @@
-
 #include "gxsound.hpp"
-#include <fmod.h>
 #include "gxaudio.hpp"
-#include "std.hpp"
+
+extern "C" {
+#include <fmod.h>
+}
 
 gxSound::gxSound(gxAudio* a, FSOUND_SAMPLE* s) : audio(a), sample(s), defs_valid(true)
 {

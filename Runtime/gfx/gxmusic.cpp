@@ -1,7 +1,8 @@
-
 #include "gxmusic.hpp"
+
+extern "C" {
 #include <fmod.h>
-#include "std.hpp"
+}
 
 gxMusic::gxMusic(gxAudio* a, FMUSIC_MODULE* m, FSOUND_STREAM* s) : audio(a), module(m), stream(s), stream_channel(-1) {}
 
@@ -54,8 +55,6 @@ bool gxMusic::isPlaying() const
 {
 	if (module) {
 		return FMUSIC_IsPlaying(module) ? true : false;
-	} else {
-		return FSOUND_IsPlaying(stream_channel) ? true : false;
 	}
-	return false;
+	return FSOUND_IsPlaying(stream_channel) ? true : false;
 }

@@ -1,6 +1,4 @@
-
-#ifndef GXCHANNEL_H
-#define GXCHANNEL_H
+#pragma once
 
 class gxChannel {
 	/***** GX INTERFACE *****/
@@ -16,5 +14,3 @@ class gxChannel {
 
 	virtual bool isPlaying() = 0;
 };
-
-#endif

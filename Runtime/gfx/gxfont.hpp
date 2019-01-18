@@ -1,6 +1,5 @@
-
-#ifndef GXFONT_H
-#define GXFONT_H
+#pragma once
+#include <string>
 
 class gxCanvas;
 class gxGraphics;
@@ -30,5 +29,3 @@ class gxFont {
 	int  getWidth(const std::string& text) const; //width of string
 	bool isPrintable(int chr) const;              //printable char?
 };
-
-#endif

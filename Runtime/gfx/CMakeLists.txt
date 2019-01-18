@@ -40,18 +40,17 @@ add_library(${PROJECT_NAME} STATIC
 	"gxsound.cpp"
 	"gxtimer.hpp"
 	"gxtimer.cpp"
-	"std.hpp"
-	"std.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME}
-	PRIVATE
-		stdutil
-	PUBLIC 
-		shell32
-		winmm
-		${fmod_LIBRARIES}
-		${FreeImage_LIBRARIES}
+	stdutil
+	shell32
+	winmm
+	${fmod_LIBRARIES}
+	${FreeImage_LIBRARIES}
+	ddraw
+	dxguid
+	dinput8
 )
 
 target_include_directories(${PROJECT_NAME}

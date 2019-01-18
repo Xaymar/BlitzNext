@@ -1,7 +1,5 @@
-
 #include "gxdevice.hpp"
 #include "gxruntime.hpp"
-#include "std.hpp"
 
 gxDevice::gxDevice()
 {

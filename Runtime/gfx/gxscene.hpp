@@ -1,21 +1,17 @@
-
-
-#ifndef GXSCENE_H
-#define GXSCENE_H
-
+#pragma once
 #include <d3d.h>
 #include <map>
-#include <windows.h>
-#include "GraphicsRuntime.hpp"
-
-#include "gxlight.hpp"
+#include <Windows.h>
+#include "graphicsruntime.hpp"
+#include <vector>
+#include <set>
 
 class gxCanvas;
-
 class gxMesh;
 class gxLight;
 class gxGraphics;
 class gxTexture;
+class gxLight;
 
 class gxScene {
 	public:
@@ -142,5 +138,3 @@ class gxScene {
 	void setTriCull();
 	void setTexState(int index, const TexState& state, bool set_blend);
 };
-
-#endif

@@ -1,12 +1,23 @@
-#pragma once
-
 #include "gxruntime.hpp"
-#include <fmod.h>
+#include <algorithm>
+#include <map>
+#include "graphicsruntime.hpp"
+#include "gxaudio.hpp"
+#include "gxcanvas.hpp"
+#include "gxfilesystem.hpp"
+#include "gxgraphics.hpp"
+#include "gxinput.hpp"
+#include "gxtimer.hpp"
+
+#include <stdutil.hpp>
+#include <Windows.h>
+#include <mmsystem.h>
 #include <shellapi.h>
-#include <windows.h>
 #include <zmouse.h>
-#include "GraphicsRuntime.hpp"
-#include "std.hpp"
+
+extern "C" {
+#include <fmod.h>
+}
 
 struct gxRuntime::GfxMode {
 	DDSURFACEDESC2 desc;
@@ -21,8 +32,8 @@ struct gxRuntime::GfxDriver {
 static const int static_ws = WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 static const int scaled_ws = WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
 
-static string         app_title;
-static string         app_close;
+static std::string    app_title;
+static std::string    app_close;
 static gxRuntime*     runtime;
 static bool           busy, suspended;
 static volatile bool  run_flag;
@@ -31,11 +42,11 @@ static DDSURFACEDESC2 desktop_desc;
 typedef int(_stdcall* LibFunc)(const void* in, int in_sz, void* out, int out_sz);
 
 struct gxDll {
-	HINSTANCE            hinst;
-	map<string, LibFunc> funcs;
+	HINSTANCE                      hinst;
+	std::map<std::string, LibFunc> funcs;
 };
 
-static map<string, gxDll*> libs;
+static std::map<std::string, gxDll*> libs;
 
 static LRESULT CALLBACK windowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -57,14 +68,14 @@ static IDirectDrawClipper*  clipper;
 static IDirectDrawSurface7* primSurf;
 //static Debugger *debugger;
 
-static set<gxTimer*> timers;
+static std::set<gxTimer*> timers;
 
 enum { WM_STOP = WM_USER + 1, WM_RUN, WM_END };
 
 ////////////////////
 // STATIC STARTUP //
 ////////////////////
-gxRuntime* gxRuntime::openRuntime(HINSTANCE hinst, const string& cmd_line, void* d)
+gxRuntime* gxRuntime::openRuntime(HINSTANCE hinst, const std::string& cmd_line, void* d)
 {
 	if (runtime)
 		return 0;
@@ -105,7 +116,7 @@ void gxRuntime::closeRuntime(gxRuntime* r)
 	if (!runtime || runtime != r)
 		return;
 
-	map<string, gxDll*>::const_iterator it;
+	std::map<std::string, gxDll*>::const_iterator it;
 	for (it = libs.begin(); it != libs.end(); ++it) {
 		FreeLibrary(it->second->hinst);
 	}
@@ -120,7 +131,7 @@ void gxRuntime::closeRuntime(gxRuntime* r)
 //////////////////////////
 typedef int(_stdcall* SetAppCompatDataFunc)(int x, int y);
 
-gxRuntime::gxRuntime(HINSTANCE hi, const string& cl, HWND hw)
+gxRuntime::gxRuntime(HINSTANCE hi, const std::string& cl, HWND hw)
 	: hinst(hi), cmd_line(cl), hwnd(hw), curr_driver(0), enum_all(false), pointer_visible(true), audio(0), input(0),
 	  graphics(0), fileSystem(0), use_di(false)
 {
@@ -338,7 +349,7 @@ void gxRuntime::flip(bool vwait)
 		}
 		if (n >= 0)
 			return;
-		string t = "Flip Failed! Return code:" + itoa(n & 0x7fff);
+		std::string t = "Flip Failed! Return code:" + itoa(n & 0x7fff);
 		debugLog(t.c_str());
 		break;
 	}
@@ -677,7 +688,7 @@ void gxRuntime::debugLog(const char* t)
 /////////////////////////
 // RETURN COMMAND LINE //
 /////////////////////////
-string gxRuntime::commandLine()
+std::string gxRuntime::commandLine()
 {
 	return cmd_line;
 }
@@ -685,24 +696,24 @@ string gxRuntime::commandLine()
 /////////////
 // EXECUTE //
 /////////////
-bool gxRuntime::execute(const string& cmd_line)
+bool gxRuntime::execute(const std::string& cmd_line)
 {
 	if (!cmd_line.size())
 		return false;
 
 	//convert cmd_line to cmd and params
-	string cmd = cmd_line, params;
+	std::string cmd = cmd_line, params;
 	while (cmd.size() && cmd[0] == ' ')
 		cmd = cmd.substr(1);
 	if (cmd.find('\"') == 0) {
 		int n = cmd.find('\"', 1);
-		if (n != string::npos) {
+		if (n != std::string::npos) {
 			params = cmd.substr(n + 1);
 			cmd    = cmd.substr(1, n - 1);
 		}
 	} else {
 		int n = cmd.find(' ');
-		if (n != string::npos) {
+		if (n != std::string::npos) {
 			params = cmd.substr(n + 1);
 			cmd    = cmd.substr(0, n);
 		}
@@ -720,7 +731,7 @@ bool gxRuntime::execute(const string& cmd_line)
 ///////////////
 // APP TITLE //
 ///////////////
-void gxRuntime::setTitle(const string& t, const string& e)
+void gxRuntime::setTitle(const std::string& t, const std::string& e)
 {
 	app_title = t;
 	app_close = e;
@@ -1165,7 +1176,7 @@ static BOOL WINAPI enumDriver(GUID FAR* guid, LPSTR desc, LPSTR name, LPVOID con
 		dir3d->EnumDevices(enumDevice, d);
 		dir3d->Release();
 	}
-	vector<gxRuntime::GfxDriver*>* drivers = (vector<gxRuntime::GfxDriver*>*)context;
+	std::vector<gxRuntime::GfxDriver*>* drivers = (std::vector<gxRuntime::GfxDriver*>*)context;
 	drivers->push_back(d);
 	dd->EnumDisplayModes(0, 0, d, enumMode);
 	dd->Release();
@@ -1203,7 +1214,7 @@ int gxRuntime::enumerateGraphicsDrivers()
 	return drivers.size();
 }
 
-void gxRuntime::graphicsDriverInfo(int driver, string* name, int* c)
+void gxRuntime::graphicsDriverInfo(int driver, std::string* name, int* c)
 {
 	GfxDriver* g    = drivers[driver];
 	int        caps = 0;
@@ -1278,26 +1289,26 @@ void gxRuntime::freeTimer(gxTimer* t)
 	delete t;
 }
 
-static string toDir(string t)
+static std::string toDir(std::string t)
 {
 	if (t.size() && t[t.size() - 1] != '\\')
 		t += '\\';
 	return t;
 }
 
-string gxRuntime::systemProperty(const std::string& p)
+std::string gxRuntime::systemProperty(const std::string& p)
 {
-	char   buff[MAX_PATH + 1];
-	string t = tolower(p);
+	char        buff[MAX_PATH + 1];
+	std::string t = tolower(p);
 	if (t == "cpu") {
 		return "Intel";
 	} else if (t == "os") {
 		return "Windows";
 	} else if (t == "appdir") {
 		if (GetModuleFileName(0, buff, MAX_PATH)) {
-			string t = buff;
-			int    n = t.find_last_of('\\');
-			if (n != string::npos)
+			std::string t = buff;
+			int         n = t.find_last_of('\\');
+			if (n != std::string::npos)
 				t = t.substr(0, n);
 			return toDir(t);
 		}
@@ -1342,7 +1353,7 @@ void gxRuntime::enableDirectInput(bool enable)
 int gxRuntime::callDll(const std::string& dll, const std::string& func, const void* in, int in_sz, void* out,
 					   int out_sz)
 {
-	map<string, gxDll*>::const_iterator lib_it = libs.find(dll);
+	std::map<std::string, gxDll*>::const_iterator lib_it = libs.find(dll);
 
 	if (lib_it == libs.end()) {
 		HINSTANCE h = LoadLibrary(dll.c_str());
@@ -1353,8 +1364,8 @@ int gxRuntime::callDll(const std::string& dll, const std::string& func, const vo
 		lib_it   = libs.insert(make_pair(dll, t)).first;
 	}
 
-	gxDll*                               t      = lib_it->second;
-	map<string, LibFunc>::const_iterator fun_it = t->funcs.find(func);
+	gxDll*                                         t      = lib_it->second;
+	std::map<std::string, LibFunc>::const_iterator fun_it = t->funcs.find(func);
 
 	if (fun_it == t->funcs.end()) {
 		LibFunc f = (LibFunc)GetProcAddress(t->hinst, func.c_str());

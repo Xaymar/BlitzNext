@@ -1,12 +1,10 @@
-
-#ifndef GXAUDIO_H
-#define GXAUDIO_H
-
+#pragma once
 #include <string>
 
-#include "gxsound.hpp"
-
 class gxRuntime;
+class gxChannel;
+class gxSound;
+
 struct FSOUND_SAMPLE;
 
 class gxAudio {
@@ -41,5 +39,3 @@ class gxAudio {
 	gxChannel* playCDTrack(int track, int mode);
 	gxChannel* playFile(const std::string& filename, bool use_3d);
 };
-
-#endif

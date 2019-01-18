@@ -1,8 +1,5 @@
-
 #include "gxmesh.hpp"
 #include "gxgraphics.hpp"
-#include "std.hpp"
-
 #include "gxruntime.hpp"
 
 extern gxRuntime* gx_runtime;

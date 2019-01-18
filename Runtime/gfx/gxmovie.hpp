@@ -1,14 +1,10 @@
-
-#ifndef GXMOVIE_H
-#define GXMOVIE_H
-
-#include "amstream.h" // DirectShow multimedia stream interfaces
-#include "ddstream.h" // DirectDraw multimedia stream interfaces
-#include "mmstream.h" // multimedia stream interfaces
-
-#include "gxcanvas.hpp"
+#pragma once
+#include <amstream.h> // DirectShow multimedia stream interfaces
+#include <ddstream.h> // DirectDraw multimedia stream interfaces
+#include <mmstream.h> // multimedia stream interfaces
 
 class gxGraphics;
+class gxCanvas;
 
 class gxMovie {
 	public:
@@ -30,18 +26,18 @@ class gxMovie {
 	public:
 	bool draw(gxCanvas* dest, int x, int y, int w, int h);
 
-	bool isPlaying() const
+	inline bool isPlaying() const
 	{
 		return playing;
 	}
-	int getWidth() const
+
+	inline int getWidth() const
 	{
 		return src_rect.right;
 	}
-	int getHeight() const
+
+	inline int getHeight() const
 	{
 		return src_rect.bottom;
 	}
 };
-
-#endif

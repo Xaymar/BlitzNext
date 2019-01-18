@@ -1,7 +1,5 @@
-
-#ifndef GXTIMER_H
-#define GXTIMER_H
-
+#pragma once
+#include <Windows.h>
 #include <mmsyscom.h>
 
 class gxRuntime;
@@ -23,5 +21,3 @@ class gxTimer {
 	public:
 	int wait();
 };
-
-#endif
