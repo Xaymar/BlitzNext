@@ -30,10 +30,22 @@ if(WIN32)
 	)
 endif()
 
+# All Warnings, Extra Warnings, Pedantic
+If(MSVC)
+	# Force to always compile with W4
+	If(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+		String(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+	Else()
+		Set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+	EndIf()
+ElseIf(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+	# Update If necessary
+	Set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
+EndIf()
+
 # Projects
 add_subdirectory(config)
 add_subdirectory(stdutil)
-add_subdirectory(gxruntime)
 add_subdirectory(runtime)
 add_subdirectory(linker)
 add_subdirectory(debugger)
