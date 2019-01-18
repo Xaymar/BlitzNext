@@ -1,5 +1,5 @@
 
-#include "stdutil.h"
+#include "stdutil.hpp"
 
 #include <set>
 #include <math.h>
@@ -127,11 +127,8 @@ void _cdecl operator delete[](void *q, const char *file, int line) { op_delete(q
 
 #else
 
-void trackmem(bool enable) {
-}
-
-void checkmem(ostream &out) {
-}
+#define trackmem
+#define checkmem
 
 #endif
 

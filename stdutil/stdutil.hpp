@@ -4,7 +4,7 @@
 
 #pragma warning(disable:4786)
 
-#include "../config/config.h"
+#include "config.hpp"
 
 #include <string>
 #include <iostream>
