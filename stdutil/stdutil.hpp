@@ -1,16 +1,16 @@
-
-#ifndef STDUTIL_H
-#define STDUTIL_H
-
-#pragma warning(disable : 4786)
-
-#include "config.hpp"
-
+#pragma once
 #include <iostream>
 #include <string>
 
+#include <config.hpp>
+
+#ifdef MEMDEBUG
 void trackmem(bool enable);
 void checkmem(std::ostream& out);
+#else
+static inline void trackmem(bool){};
+static inline void checkmem(std::ostream&){};
+#endif
 
 //some stuff that should be in std libs
 int         atoi(const std::string& s);
@@ -132,5 +132,3 @@ class pool {
 		p->~T();
 	}
 };
-
-#endif

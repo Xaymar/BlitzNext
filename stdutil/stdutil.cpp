@@ -1,10 +1,10 @@
-
 #include "stdutil.hpp"
 
-#include <math.h>
+#include <cmath>
 #include <set>
-#include <stdlib.h>
-#include <windows.h>
+#include <cstdlib>
+
+#include <Windows.h>
 
 using namespace std;
 
@@ -171,10 +171,6 @@ void _cdecl operator delete[](void* q, const char* file, int line)
 	op_delete(q);
 }
 
-#else
-
-#define trackmem
-#define checkmem
 
 #endif
 
