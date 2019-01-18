@@ -1,12 +1,12 @@
 
 #pragma once
-#include <map>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <list>
+#include <map>
 #include <string>
 #include <vector>
-#include <fstream>
-#include <iostream>
-#include <iomanip>
 #include "stdutil.hpp"
 
 #include <windows.h>
