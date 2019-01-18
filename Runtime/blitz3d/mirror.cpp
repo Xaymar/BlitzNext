@@ -1,13 +1,9 @@
 
-#include "std.hpp"
 #include "mirror.hpp"
+#include "std.hpp"
 
-Mirror::Mirror(){
-}
+Mirror::Mirror() {}
 
-Mirror::Mirror( const Mirror &t ):
-Object(t){
-}
+Mirror::Mirror(const Mirror& t) : Object(t) {}
 
-Mirror::~Mirror(){
-}
+Mirror::~Mirror() {}

@@ -20,6 +20,10 @@ add_library(${PROJECT_NAME} STATIC
 	"bbmath.hpp"
 	"bbruntime.cpp"
 	"bbruntime.hpp"
+	"bbsockets.cpp"
+	"bbsockets.hpp"
+	"bbstream.cpp"
+	"bbstream.hpp"
 	"bbstring.cpp"
 	"bbstring.hpp"
 	"bbsys.cpp"
@@ -33,8 +37,8 @@ add_library(${PROJECT_NAME} STATIC
 	"runtime.cpp"
 	"std.cpp"
 	"std.hpp"
-	"userlib.cpp"
-	"userlib.hpp"
+#	"userlib.cpp"
+#	"userlib.hpp"
 	"userlibs.cpp"
 	"userlibs.hpp"
 )
@@ -42,10 +46,11 @@ add_library(${PROJECT_NAME} STATIC
 target_link_libraries(${PROJECT_NAME}
 	PUBLIC
 		stdutil
-		gxruntime
+		runtime_gfx
 		ddraw
 		dsound
 		dxguid
+		mswsock
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -61,7 +66,7 @@ if (WIN32)
 			WIN32_LEAN_AND_MEAN
 			NOGPICAPMASKS
 			NOVIRTUALKEYCODES
-			#NOWINMESSAGES
+			NOWINMESSAGES
 			NOWINSTYLES
 			NOSYSMETRICS
 			NOMENUS
@@ -78,7 +83,7 @@ if (WIN32)
 			#NOGDI
 			NOKERNEL
 			#NOUSER
-			#NONLS
+			NONLS
 			NOMB
 			NOMEMMGR
 			NOMETAFILE
@@ -88,7 +93,7 @@ if (WIN32)
 			NOSCROLL
 			NOSERVICE
 			NOSOUND
-			#NOTEXTMETRIC
+			NOTEXTMETRIC
 			NOWH
 			NOWINOFFSETS
 			NOCOMM

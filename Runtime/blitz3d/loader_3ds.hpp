@@ -4,9 +4,9 @@
 
 #include "meshloader.hpp"
 
-class Loader_3DS : public MeshLoader{
-public:
-	MeshModel *load( const string &f,const Transform &conv,int hint );
+class Loader_3DS : public MeshLoader {
+	public:
+	MeshModel* load(const string& f, const Transform& conv, int hint);
 };
 
 #endif

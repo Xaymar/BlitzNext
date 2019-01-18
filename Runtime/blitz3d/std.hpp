@@ -2,18 +2,18 @@
 #ifndef STD_H
 #define STD_H
 
-#pragma warning( disable:4786 )
+#pragma warning(disable : 4786)
 
 #include "config.hpp"
-#include "stdutil.hpp"
 #include "gxruntime.hpp"
+#include "stdutil.hpp"
 
-#include <set>
+#include <fstream>
+#include <iostream>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <fstream>
 
 using namespace std;
 

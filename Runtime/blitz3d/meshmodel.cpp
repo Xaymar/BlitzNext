@@ -1,61 +1,68 @@
 
-#include "std.hpp"
 #include "meshmodel.hpp"
 #include "meshcollider.hpp"
+#include "std.hpp"
 
-extern gxGraphics *gx_graphics;
+extern gxGraphics* gx_graphics;
 
 struct MeshModel::Rep : public Surface::Monitor {
+	int                   ref_cnt;
+	mutable Box           box, cullBox;
+	mutable MeshCollider* collider;
+	mutable int           box_valid, coll_valid, norms_valid;
 
-	int ref_cnt;
-	mutable Box box, cullBox;
-	mutable MeshCollider *collider;
-	mutable int box_valid, coll_valid, norms_valid;
-
-	SurfaceList surfaces;
+	SurfaceList       surfaces;
 	vector<Transform> bone_tforms;
 
-	Rep() :
-		ref_cnt(1), collider(0), box_valid(-1), coll_valid(-1), norms_valid(-1) {
+	Rep() : ref_cnt(1), collider(0), box_valid(-1), coll_valid(-1), norms_valid(-1)
+	{
 		geom_changes = brush_changes = 0;
 	}
 
-	~Rep() {
+	~Rep()
+	{
 		delete collider;
-		for (int k = 0; k < surfaces.size(); ++k) delete surfaces[k];
+		for (int k = 0; k < surfaces.size(); ++k)
+			delete surfaces[k];
 	}
 
-	Surface *createSurface(const Brush &b) {
-		Surface *t = new Surface(this);
+	Surface* createSurface(const Brush& b)
+	{
+		Surface* t = new Surface(this);
 		surfaces.push_back(t);
 		t->setBrush(b);
 		return t;
 	}
 
-	Surface *findSurface(const Brush &b) {
+	Surface* findSurface(const Brush& b)
+	{
 		for (int k = 0; k < surfaces.size(); ++k) {
-			Surface *s = surfaces[k];
-			if (s->getBrush() < b || b < s->getBrush()) continue;
+			Surface* s = surfaces[k];
+			if (s->getBrush() < b || b < s->getBrush())
+				continue;
 			return s;
 		}
 		return 0;
 	}
 
-	void paint(const Brush &b) {
+	void paint(const Brush& b)
+	{
 		for (int k = 0; k < surfaces.size(); ++k) {
-			Surface *s = surfaces[k];
+			Surface* s = surfaces[k];
 			s->setBrush(b);
 		}
 	}
 
-	void add(Rep *t) {
+	void add(Rep* t)
+	{
 		if (cullBox.empty() && !t->cullBox.empty()) {
 			setCullBox(t->cullBox);
 		}
 		for (int k = 0; k < t->surfaces.size(); ++k) {
-			Surface *src = t->surfaces[k];
-			Surface *dest = findSurface(src->getBrush());
-			if (!dest) dest = createSurface(src->getBrush());
+			Surface* src  = t->surfaces[k];
+			Surface* dest = findSurface(src->getBrush());
+			if (!dest)
+				dest = createSurface(src->getBrush());
 			int j;
 			for (j = 0; j < src->numTriangles(); ++j) {
 				Surface::Triangle t = src->getTriangle(j);
@@ -70,23 +77,25 @@ struct MeshModel::Rep : public Surface::Monitor {
 		}
 	}
 
-	void transform(const Transform &t) {
+	void transform(const Transform& t)
+	{
 		Matrix co = t.m.cofactor();
 		for (int k = 0; k < surfaces.size(); ++k) {
-			Surface *s = surfaces[k];
+			Surface* s = surfaces[k];
 			for (int j = 0; j < s->numVertices(); ++j) {
-				const Vector &v = s->getVertex(j).coords;
-				const Vector &n = s->getVertex(j).normal;
-				s->setCoords(j, t*v);
-				s->setNormal(j, co*n);
+				const Vector& v = s->getVertex(j).coords;
+				const Vector& n = s->getVertex(j).normal;
+				s->setCoords(j, t * v);
+				s->setNormal(j, co * n);
 			}
 		}
 	}
 
-	void flip() {
+	void flip()
+	{
 		for (int k = 0; k < surfaces.size(); ++k) {
-			Surface *s = surfaces[k];
-			int j;
+			Surface* s = surfaces[k];
+			int      j;
 			for (j = 0; j < s->numVertices(); ++j) {
 				s->setNormal(j, -s->getVertex(j).normal);
 			}
@@ -98,25 +107,28 @@ struct MeshModel::Rep : public Surface::Monitor {
 		}
 	}
 
-	void setCullBox(const Box &t) {
+	void setCullBox(const Box& t)
+	{
 		cullBox = t;
 	}
 
-	void updateNormals() {
+	void updateNormals()
+	{
 		if (norms_valid != geom_changes) {
 			for (int k = 0; k < surfaces.size(); ++k) {
-				Surface *s = surfaces[k];
+				Surface* s = surfaces[k];
 				s->updateNormals();
 			}
 			norms_valid = geom_changes;
 		}
 	}
 
-	const Box &getBox()const {
+	const Box& getBox() const
+	{
 		if (box_valid != geom_changes) {
 			box.clear();
 			for (int k = 0; k < surfaces.size(); ++k) {
-				Surface *s = surfaces[k];
+				Surface* s = surfaces[k];
 				for (int j = 0; j < s->numVertices(); ++j) {
 					box.update(s->getVertex(j).coords);
 				}
@@ -126,25 +138,27 @@ struct MeshModel::Rep : public Surface::Monitor {
 		return box;
 	}
 
-	const Box &getCullBox()const {
+	const Box& getCullBox() const
+	{
 		return cullBox.empty() ? getBox() : cullBox;
 	}
 
-	MeshCollider *getCollider()const {
+	MeshCollider* getCollider() const
+	{
 		if (coll_valid != geom_changes) {
 			delete collider;
-			vector<MeshCollider::Vertex> verts;
+			vector<MeshCollider::Vertex>   verts;
 			vector<MeshCollider::Triangle> tris;
 			for (int k = 0; k < surfaces.size(); ++k) {
-				Surface *s = surfaces[k];
-				int j;
+				Surface* s = surfaces[k];
+				int      j;
 				for (j = 0; j < s->numTriangles(); ++j) {
 					MeshCollider::Triangle q;
 					q.verts[0] = s->getTriangle(j).verts[0] + verts.size();
 					q.verts[1] = s->getTriangle(j).verts[1] + verts.size();
 					q.verts[2] = s->getTriangle(j).verts[2] + verts.size();
-					q.surface = s;
-					q.index = j;
+					q.surface  = s;
+					q.index    = j;
 					tris.push_back(q);
 				}
 				for (j = 0; j < s->numVertices(); ++j) {
@@ -153,18 +167,17 @@ struct MeshModel::Rep : public Surface::Monitor {
 					verts.push_back(q);
 				}
 			}
-			collider = new MeshCollider(verts, tris);
+			collider   = new MeshCollider(verts, tris);
 			coll_valid = geom_changes;
 		}
 		return collider;
 	}
 };
 
-MeshModel::MeshModel() :
-	rep(new Rep()), brush_changes(0) {}
+MeshModel::MeshModel() : rep(new Rep()), brush_changes(0) {}
 
-MeshModel::MeshModel(const MeshModel &t) : Model(t),
-rep(t.rep), brush_changes(rep->brush_changes - 1) {
+MeshModel::MeshModel(const MeshModel& t) : Model(t), rep(t.rep), brush_changes(rep->brush_changes - 1)
+{
 	++rep->ref_cnt;
 	surf_bones.resize(t.surf_bones.size());
 	/*
@@ -177,26 +190,32 @@ rep(t.rep), brush_changes(rep->brush_changes - 1) {
 	*/
 }
 
-MeshModel::~MeshModel() {
-	if (!--rep->ref_cnt) delete rep;
+MeshModel::~MeshModel()
+{
+	if (!--rep->ref_cnt)
+		delete rep;
 }
 
-void MeshModel::updateNormals() {
+void MeshModel::updateNormals()
+{
 	rep->updateNormals();
 }
 
-void MeshModel::setCullBox(const Box &box) {
+void MeshModel::setCullBox(const Box& box)
+{
 	rep->setCullBox(box);
 }
 
-void MeshModel::setRenderBrush(const Brush &b) {
+void MeshModel::setRenderBrush(const Brush& b)
+{
 	--brush_changes;
 	render_brush = b;
 }
 
-void MeshModel::createBones() {
+void MeshModel::createBones()
+{
 	setRenderSpace(RENDER_SPACE_WORLD);
-	const vector<Object*> &bones = getAnimator()->getObjects();
+	const vector<Object*>& bones = getAnimator()->getObjects();
 
 	surf_bones.resize(bones.size());
 
@@ -207,19 +226,21 @@ void MeshModel::createBones() {
 	}
 }
 
-bool MeshModel::render(const RenderContext &rc) {
-
-	const Box &b = rep->getCullBox();
-	if (b.empty()) return false;
+bool MeshModel::render(const RenderContext& rc)
+{
+	const Box& b = rep->getCullBox();
+	if (b.empty())
+		return false;
 
 	static Frustum model_frustum;
-	new(&model_frustum) Frustum(rc.getWorldFrustum(), -getRenderTform());
-	if (!model_frustum.cull(b)) return false;
+	new (&model_frustum) Frustum(rc.getWorldFrustum(), -getRenderTform());
+	if (!model_frustum.cull(b))
+		return false;
 
 	if (brush_changes != rep->brush_changes) {
 		brushes.clear();
 		for (int k = 0; k < rep->surfaces.size(); ++k) {
-			Surface *s = rep->surfaces[k];
+			Surface* s = rep->surfaces[k];
 			brushes.push_back(Brush(s->getBrush(), render_brush));
 		}
 		brush_changes = rep->brush_changes;
@@ -227,8 +248,8 @@ bool MeshModel::render(const RenderContext &rc) {
 
 	if (!surf_bones.size()) {
 		for (int k = 0; k < rep->surfaces.size(); ++k) {
-			Surface *s = rep->surfaces[k];
-			if (gxMesh *mesh = s->getMesh()) {
+			Surface* s = rep->surfaces[k];
+			if (gxMesh* mesh = s->getMesh()) {
 				enqueue(mesh, 0, s->numVertices(), 0, s->numTriangles(), brushes[k]);
 			}
 		}
@@ -236,21 +257,20 @@ bool MeshModel::render(const RenderContext &rc) {
 	}
 
 	//OK, its boned!
-	const vector<Object*> &bones = getAnimator()->getObjects();
+	const vector<Object*>& bones = getAnimator()->getObjects();
 
 	int k;
 	for (k = 0; k < bones.size(); ++k) {
-		Transform t =
-			bones[k]->getRenderTform() * rep->bone_tforms[k];
-		surf_bones[k].coord_tform = t;
+		Transform t                = bones[k]->getRenderTform() * rep->bone_tforms[k];
+		surf_bones[k].coord_tform  = t;
 		surf_bones[k].normal_tform = t.m.cofactor();
 	}
 
 	bool trans = false;
 	for (k = 0; k < rep->surfaces.size(); ++k) {
-		Surface *s = rep->surfaces[k];
+		Surface* s = rep->surfaces[k];
 		if (brushes[k].getBlend() == gxScene::BLEND_REPLACE) {
-			if (gxMesh *mesh = s->getMesh(surf_bones)) {
+			if (gxMesh* mesh = s->getMesh(surf_bones)) {
 				enqueue(mesh, 0, s->numVertices(), 0, s->numTriangles(), brushes[k]);
 			}
 		} else {
@@ -260,12 +280,13 @@ bool MeshModel::render(const RenderContext &rc) {
 	return trans;
 }
 
-void MeshModel::renderQueue(int type) {
+void MeshModel::renderQueue(int type)
+{
 	if (type == QUEUE_TRANSPARENT && surf_bones.size()) {
 		for (int k = 0; k < rep->surfaces.size(); ++k) {
-			Surface *s = rep->surfaces[k];
+			Surface* s = rep->surfaces[k];
 			if (brushes[k].getBlend() != gxScene::BLEND_REPLACE) {
-				if (gxMesh *mesh = s->getMesh(surf_bones)) {
+				if (gxMesh* mesh = s->getMesh(surf_bones)) {
 					enqueue(mesh, 0, s->numVertices(), 0, s->numTriangles(), brushes[k]);
 				}
 			}
@@ -274,47 +295,58 @@ void MeshModel::renderQueue(int type) {
 	Model::renderQueue(type);
 }
 
-Surface *MeshModel::createSurface(const Brush &b) {
+Surface* MeshModel::createSurface(const Brush& b)
+{
 	return rep->createSurface(b);
 	--brush_changes;
 }
 
-void MeshModel::flipTriangles() {
+void MeshModel::flipTriangles()
+{
 	rep->flip();
 }
 
-void MeshModel::transform(const Transform &t) {
+void MeshModel::transform(const Transform& t)
+{
 	rep->transform(t);
 }
 
-void MeshModel::add(const MeshModel &t) {
+void MeshModel::add(const MeshModel& t)
+{
 	rep->add(t.rep);
 }
 
-const MeshModel::SurfaceList &MeshModel::getSurfaces()const {
+const MeshModel::SurfaceList& MeshModel::getSurfaces() const
+{
 	return rep->surfaces;
 }
 
-void MeshModel::paint(const Brush &b) {
+void MeshModel::paint(const Brush& b)
+{
 	rep->paint(b);
 }
 
-const Box &MeshModel::getBox()const {
+const Box& MeshModel::getBox() const
+{
 	return rep->getBox();
 }
 
-MeshCollider *MeshModel::getCollider()const {
+MeshCollider* MeshModel::getCollider() const
+{
 	return rep->getCollider();
 }
 
-Surface *MeshModel::findSurface(const Brush &b)const {
+Surface* MeshModel::findSurface(const Brush& b) const
+{
 	return rep->findSurface(b);
 }
 
-bool MeshModel::collide(const Line &line, float radius, Collision *curr_coll, const Transform &t) {
+bool MeshModel::collide(const Line& line, float radius, Collision* curr_coll, const Transform& t)
+{
 	return getCollider()->collide(line, radius, curr_coll, t);
 }
 
-bool MeshModel::intersects(const MeshModel &m)const {
-	return getCollider()->intersects(*m.getCollider(), -m.GetWorldTransform()*GetWorldTransform());
+bool MeshModel::intersects(const MeshModel& m) const
+{
+	return getCollider()->intersects(*m.getCollider(), -m.GetWorldTransform() * GetWorldTransform());
 }

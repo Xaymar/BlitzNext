@@ -3,18 +3,20 @@
 #define BBSYS_H
 
 #include "basic.hpp"
-#include "../gxruntime/gxruntime.hpp"
+#include "gxruntime.hpp"
 
-extern bool debug;
-extern gxRuntime *gx_runtime;
+extern bool       debug;
+extern gxRuntime* gx_runtime;
 
-struct bbEx{
-	const char *err;
-	bbEx( const char *e ):err(e){
-		if( e ) gx_runtime->debugError( e );
+struct bbEx {
+	const char* err;
+	bbEx(const char* e) : err(e)
+	{
+		if (e)
+			gx_runtime->debugError(e);
 	}
 };
 
-#define ThrowRuntimeException( _X_ ) throw bbEx( _X_ );
+#define ThrowRuntimeException(_X_) throw bbEx(_X_);
 
 #endif

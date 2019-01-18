@@ -1,8 +1,8 @@
 
-#include "std.hpp"
+#include "multiplay_setup.hpp"
 #include "bbsys.hpp"
 #include "resource.hpp"
-#include "multiplay_setup.hpp"
+#include "std.hpp"
 
 //IDirectPlay4 *dirPlay;
 //

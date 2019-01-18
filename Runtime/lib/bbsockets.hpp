@@ -2,7 +2,6 @@
 #ifndef BBSOCKETS_H
 #define BBSOCKETS_H
 
-#include "bbstream.h"
+#include "bbstream.hpp"
 
 #endif
-

@@ -1,5 +1,5 @@
-#include "std.hpp"
 #include "bbsys.hpp"
+#include "std.hpp"
 
 //how many strings allocated
 static int stringCnt;
@@ -17,7 +17,7 @@ static const int OBJ_NEW_INC = 512;
 static const int STR_NEW_INC = 512;
 
 //current data ptr
-static BBData *dataPtr;
+static BBData* dataPtr;
 
 //chunks of mem - WHAT THE FUCK WAS I ON?!?!?!?
 //static list<char*> memBlks;
@@ -37,7 +37,8 @@ static BBType _bbFltType(BBTYPE_FLT);
 static BBType _bbStrType(BBTYPE_STR);
 static BBType _bbCStrType(BBTYPE_CSTR);
 
-static void *bbMalloc(int size) {
+static void* bbMalloc(int size)
+{
 	return malloc(size);
 	/*
 	char *c=new char[ size ];
@@ -46,7 +47,8 @@ static void *bbMalloc(int size) {
 	*/
 }
 
-static void bbFree(void *q) {
+static void bbFree(void* q)
+{
 	free(q);
 	/*
 	if( !q ) return;
@@ -56,151 +58,196 @@ static void bbFree(void *q) {
 	*/
 }
 
-static void removeStr(BBStr *str) {
+static void removeStr(BBStr* str)
+{
 	str->next->prev = str->prev;
 	str->prev->next = str->next;
 }
 
-static void insertStr(BBStr *str, BBStr *next) {
-	str->next = next;
-	str->prev = next->prev;
+static void insertStr(BBStr* str, BBStr* next)
+{
+	str->next       = next;
+	str->prev       = next->prev;
 	str->prev->next = str;
-	next->prev = str;
+	next->prev      = str;
 }
 
-void *BBStr::operator new(size_t size) {
+void* BBStr::operator new(size_t size)
+{
 	if (freeStrs.next == &freeStrs) {
-		BBStr *t = (BBStr*)bbMalloc(sizeof(BBStr)*STR_NEW_INC);
-		for (int k = 0; k < STR_NEW_INC; ++k) insertStr(t++, &freeStrs);
+		BBStr* t = (BBStr*)bbMalloc(sizeof(BBStr) * STR_NEW_INC);
+		for (int k = 0; k < STR_NEW_INC; ++k)
+			insertStr(t++, &freeStrs);
 	}
-	BBStr *t = freeStrs.next;
-	removeStr(t); insertStr(t, &usedStrs);
+	BBStr* t = freeStrs.next;
+	removeStr(t);
+	insertStr(t, &usedStrs);
 	return t;
 }
 
-void BBStr::operator delete(void *q) {
-	if (!q) return;
-	BBStr *t = (BBStr*)q;
-	removeStr(t); insertStr(t, &freeStrs);
+void BBStr::operator delete(void* q)
+{
+	if (!q)
+		return;
+	BBStr* t = (BBStr*)q;
+	removeStr(t);
+	insertStr(t, &freeStrs);
 }
 
-BBStr::BBStr() {
+BBStr::BBStr()
+{
 	++stringCnt;
 }
 
-BBStr::BBStr(const char *s) :string(s) {
+BBStr::BBStr(const char* s) : string(s)
+{
 	++stringCnt;
 }
 
-BBStr::BBStr(const char *s, int n) : string(s, n) {
+BBStr::BBStr(const char* s, int n) : string(s, n)
+{
 	++stringCnt;
 }
 
-BBStr::BBStr(const BBStr &s) : string(s) {
+BBStr::BBStr(const BBStr& s) : string(s)
+{
 	++stringCnt;
 }
 
-BBStr::BBStr(const string &s) : string(s) {
+BBStr::BBStr(const string& s) : string(s)
+{
 	++stringCnt;
 }
 
-BBStr &BBStr::operator=(const char *s) {
-	string::operator=(s); return *this;
+BBStr& BBStr::operator=(const char* s)
+{
+	string::operator=(s);
+	return *this;
 }
 
-BBStr &BBStr::operator=(const BBStr &s) {
-	string::operator=(s); return *this;
+BBStr& BBStr::operator=(const BBStr& s)
+{
+	string::operator=(s);
+	return *this;
 }
 
-BBStr &BBStr::operator=(const string &s) {
-	string::operator=(s); return *this;
+BBStr& BBStr::operator=(const string& s)
+{
+	string::operator=(s);
+	return *this;
 }
 
-BBStr::~BBStr() {
+BBStr::~BBStr()
+{
 	--stringCnt;
 }
 
-BBStr *_bbStrLoad(BBStr **var) {
+BBStr* _bbStrLoad(BBStr** var)
+{
 	return *var ? new BBStr(**var) : new BBStr();
 }
 
-void _bbStrRelease(BBStr *str) {
+void _bbStrRelease(BBStr* str)
+{
 	delete str;
 }
 
-void _bbStrStore(BBStr **var, BBStr *str) {
-	_bbStrRelease(*var); *var = str;
+void _bbStrStore(BBStr** var, BBStr* str)
+{
+	_bbStrRelease(*var);
+	*var = str;
 }
 
-BBStr *_bbStrConcat(BBStr *s1, BBStr *s2) {
-	*s1 += *s2; delete s2; return s1;
+BBStr* _bbStrConcat(BBStr* s1, BBStr* s2)
+{
+	*s1 += *s2;
+	delete s2;
+	return s1;
 }
 
-int _bbStrCompare(BBStr *lhs, BBStr *rhs) {
+int _bbStrCompare(BBStr* lhs, BBStr* rhs)
+{
 	int n = lhs->compare(*rhs);
-	delete lhs; delete rhs; return n;
+	delete lhs;
+	delete rhs;
+	return n;
 }
 
-int _bbStrToInt(BBStr *s) {
+int _bbStrToInt(BBStr* s)
+{
 	int n = atoi(*s);
-	delete s; return n;
+	delete s;
+	return n;
 }
 
-BBStr *_bbStrFromInt(int n) {
+BBStr* _bbStrFromInt(int n)
+{
 	return new BBStr(itoa(n));
 }
 
-float _bbStrToFloat(BBStr *s) {
+float _bbStrToFloat(BBStr* s)
+{
 	float n = (float)atof(*s);
-	delete s; return n;
+	delete s;
+	return n;
 }
 
-BBStr *_bbStrFromFloat(float n) {
+BBStr* _bbStrFromFloat(float n)
+{
 	return new BBStr(ftoa(n));
 }
 
-BBStr *_bbStrConst(const char *s) {
+BBStr* _bbStrConst(const char* s)
+{
 	return new BBStr(s);
 }
 
-void * _bbVecAlloc(BBVecType *type) {
-	void *vec = bbMalloc(type->size * 4);
+void* _bbVecAlloc(BBVecType* type)
+{
+	void* vec = bbMalloc(type->size * 4);
 	memset(vec, 0, type->size * 4);
 	return vec;
 }
 
-void _bbVecFree(void *vec, BBVecType *type) {
+void _bbVecFree(void* vec, BBVecType* type)
+{
 	if (type->elementType->type == BBTYPE_STR) {
-		BBStr **p = (BBStr**)vec;
+		BBStr** p = (BBStr**)vec;
 		for (int k = 0; k < type->size; ++p, ++k) {
-			if (*p) _bbStrRelease(*p);
+			if (*p)
+				_bbStrRelease(*p);
 		}
 	} else if (type->elementType->type == BBTYPE_OBJ) {
-		BBObj **p = (BBObj**)vec;
+		BBObj** p = (BBObj**)vec;
 		for (int k = 0; k < type->size; ++p, ++k) {
-			if (*p) _bbObjRelease(*p);
+			if (*p)
+				_bbObjRelease(*p);
 		}
 	}
 	bbFree(vec);
 }
 
-void _bbVecBoundsEx() {
+void _bbVecBoundsEx()
+{
 	ThrowRuntimeException("Blitz array index out of bounds");
 }
 
-void _bbUndimArray(BBArray *array) {
-	if (void *t = array->data) {
+void _bbUndimArray(BBArray* array)
+{
+	if (void* t = array->data) {
 		if (array->elementType == BBTYPE_STR) {
-			BBStr **p = (BBStr**)t;
-			int size = array->scales[array->dims - 1];
+			BBStr** p    = (BBStr**)t;
+			int     size = array->scales[array->dims - 1];
 			for (int k = 0; k < size; ++p, ++k) {
-				if (*p) _bbStrRelease(*p);
+				if (*p)
+					_bbStrRelease(*p);
 			}
 		} else if (array->elementType == BBTYPE_OBJ) {
-			BBObj **p = (BBObj**)t;
-			int size = array->scales[array->dims - 1];
+			BBObj** p    = (BBObj**)t;
+			int     size = array->scales[array->dims - 1];
 			for (int k = 0; k < size; ++p, ++k) {
-				if (*p) _bbObjRelease(*p);
+				if (*p)
+					_bbObjRelease(*p);
 			}
 		}
 		bbFree(t);
@@ -208,47 +255,53 @@ void _bbUndimArray(BBArray *array) {
 	}
 }
 
-void _bbDimArray(BBArray *array) {
+void _bbDimArray(BBArray* array)
+{
 	int k;
-	for (k = 0; k < array->dims; ++k) ++array->scales[k];
+	for (k = 0; k < array->dims; ++k)
+		++array->scales[k];
 	for (k = 1; k < array->dims; ++k) {
 		array->scales[k] *= array->scales[k - 1];
 	}
-	int size = array->scales[array->dims - 1];
+	int size    = array->scales[array->dims - 1];
 	array->data = bbMalloc(size * 4);
 	memset(array->data, 0, size * 4);
 }
 
-void _bbArrayBoundsEx() {
+void _bbArrayBoundsEx()
+{
 	ThrowRuntimeException("Array index out of bounds");
 }
 
-static void unlinkObj(BBObj *obj) {
+static void unlinkObj(BBObj* obj)
+{
 	obj->next->prev = obj->prev;
 	obj->prev->next = obj->next;
 }
 
-static void insertObj(BBObj *obj, BBObj *next) {
-	obj->next = next;
-	obj->prev = next->prev;
+static void insertObj(BBObj* obj, BBObj* next)
+{
+	obj->next        = next;
+	obj->prev        = next->prev;
 	next->prev->next = obj;
-	next->prev = obj;
+	next->prev       = obj;
 }
 
-BBObj *_bbObjNew(BBObjType *type) {
+BBObj* _bbObjNew(BBObjType* type)
+{
 	if (type->free.next == &type->free) {
-		int obj_size = sizeof(BBObj) + type->fieldCnt * 4;
-		BBObj *o = (BBObj*)bbMalloc(obj_size*OBJ_NEW_INC);
+		int    obj_size = sizeof(BBObj) + type->fieldCnt * 4;
+		BBObj* o        = (BBObj*)bbMalloc(obj_size * OBJ_NEW_INC);
 		for (int k = 0; k < OBJ_NEW_INC; ++k) {
 			insertObj(o, &type->free);
 			o = (BBObj*)((char*)o + obj_size);
 		}
 	}
-	BBObj *o = type->free.next;
+	BBObj* o = type->free.next;
 	unlinkObj(o);
-	o->type = type;
+	o->type    = type;
 	o->ref_cnt = 1;
-	o->fields = (BBField*)(o + 1);
+	o->fields  = (BBField*)(o + 1);
 	for (int k = 0; k < type->fieldCnt; ++k) {
 		switch (type->fieldTypes[k]->type) {
 		case BBTYPE_VEC:
@@ -264,11 +317,14 @@ BBObj *_bbObjNew(BBObjType *type) {
 	return o;
 }
 
-void _bbObjDelete(BBObj *obj) {
-	if (!obj) return;
-	BBField *fields = obj->fields;
-	if (!fields) return;
-	BBObjType *type = obj->type;
+void _bbObjDelete(BBObj* obj)
+{
+	if (!obj)
+		return;
+	BBField* fields = obj->fields;
+	if (!fields)
+		return;
+	BBObjType* type = obj->type;
 	for (int k = 0; k < type->fieldCnt; ++k) {
 		switch (type->fieldTypes[k]->type) {
 		case BBTYPE_STR:
@@ -292,122 +348,157 @@ void _bbObjDelete(BBObj *obj) {
 	--objCnt;
 }
 
-void _bbObjDeleteEach(BBObjType *type) {
-	BBObj *obj = type->used.next;
+void _bbObjDeleteEach(BBObjType* type)
+{
+	BBObj* obj = type->used.next;
 	while (obj->type) {
-		BBObj *next = obj->next;
-		if (obj->fields) _bbObjDelete(obj);
+		BBObj* next = obj->next;
+		if (obj->fields)
+			_bbObjDelete(obj);
 		obj = next;
 	}
 }
 
-extern void bbDebugLog(BBStr *t);
+extern void bbDebugLog(BBStr* t);
 extern void bbStop();
 
-void _bbObjRelease(BBObj *obj) {
-	if (!obj || --obj->ref_cnt) return;
+void _bbObjRelease(BBObj* obj)
+{
+	if (!obj || --obj->ref_cnt)
+		return;
 	unlinkObj(obj);
 	insertObj(obj, &obj->type->free);
 	--unrelObjCnt;
 }
 
-void _bbObjStore(BBObj **var, BBObj *obj) {
-	if (obj) ++obj->ref_cnt;	//do this first incase of self-assignment
+void _bbObjStore(BBObj** var, BBObj* obj)
+{
+	if (obj)
+		++obj->ref_cnt; //do this first incase of self-assignment
 	_bbObjRelease(*var);
 	*var = obj;
 }
 
-int _bbObjCompare(BBObj *o1, BBObj *o2) {
+int _bbObjCompare(BBObj* o1, BBObj* o2)
+{
 	return (o1 ? o1->fields : 0) != (o2 ? o2->fields : 0);
 }
 
-BBObj *_bbObjNext(BBObj *obj) {
+BBObj* _bbObjNext(BBObj* obj)
+{
 	do {
 		obj = obj->next;
-		if (!obj->type) return 0;
+		if (!obj->type)
+			return 0;
 	} while (!obj->fields);
 	return obj;
 }
 
-BBObj *_bbObjPrev(BBObj *obj) {
+BBObj* _bbObjPrev(BBObj* obj)
+{
 	do {
 		obj = obj->prev;
-		if (!obj->type) return 0;
+		if (!obj->type)
+			return 0;
 	} while (!obj->fields);
 	return obj;
 }
 
-BBObj *_bbObjFirst(BBObjType *type) {
+BBObj* _bbObjFirst(BBObjType* type)
+{
 	return _bbObjNext(&type->used);
 }
 
-BBObj *_bbObjLast(BBObjType *type) {
+BBObj* _bbObjLast(BBObjType* type)
+{
 	return _bbObjPrev(&type->used);
 }
 
-void _bbObjInsBefore(BBObj *o1, BBObj *o2) {
-	if (o1 == o2) return;
+void _bbObjInsBefore(BBObj* o1, BBObj* o2)
+{
+	if (o1 == o2)
+		return;
 	unlinkObj(o1);
 	insertObj(o1, o2);
 }
 
-void _bbObjInsAfter(BBObj *o1, BBObj *o2) {
-	if (o1 == o2) return;
+void _bbObjInsAfter(BBObj* o1, BBObj* o2)
+{
+	if (o1 == o2)
+		return;
 	unlinkObj(o1);
 	insertObj(o1, o2->next);
 }
 
-int _bbObjEachFirst(BBObj **var, BBObjType *type) {
+int _bbObjEachFirst(BBObj** var, BBObjType* type)
+{
 	_bbObjStore(var, _bbObjFirst(type));
 	return *var != 0;
 }
 
-int _bbObjEachNext(BBObj **var) {
+int _bbObjEachNext(BBObj** var)
+{
 	_bbObjStore(var, _bbObjNext(*var));
 	return *var != 0;
 }
 
-int _bbObjEachFirst2(BBObj **var, BBObjType *type) {
+int _bbObjEachFirst2(BBObj** var, BBObjType* type)
+{
 	*var = _bbObjFirst(type);
 	return *var != 0;
 }
 
-int _bbObjEachNext2(BBObj **var) {
+int _bbObjEachNext2(BBObj** var)
+{
 	*var = _bbObjNext(*var);
 	return *var != 0;
 }
 
-BBStr *_bbObjToStr(BBObj *obj) {
-	if (!obj || !obj->fields) return new BBStr("[NULL]");
+BBStr* _bbObjToStr(BBObj* obj)
+{
+	if (!obj || !obj->fields)
+		return new BBStr("[NULL]");
 
-	static BBObj *root;
-	static int recurs_cnt;
+	static BBObj* root;
+	static int    recurs_cnt;
 
-	if (obj == root) return new BBStr("[ROOT]");
-	if (recurs_cnt == 8) return new BBStr("....");
+	if (obj == root)
+		return new BBStr("[ROOT]");
+	if (recurs_cnt == 8)
+		return new BBStr("....");
 
 	++recurs_cnt;
-	BBObj *oldRoot = root;
-	if (!root) root = obj;
+	BBObj* oldRoot = root;
+	if (!root)
+		root = obj;
 
-	BBObjType *type = obj->type;
-	BBField *fields = obj->fields;
-	BBStr *s = new BBStr("["), *t;
+	BBObjType* type   = obj->type;
+	BBField*   fields = obj->fields;
+	BBStr *    s      = new BBStr("["), *t;
 	for (int k = 0; k < type->fieldCnt; ++k) {
-		if (k) *s += ',';
+		if (k)
+			*s += ',';
 		switch (type->fieldTypes[k]->type) {
 		case BBTYPE_INT:
-			t = _bbStrFromInt(fields[k].INT); *s += *t; delete t;
+			t = _bbStrFromInt(fields[k].INT);
+			*s += *t;
+			delete t;
 			break;
 		case BBTYPE_FLT:
-			t = _bbStrFromFloat(fields[k].FLT); *s += *t; delete t;
+			t = _bbStrFromFloat(fields[k].FLT);
+			*s += *t;
+			delete t;
 			break;
 		case BBTYPE_STR:
-			if (fields[k].STR) *s += '\"' + *fields[k].STR + '\"';
-			else *s += "\"\"";
+			if (fields[k].STR)
+				*s += '\"' + *fields[k].STR + '\"';
+			else
+				*s += "\"\"";
 			break;
 		case BBTYPE_OBJ:
-			t = _bbObjToStr(fields[k].OBJ); *s += *t; delete t;
+			t = _bbObjToStr(fields[k].OBJ);
+			*s += *t;
+			delete t;
 			break;
 		default:
 			*s += "???";
@@ -419,90 +510,129 @@ BBStr *_bbObjToStr(BBObj *obj) {
 	return s;
 }
 
-int _bbObjToHandle(BBObj *obj) {
-	if (!obj || !obj->fields) return 0;
+int _bbObjToHandle(BBObj* obj)
+{
+	if (!obj || !obj->fields)
+		return 0;
 	map<BBObj*, int>::const_iterator it = object_map.find(obj);
-	if (it != object_map.end()) return it->second;
+	if (it != object_map.end())
+		return it->second;
 	++next_handle;
-	object_map[obj] = next_handle;
+	object_map[obj]         = next_handle;
 	handle_map[next_handle] = obj;
 	return next_handle;
 }
 
-BBObj *_bbObjFromHandle(int handle, BBObjType *type) {
+BBObj* _bbObjFromHandle(int handle, BBObjType* type)
+{
 	map<int, BBObj*>::const_iterator it = handle_map.find(handle);
-	if (it == handle_map.end()) return 0;
-	BBObj *obj = it->second;
+	if (it == handle_map.end())
+		return 0;
+	BBObj* obj = it->second;
 	return obj->type == type ? obj : 0;
 }
 
-void _bbNullObjEx() {
+void _bbNullObjEx()
+{
 	ThrowRuntimeException("Object does not exist");
 }
 
-void _bbRestore(BBData *data) {
+void _bbRestore(BBData* data)
+{
 	dataPtr = data;
 }
 
-int _bbReadInt() {
+int _bbReadInt()
+{
 	switch (dataPtr->fieldType) {
-	case BBTYPE_END:ThrowRuntimeException("Out of data"); return 0;
-	case BBTYPE_INT:return dataPtr++->field.INT;
-	case BBTYPE_FLT:return dataPtr++->field.FLT;
-	case BBTYPE_CSTR:return atoi(dataPtr++->field.CSTR);
-	default:ThrowRuntimeException("Bad data type"); return 0;
+	case BBTYPE_END:
+		ThrowRuntimeException("Out of data");
+		return 0;
+	case BBTYPE_INT:
+		return dataPtr++->field.INT;
+	case BBTYPE_FLT:
+		return dataPtr++->field.FLT;
+	case BBTYPE_CSTR:
+		return atoi(dataPtr++->field.CSTR);
+	default:
+		ThrowRuntimeException("Bad data type");
+		return 0;
 	}
 }
 
-float _bbReadFloat() {
+float _bbReadFloat()
+{
 	switch (dataPtr->fieldType) {
-	case BBTYPE_END:ThrowRuntimeException("Out of data"); return 0;
-	case BBTYPE_INT:return dataPtr++->field.INT;
-	case BBTYPE_FLT:return dataPtr++->field.FLT;
-	case BBTYPE_CSTR:return atof(dataPtr++->field.CSTR);
-	default:ThrowRuntimeException("Bad data type"); return 0;
+	case BBTYPE_END:
+		ThrowRuntimeException("Out of data");
+		return 0;
+	case BBTYPE_INT:
+		return dataPtr++->field.INT;
+	case BBTYPE_FLT:
+		return dataPtr++->field.FLT;
+	case BBTYPE_CSTR:
+		return atof(dataPtr++->field.CSTR);
+	default:
+		ThrowRuntimeException("Bad data type");
+		return 0;
 	}
 }
 
-BBStr *_bbReadStr() {
+BBStr* _bbReadStr()
+{
 	switch (dataPtr->fieldType) {
-	case BBTYPE_END:ThrowRuntimeException("Out of data"); return 0;
-	case BBTYPE_INT:return new BBStr(itoa(dataPtr++->field.INT));
-	case BBTYPE_FLT:return new BBStr(ftoa(dataPtr++->field.FLT));
-	case BBTYPE_CSTR:return new BBStr(dataPtr++->field.CSTR);
-	default:ThrowRuntimeException("Bad data type"); return 0;
+	case BBTYPE_END:
+		ThrowRuntimeException("Out of data");
+		return 0;
+	case BBTYPE_INT:
+		return new BBStr(itoa(dataPtr++->field.INT));
+	case BBTYPE_FLT:
+		return new BBStr(ftoa(dataPtr++->field.FLT));
+	case BBTYPE_CSTR:
+		return new BBStr(dataPtr++->field.CSTR);
+	default:
+		ThrowRuntimeException("Bad data type");
+		return 0;
 	}
 }
 
-int _bbAbs(int n) {
+int _bbAbs(int n)
+{
 	return n >= 0 ? n : -n;
 }
 
-int _bbSgn(int n) {
+int _bbSgn(int n)
+{
 	return n > 0 ? 1 : (n < 0 ? -1 : 0);
 }
 
-int _bbMod(int x, int y) {
-	return x%y;
+int _bbMod(int x, int y)
+{
+	return x % y;
 }
 
-float _bbFAbs(float n) {
+float _bbFAbs(float n)
+{
 	return n >= 0 ? n : -n;
 }
 
-float _bbFSgn(float n) {
+float _bbFSgn(float n)
+{
 	return n > 0 ? 1 : (n < 0 ? -1 : 0);
 }
 
-float _bbFMod(float x, float y) {
+float _bbFMod(float x, float y)
+{
 	return (float)fmod(x, y);
 }
 
-float _bbFPow(float x, float y) {
+float _bbFPow(float x, float y)
+{
 	return (float)pow(x, y);
 }
 
-void bbRuntimeStats() {
+void bbRuntimeStats()
+{
 	gx_runtime->debugLog(("Active strings :" + itoa(stringCnt)).c_str());
 	gx_runtime->debugLog(("Active objects :" + itoa(objCnt)).c_str());
 	gx_runtime->debugLog(("Unreleased objs:" + itoa(unrelObjCnt)).c_str());
@@ -516,7 +646,8 @@ void bbRuntimeStats() {
 	*/
 }
 
-bool basic_create() {
+bool basic_create()
+{
 	next_handle = 0;
 	//	memBlks.clear();
 	handle_map.clear();
@@ -527,16 +658,18 @@ bool basic_create() {
 	return true;
 }
 
-bool basic_destroy() {
-	while (usedStrs.next != &usedStrs) delete usedStrs.next;
+bool basic_destroy()
+{
+	while (usedStrs.next != &usedStrs)
+		delete usedStrs.next;
 	//	while( memBlks.size() ) bbFree( memBlks.back() );
 	handle_map.clear();
 	object_map.clear();
 	return true;
 }
 
-void basic_link(void(*rtSym)(const char *sym, void *pc)) {
-
+void basic_link(void (*rtSym)(const char* sym, void* pc))
+{
 	rtSym("_bbIntType", &_bbIntType);
 	rtSym("_bbFltType", &_bbFltType);
 	rtSym("_bbStrType", &_bbStrType);

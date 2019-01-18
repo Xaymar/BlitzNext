@@ -5,9 +5,9 @@
 
   */
 
-#include "std.hpp"
 #include "multiplay.hpp"
 #include "multiplay_setup.hpp"
+#include "std.hpp"
 
 //struct Player;
 //

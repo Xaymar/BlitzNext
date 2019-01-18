@@ -6,22 +6,22 @@
 
 extern const float COLLISION_FLT_EPSILON;
 
-struct Collision{
-	float time;
-	Vector normal;
-	void *surface;
+struct Collision {
+	float          time;
+	Vector         normal;
+	void*          surface;
 	unsigned short index;
 
-	Collision():time(1),surface(0),index(~0){}
+	Collision() : time(1), surface(0), index(~0) {}
 
-	bool update( const Line &line,float time,const Vector &normal );
+	bool update(const Line& line, float time, const Vector& normal);
 
-	bool sphereCollide( const Line &src_line,float src_radius,const Vector &dest,float dest_radius );
-	bool sphereCollide( const Line &line,float radius,const Vector &dest,const Vector &radii );
+	bool sphereCollide(const Line& src_line, float src_radius, const Vector& dest, float dest_radius);
+	bool sphereCollide(const Line& line, float radius, const Vector& dest, const Vector& radii);
 
-	bool triangleCollide( const Line &src_line,float src_radius,const Vector &v0,const Vector &v1,const Vector &v2 );
+	bool triangleCollide(const Line& src_line, float src_radius, const Vector& v0, const Vector& v1, const Vector& v2);
 
-	bool boxCollide( const Line &src_line,float src_radius,const Box &box );
+	bool boxCollide(const Line& src_line, float src_radius, const Box& box);
 };
 
 #endif

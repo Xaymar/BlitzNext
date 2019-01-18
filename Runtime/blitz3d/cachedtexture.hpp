@@ -2,30 +2,33 @@
 #ifndef CACHEDTEXTURE_H
 #define CACHEDTEXTURE_H
 
-#include "../gxruntime/gxcanvas.hpp"
+#include "gxcanvas.hpp"
 
-class CachedTextureFactory{
-public:
-	CachedTextureFactory( int w,int h,int flags,int cnt );
-	CachedTextureFactory( const string &f,int flags,int w,int h,int first,int cnt );
-	CachedTextureFactory( const CachedTextureFactory &t );
+class CachedTextureFactory {
+	public:
+	CachedTextureFactory(int w, int h, int flags, int cnt);
+	CachedTextureFactory(const string& f, int flags, int w, int h, int first, int cnt);
+	CachedTextureFactory(const CachedTextureFactory& t);
 	~CachedTextureFactory();
 
-	CachedTextureFactory &operator=( const CachedTextureFactory &t );
+	CachedTextureFactory& operator=(const CachedTextureFactory& t);
 
-	string getName()const;
+	string getName() const;
 
-	const vector<gxCanvas*> &getFrames()const;
+	const vector<gxCanvas*>& getFrames() const;
 
-	bool operator<( const CachedTextureFactory &t )const{ return rep<t.rep; }
+	bool operator<(const CachedTextureFactory& t) const
+	{
+		return rep < t.rep;
+	}
 
-	static void setPath( const string &t );
+	static void setPath(const string& t);
 
-private:
+	private:
 	struct CachedTexture;
-	CachedTexture *rep;
+	CachedTexture* rep;
 
-	CachedTexture *findRep( const string &f,int flags,int w,int h,int first,int cnt );
+	CachedTexture* findRep(const string& f, int flags, int w, int h, int first, int cnt);
 
 	static set<CachedTexture*> rep_set;
 };
