@@ -1,6 +1,6 @@
-
 #include "bbmath.hpp"
-#include "std.hpp"
+#include <cmath>
+#include <algorithm>
 
 static int       rnd_state;
 static const int RND_A = 48271;

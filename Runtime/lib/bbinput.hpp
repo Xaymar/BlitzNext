@@ -1,11 +1,9 @@
-
-#ifndef BBINPUT_H
-#define BBINPUT_H
-
+#pragma once
 #include <vector>
-
 #include "bbsys.hpp"
-#include "gxinput.hpp"
+
+#include <gxinput.hpp>
+#include <gxdevice.hpp>
 
 extern gxInput*               gx_input;
 extern gxDevice*              gx_mouse;
@@ -51,5 +49,3 @@ int   bbJoyZDir(int port);
 int   bbJoyUDir(int port);
 int   bbJoyVDir(int port);
 void  bbFlushJoy();
-
-#endif

@@ -1,9 +1,7 @@
-
-#ifndef BBSYS_H
-#define BBSYS_H
-
+#pragma once
 #include "basic.hpp"
-#include "gxruntime.hpp"
+
+#include <gxruntime.hpp>
 
 extern bool       debug;
 extern gxRuntime* gx_runtime;
@@ -18,5 +16,3 @@ struct bbEx {
 };
 
 #define ThrowRuntimeException(_X_) throw bbEx(_X_);
-
-#endif

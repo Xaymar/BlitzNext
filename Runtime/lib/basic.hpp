@@ -1,7 +1,4 @@
-
-#ifndef BASIC_H
-#define BASIC_H
-
+#pragma once
 #include <mutex>
 #include <string>
 
@@ -155,5 +152,3 @@ float _bbFMod(float x, float y);
 float _bbFPow(float x, float y);
 
 void bbRuntimeStats();
-
-#endif

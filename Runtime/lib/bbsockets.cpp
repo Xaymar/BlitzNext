@@ -1,7 +1,9 @@
-
 #include "bbsockets.hpp"
+#include <set>
+
+#include <stdutil.hpp>
+
 #include <WinSock2.h>
-#include "std.hpp"
 
 static bool    socks_ok;
 static WSADATA wsadata;
@@ -22,9 +24,9 @@ class UDPStream;
 class TCPStream;
 class TCPServer;
 
-static set<UDPStream*> udp_set;
-static set<TCPStream*> tcp_set;
-static set<TCPServer*> server_set;
+static std::set<UDPStream*> udp_set;
+static std::set<TCPStream*> tcp_set;
+static std::set<TCPServer*> server_set;
 
 class UDPStream : public bbStream {
 	public:
@@ -44,10 +46,10 @@ class UDPStream : public bbStream {
 	int getMsgPort();
 
 	private:
-	SOCKET       sock;
-	vector<char> in_buf, out_buf;
-	sockaddr_in  addr, in_addr, out_addr;
-	int          in_get, e;
+	SOCKET            sock;
+	std::vector<char> in_buf, out_buf;
+	sockaddr_in       addr, in_addr, out_addr;
+	int               in_get, e;
 };
 
 UDPStream::UDPStream(SOCKET s) : sock(s), in_get(0), e(0)
@@ -199,9 +201,9 @@ class TCPServer {
 	void remove(TCPStream* s);
 
 	private:
-	int             e;
-	SOCKET          sock;
-	set<TCPStream*> accepted_set;
+	int                  e;
+	SOCKET               sock;
+	std::set<TCPStream*> accepted_set;
 };
 
 TCPStream::TCPStream(SOCKET s, TCPServer* t) : sock(s), server(t), e(0)
@@ -348,6 +350,7 @@ void TCPServer::remove(TCPStream* s)
 	accepted_set.erase(s);
 }
 
+#ifdef _DEBUG
 static inline void debugUDPStream(UDPStream* p)
 {
 	if (debug && !udp_set.count(p)) {
@@ -368,8 +371,13 @@ static inline void debugTCPServer(TCPServer* p)
 		ThrowRuntimeException("TCP Server does not exist");
 	}
 }
+#else
+#define debugUPDStream
+#define debugTCPStream
+#define debugTCPServer
+#endif
 
-static vector<int> host_ips;
+static std::vector<int> host_ips;
 
 int bbCountHostIPs(BBStr* host)
 {
@@ -467,7 +475,7 @@ BBStr* bbDottedIP(int ip)
 					 + itoa(ip & 255));
 }
 
-static int findHostIP(const string& t)
+static int findHostIP(const std::string& t)
 {
 	int ip = inet_addr(t.c_str());
 	if (ip != INADDR_NONE)

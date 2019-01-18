@@ -1,15 +1,18 @@
-
 #include "bbstream.hpp"
-#include "std.hpp"
+#include <set>
 
-static set<bbStream*> stream_set;
+static std::set<bbStream*> stream_set;
 
+#ifdef _DEBUG
 void debugStream(bbStream* s)
 {
 	if (stream_set.count(s))
 		return;
 	ThrowRuntimeException("Stream does not exist");
 }
+#else
+#define debugStream
+#endif
 
 bbStream::bbStream()
 {
@@ -80,7 +83,7 @@ BBStr* bbReadString(bbStream* s)
 	if (s->read((char*)&len, 4)) {
 		char* buff = new char[len];
 		if (s->read(buff, len)) {
-			*str = string(buff, len);
+			*str = std::string(buff, len);
 		}
 		delete[] buff;
 	}

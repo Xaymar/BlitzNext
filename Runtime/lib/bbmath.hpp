@@ -1,6 +1,4 @@
-
-#ifndef BBMATH_H
-#define BBMATH_H
+#pragma once
 
 float bbSin(float n);
 float bbCos(float n);
@@ -20,5 +18,3 @@ float bbLog(float n);
 float bbLog10(float n);
 float bbRnd(float from, float to);
 void  bbSeedRnd(int seed);
-
-#endif

@@ -1,26 +1,25 @@
-
-#include "std.hpp"
-
-#include "../blitz3d/blitz3d.hpp"
-#include "../blitz3d/brush.hpp"
-#include "../blitz3d/camera.hpp"
-#include "../blitz3d/meshmodel.hpp"
-#include "../blitz3d/sprite.hpp"
-#include "../blitz3d/texture.hpp"
-#include "../blitz3d/world.hpp"
 #include "bbblitz3d.hpp"
-#include "bbgraphics.hpp"
-//#include "../blitz3d/loader_x.hpp"
+#include <set>
+#include "../blitz3d/animator.hpp"
+#include "../blitz3d/brush.hpp"
 #include "../blitz3d/cachedtexture.hpp"
+#include "../blitz3d/camera.hpp"
 #include "../blitz3d/listener.hpp"
 #include "../blitz3d/loader_3ds.hpp"
 #include "../blitz3d/loader_b3d.hpp"
 #include "../blitz3d/md2model.hpp"
+#include "../blitz3d/meshmodel.hpp"
 #include "../blitz3d/meshutil.hpp"
 #include "../blitz3d/pivot.hpp"
 #include "../blitz3d/planemodel.hpp"
 #include "../blitz3d/q3bspmodel.hpp"
+#include "../blitz3d/sprite.hpp"
 #include "../blitz3d/terrain.hpp"
+#include "../blitz3d/texture.hpp"
+#include "../blitz3d/world.hpp"
+#include "bbgraphics.hpp"
+
+#include <stdutil.hpp>
 
 gxScene*             gx_scene;
 extern gxFileSystem* gx_filesys;
@@ -28,9 +27,9 @@ extern gxFileSystem* gx_filesys;
 static int    tri_count;
 static World* world;
 
-static set<Brush*>   brush_set;
-static set<Texture*> texture_set;
-static set<Entity*>  entity_set;
+static std::set<Brush*>   brush_set;
+static std::set<Texture*> texture_set;
+static std::set<Entity*>  entity_set;
 
 static Listener* listener;
 
@@ -53,7 +52,7 @@ extern float stats3d[10];
 static Loader_3DS loader_3ds;
 static Loader_B3D loader_b3d;
 
-static map<string, Transform> loader_mat_map;
+static std::map<std::string, Transform> loader_mat_map;
 
 #ifdef _DEBUG
 static inline void debug3d()
@@ -192,13 +191,13 @@ static inline void debugVertex(Surface* s, int n, int t)
 }
 #endif
 
-static Entity* loadEntity(string t, int hint)
+static Entity* loadEntity(std::string t, int hint)
 {
 	t     = tolower(t);
 	int n = t.rfind(".");
-	if (n == string::npos)
+	if (n == std::string::npos)
 		return 0;
-	string      ext = t.substr(n + 1);
+	std::string ext = t.substr(n + 1);
 	MeshLoader* l;
 
 	if (ext == "x") {
@@ -213,9 +212,9 @@ static Entity* loadEntity(string t, int hint)
 
 	const Transform& conv = loader_mat_map[ext];
 
-	CachedTextureFactory::setPath(filenamepath(t));
+	CachedTexture::setPath(filenamepath(t));
 	Entity* e = l->load(t, conv, hint);
-	CachedTextureFactory::setPath("");
+	CachedTexture::setPath("");
 	return e;
 }
 
@@ -267,7 +266,7 @@ static void erase(Entity* e)
 #endif
 }
 
-static Entity* findChild(Entity* e, const string& t)
+static Entity* findChild(Entity* e, const std::string& t)
 {
 	if (e->getName() == t)
 		return e;
@@ -586,7 +585,7 @@ BBStr* bbTextureName(Texture* t)
 #ifdef _DEBUG
 	debugTexture(t);
 #endif
-	CachedTextureFactory* c = t->getCachedTexture();
+	CachedTexture* c = t->getCachedTexture();
 	return c ? new BBStr(c->getName().c_str()) : new BBStr("");
 }
 
@@ -1722,10 +1721,10 @@ Entity* bbLoadBSP(BBStr* file, float gam, Entity* p)
 #ifdef _DEBUG
 	debugParent(p);
 #endif
-	CachedTextureFactory::setPath(filenamepath(*file));
+	CachedTexture::setPath(filenamepath(*file));
 	Q3BSPModel* t = new Q3BSPModel(*file, gam);
 	delete file;
-	CachedTextureFactory::setPath("");
+	CachedTexture::setPath("");
 
 	if (!t->isValid()) {
 		delete t;

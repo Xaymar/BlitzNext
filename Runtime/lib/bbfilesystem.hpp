@@ -1,10 +1,6 @@
-
-#ifndef BBFILESYSTEM_H
-#define BBFILESYSTEM_H
-
+#pragma once
 #include "bbsys.hpp"
-#include "gxfilesystem.hpp"
+
+#include <gxfilesystem.hpp>
 
 extern gxFileSystem* gx_filesys;
-
-#endif

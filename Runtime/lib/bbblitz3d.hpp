@@ -1,10 +1,5 @@
-
-#ifndef BBBLITZ3D_H
-#define BBBLITZ3D_H
-
+#pragma once
 #include "bbsys.hpp"
-#include "gxscene.hpp"
+#include <gxscene.hpp>
 
 extern gxScene* gx_scene;
-
-#endif

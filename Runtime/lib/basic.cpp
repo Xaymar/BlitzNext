@@ -1,5 +1,7 @@
 #include "bbsys.hpp"
-#include "std.hpp"
+#include <map>
+
+#include <stdutil.hpp>
 
 //how many strings allocated
 static int stringCnt;
@@ -29,8 +31,8 @@ static BBStr usedStrs, freeStrs;
 static int next_handle;
 
 //object<->handle maps
-static map<int, BBObj*> handle_map;
-static map<BBObj*, int> object_map;
+static std::map<int, BBObj*> handle_map;
+static std::map<BBObj*, int> object_map;
 
 static BBType _bbIntType(BBTYPE_INT);
 static BBType _bbFltType(BBTYPE_FLT);
@@ -99,41 +101,41 @@ BBStr::BBStr()
 	++stringCnt;
 }
 
-BBStr::BBStr(const char* s) : string(s)
+BBStr::BBStr(const char* s) : std::string(s)
 {
 	++stringCnt;
 }
 
-BBStr::BBStr(const char* s, int n) : string(s, n)
+BBStr::BBStr(const char* s, int n) : std::string(s, n)
 {
 	++stringCnt;
 }
 
-BBStr::BBStr(const BBStr& s) : string(s)
+BBStr::BBStr(const BBStr& s) : std::string(s)
 {
 	++stringCnt;
 }
 
-BBStr::BBStr(const string& s) : string(s)
+BBStr::BBStr(const std::string& s) : std::string(s)
 {
 	++stringCnt;
 }
 
 BBStr& BBStr::operator=(const char* s)
 {
-	string::operator=(s);
+	std::string::operator=(s);
 	return *this;
 }
 
 BBStr& BBStr::operator=(const BBStr& s)
 {
-	string::operator=(s);
+	std::string::operator=(s);
 	return *this;
 }
 
-BBStr& BBStr::operator=(const string& s)
+BBStr& BBStr::operator=(const std::string& s)
 {
-	string::operator=(s);
+	std::string::operator=(s);
 	return *this;
 }
 
@@ -338,7 +340,7 @@ void _bbObjDelete(BBObj* obj)
 			break;
 		}
 	}
-	map<BBObj*, int>::iterator it = object_map.find(obj);
+	std::map<BBObj*, int>::iterator it = object_map.find(obj);
 	if (it != object_map.end()) {
 		handle_map.erase(it->second);
 		object_map.erase(it);
@@ -514,7 +516,7 @@ int _bbObjToHandle(BBObj* obj)
 {
 	if (!obj || !obj->fields)
 		return 0;
-	map<BBObj*, int>::const_iterator it = object_map.find(obj);
+	std::map<BBObj*, int>::const_iterator it = object_map.find(obj);
 	if (it != object_map.end())
 		return it->second;
 	++next_handle;
@@ -525,7 +527,7 @@ int _bbObjToHandle(BBObj* obj)
 
 BBObj* _bbObjFromHandle(int handle, BBObjType* type)
 {
-	map<int, BBObj*>::const_iterator it = handle_map.find(handle);
+	std::map<int, BBObj*>::const_iterator it = handle_map.find(handle);
 	if (it == handle_map.end())
 		return 0;
 	BBObj* obj = it->second;

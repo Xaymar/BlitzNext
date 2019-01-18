@@ -1,14 +1,13 @@
-
 #include "bbfilesystem.hpp"
 #include <fstream>
+#include <set>
 #include "bbstream.hpp"
-#include "std.hpp"
 
 gxFileSystem* gx_filesys;
 
 struct bbFile : public bbStream {
-	filebuf* buf;
-	bbFile(filebuf* f) : buf(f) {}
+	std::filebuf* buf;
+	bbFile(std::filebuf* f) : buf(f) {}
 	~bbFile()
 	{
 		delete buf;
@@ -31,7 +30,7 @@ struct bbFile : public bbStream {
 	}
 };
 
-static set<bbFile*> file_set;
+static std::set<bbFile*> file_set;
 
 static inline void debugFile(bbFile* f)
 {
@@ -51,9 +50,9 @@ static inline void debugDir(gxDir* d)
 
 static bbFile* open(BBStr* file_path, int flags)
 {
-	string   t   = *file_path;
-	filebuf* buf = new filebuf();
-	if (buf->open(t.c_str(), flags | ios_base::binary)) {
+	std::string   t   = *file_path;
+	std::filebuf* buf = new std::filebuf();
+	if (buf->open(t.c_str(), flags | std::ios_base::binary)) {
 		bbFile* file = new bbFile(buf);
 		file_set.insert(file);
 		return file;
@@ -64,17 +63,17 @@ static bbFile* open(BBStr* file_path, int flags)
 
 bbFile* bbReadFile(BBStr* f)
 {
-	return open(f, ios_base::in);
+	return open(f, std::ios_base::in);
 }
 
 bbFile* bbWriteFile(BBStr* f)
 {
-	return open(f, ios_base::out | ios_base::trunc);
+	return open(f, std::ios_base::out | std::ios_base::trunc);
 }
 
 bbFile* bbOpenFile(BBStr* f)
 {
-	return open(f, ios_base::in | ios_base::out);
+	return open(f, std::ios_base::in | std::ios_base::out);
 }
 
 void bbCloseFile(bbFile* f)
@@ -86,17 +85,17 @@ void bbCloseFile(bbFile* f)
 
 int bbFilePos(bbFile* f)
 {
-	return f->buf->pubseekoff(0, ios_base::cur);
+	return f->buf->pubseekoff(0, std::ios_base::cur);
 }
 
 int bbSeekFile(bbFile* f, int pos)
 {
-	return f->buf->pubseekoff(pos, ios_base::beg);
+	return f->buf->pubseekoff(pos, std::ios_base::beg);
 }
 
 gxDir* bbReadDir(BBStr* d)
 {
-	string t = *d;
+	std::string t = *d;
 	delete d;
 	return gx_filesys->openDir(t, 0);
 }
@@ -137,7 +136,7 @@ void bbDeleteDir(BBStr* d)
 
 int bbFileType(BBStr* f)
 {
-	string t = *f;
+	std::string t = *f;
 	delete f;
 	int n = gx_filesys->getFileType(t);
 	return n == gxFileSystem::FILE_TYPE_FILE ? 1 : (n == gxFileSystem::FILE_TYPE_DIR ? 2 : 0);
@@ -145,14 +144,14 @@ int bbFileType(BBStr* f)
 
 int bbFileSize(BBStr* f)
 {
-	string t = *f;
+	std::string t = *f;
 	delete f;
 	return gx_filesys->getFileSize(t);
 }
 
 void bbCopyFile(BBStr* f, BBStr* to)
 {
-	string src = *f, dest = *to;
+	std::string src = *f, dest = *to;
 	delete f;
 	delete to;
 	gx_filesys->copyFile(src, dest);

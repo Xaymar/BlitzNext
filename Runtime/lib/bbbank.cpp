@@ -1,7 +1,6 @@
-
 #include "bbbank.hpp"
+#include <set>
 #include "bbstream.hpp"
-#include "std.hpp"
 
 struct bbBank {
 	char* data;
@@ -36,8 +35,9 @@ struct bbBank {
 	}
 };
 
-static set<bbBank*> bank_set;
+static std::set<bbBank*> bank_set;
 
+#ifdef _DEBUG
 static inline void debugBank(bbBank* b)
 {
 	if (debug) {
@@ -54,6 +54,9 @@ static inline void debugBank(bbBank* b, int offset)
 			ThrowRuntimeException("Offset out of range");
 	}
 }
+#else
+#define debugBank
+#endif
 
 bbBank* bbCreateBank(int size)
 {

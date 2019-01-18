@@ -1,9 +1,11 @@
-
 #include "bbaudio.hpp"
-#include "std.hpp"
+
+#include <gxchannel.hpp>
+#include <gxsound.hpp>
 
 gxAudio* gx_audio;
 
+#ifdef _DEBUG
 static inline void debugSound(gxSound* s)
 {
 	if (debug) {
@@ -11,17 +13,20 @@ static inline void debugSound(gxSound* s)
 			ThrowRuntimeException("Sound does not exist");
 	}
 }
+#else
+#define debugSound
+#endif
 
 static gxSound* loadSound(BBStr* f, bool use_3d)
 {
-	string t = *f;
+	std::string t = *f;
 	delete f;
 	return gx_audio ? gx_audio->loadSound(t, use_3d) : 0;
 }
 
 static gxChannel* playMusic(BBStr* f, bool use_3d)
 {
-	string t = *f;
+	std::string t = *f;
 	delete f;
 	return gx_audio ? gx_audio->playFile(t, use_3d) : 0;
 }

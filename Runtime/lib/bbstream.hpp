@@ -1,7 +1,4 @@
-
-#ifndef BBSTREAM_H
-#define BBSTREAM_H
-
+#pragma once
 #include "bbsys.hpp"
 
 class bbStream {
@@ -25,5 +22,3 @@ class bbStream {
 };
 
 void debugStream(bbStream* s);
-
-#endif

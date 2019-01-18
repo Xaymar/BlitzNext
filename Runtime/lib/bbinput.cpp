@@ -1,11 +1,13 @@
-
 #include "bbsys.hpp"
-#include "std.hpp"
+#include <vector>
+
+#include <gxinput.hpp>
+#include <gxdevice.hpp>
 
 gxInput*          gx_input;
 gxDevice*         gx_mouse;
 gxDevice*         gx_keyboard;
-vector<gxDevice*> gx_joysticks;
+std::vector<gxDevice*> gx_joysticks;
 
 static int         mouse_x, mouse_y, mouse_z;
 static const float JLT = -1.0f / 3.0f;

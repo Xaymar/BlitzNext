@@ -1,9 +1,7 @@
-
-#ifndef BBAUDIO_H
-#define BBAUDIO_H
-
+#pragma once
 #include "bbsys.hpp"
-#include "gxaudio.hpp"
+
+#include <gxaudio.hpp>
 
 extern gxAudio* gx_audio;
 
@@ -23,5 +21,3 @@ void       bbChannelPitch(gxChannel* channel, int pitch);
 void       bbChannelVolume(gxChannel* channel, float volume);
 void       bbChannelPan(gxChannel* channel, float pan);
 int        bbChannelPlaying(gxChannel* channel);
-
-#endif

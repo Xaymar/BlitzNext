@@ -1,3 +1,4 @@
+#pragma once
 
 enum {
 	BBTYPE_END    = 0,

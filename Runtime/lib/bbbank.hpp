@@ -1,7 +1,2 @@
-
-#ifndef BBBANK_H
-#define BBBANK_H
-
+#pragma once
 #include "bbsys.hpp"
-
-#endif

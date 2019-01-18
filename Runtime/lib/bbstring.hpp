@@ -1,8 +1,5 @@
-
-#ifndef BBSTRING_H
-#define BBSTRING_H
-
-#include "basic.h"
+#pragma once
+#include "basic.hpp"
 
 BBStr* bbString(BBStr* s, int n);
 BBStr* bbLeft(BBStr* s, int n);
@@ -22,5 +19,3 @@ BBStr* bbHex(int n);
 BBStr* bbBin(int n);
 BBStr* bbCurrentDate();
 BBStr* bbCurrentTime();
-
-#endif

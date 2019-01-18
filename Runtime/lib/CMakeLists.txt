@@ -34,9 +34,6 @@ add_library(${PROJECT_NAME} STATIC
 #	"multiplay_setup.hpp"
 #	"multiplay_setup.rc"
 	"resource.hpp"
-	"runtime.cpp"
-	"std.cpp"
-	"std.hpp"
 #	"userlib.cpp"
 #	"userlib.hpp"
 	"userlibs.cpp"
@@ -44,13 +41,12 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 target_link_libraries(${PROJECT_NAME}
-	PUBLIC
-		stdutil
-		runtime_gfx
-		ddraw
-		dsound
-		dxguid
-		mswsock
+	stdutil
+	runtime_gfx
+	ddraw
+	dsound
+	dxguid
+	wsock32
 )
 
 target_include_directories(${PROJECT_NAME}

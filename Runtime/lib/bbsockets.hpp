@@ -1,7 +1,2 @@
-
-#ifndef BBSOCKETS_H
-#define BBSOCKETS_H
-
+#pragma once
 #include "bbstream.hpp"
-
-#endif

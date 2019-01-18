@@ -1,11 +1,9 @@
-
 #include "userlibs.hpp"
 #include "bbsys.hpp"
-#include "std.hpp"
 
 #include <windows.h>
 
-static vector<HMODULE> _mods;
+static std::vector<HMODULE> _mods;
 
 struct Str {
 	char* p;
@@ -27,7 +25,7 @@ static void procNotFound()
 
 void _bbLoadLibs(char* p)
 {
-	string home;
+	std::string home;
 
 	if (const char* t = getenv("blitzpath"))
 		home = t;

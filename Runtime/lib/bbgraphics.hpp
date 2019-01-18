@@ -1,9 +1,10 @@
-
-#ifndef BBGRAPHICS_H
-#define BBGRAPHICS_H
-
+#pragma once
 #include "bbsys.hpp"
-#include "gxgraphics.hpp"
+
+#include <gxgraphics.hpp>
+#include <gxcanvas.hpp>
+#include <gxscene.hpp>
+#include <gxfont.hpp>
 
 extern gxGraphics* gx_graphics;
 extern gxCanvas*   gx_canvas;
@@ -115,5 +116,3 @@ void   bbWrite(BBStr* str);
 void   bbPrint(BBStr* str);
 BBStr* bbInput(BBStr* prompt);
 void   bbLocate(int x, int y);
-
-#endif

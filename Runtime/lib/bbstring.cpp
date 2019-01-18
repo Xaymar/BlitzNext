@@ -1,7 +1,6 @@
-
+#include "bbsys.hpp"
 
 #include <time.h>
-#include "bbsys.hpp"
 
 #define CHKPOS(x) \
 	if ((x) < 0)  \
@@ -39,7 +38,7 @@ BBStr* bbRight(BBStr* s, int n)
 BBStr* bbReplace(BBStr* s, BBStr* from, BBStr* to)
 {
 	int n = 0, from_sz = from->size(), to_sz = to->size();
-	while (n < s->size() && (n = s->find(*from, n)) != string::npos) {
+	while (n < s->size() && (n = s->find(*from, n)) != std::string::npos) {
 		s->replace(n, from_sz, *to);
 		n += to_sz;
 	}
@@ -55,7 +54,7 @@ int bbInstr(BBStr* s, BBStr* t, int from)
 	int n = s->find(*t, from);
 	delete s;
 	delete t;
-	return n == string::npos ? 0 : n + 1;
+	return n == std::string::npos ? 0 : n + 1;
 }
 
 BBStr* bbMid(BBStr* s, int o, int n)
