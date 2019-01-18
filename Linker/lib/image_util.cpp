@@ -1,6 +1,8 @@
 
-#include "std.h"
-#include "image_util.h"
+#include "std.hpp"
+#include "image_util.hpp"
+
+using namespace std;
 
 #ifndef DEMO
 

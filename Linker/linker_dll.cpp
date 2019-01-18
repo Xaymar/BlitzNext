@@ -1,6 +1,6 @@
 
-#include "../LinkerLib/std.h"
-#include "../LinkerLib/linker.h"
+#include "std.hpp"
+#include "linker.hpp"
 
 #include <windows.h>
 

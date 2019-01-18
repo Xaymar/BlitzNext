@@ -1,7 +1,9 @@
 
-#include "std.h"
-#include "linker.h"
-#include "image_util.h"
+#include "std.hpp"
+#include "linker.hpp"
+#include "image_util.hpp"
+
+using namespace std;
 
 class BBModule : public Module{
 public:

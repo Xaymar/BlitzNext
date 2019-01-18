@@ -1,6 +1,8 @@
 
-#include "std.h"
-#include "dlltoexe.h"
+#include "std.hpp"
+#include "dlltoexe.hpp"
+
+using namespace std;
 
 #pragma pack( push,1 )
 struct Head{
