@@ -2,7 +2,7 @@
 #ifndef DEBUGGERAPP_H
 #define DEBUGGERAPP_H
 
-#include "mainframe.h"
+#include "mainframe.hpp"
 
 class DebuggerApp : public CWinApp{
 	MainFrame *main_frame;

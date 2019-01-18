@@ -1,0 +1,90 @@
+project(debugger)
+
+add_library(${PROJECT_NAME} MODULE
+	"debuggerapp.cpp"
+	"debuggerapp.hpp"
+	"debugtree.cpp"
+	"debugtree.hpp"
+	"mainframe.cpp"
+	"mainframe.hpp"
+	"prefs.cpp"
+	"prefs.hpp"
+	"sourcefile.cpp"
+	"sourcefile.hpp"
+	"stdafx.cpp"
+	"stdafx.hpp"
+	"stdutil.cpp"
+	"tabber.cpp"
+	"tabber.hpp"	
+	"debugger.hpp"
+	"debugger.rc"	
+	"resource.hpp"
+	"resource.rc"
+)
+
+target_link_libraries(${PROJECT_NAME}
+	PRIVATE
+		linker
+		compiler
+		runtime_lib
+)
+
+target_compile_definitions(${PROJECT_NAME}
+	PRIVATE 
+		_AFXDLL
+)
+
+target_include_directories(${PROJECT_NAME}
+	PUBLIC
+		${PROJECT_SOURCE_DIR}
+)
+
+if (WIN32)
+	target_compile_definitions(${PROJECT_NAME}
+		PRIVATE
+			_CRT_SECURE_NO_WARNINGS
+			# windows.h
+			WIN32_LEAN_AND_MEAN
+			NOGPICAPMASKS
+			NOVIRTUALKEYCODES
+			#NOWINMESSAGES
+			NOWINSTYLES
+			NOSYSMETRICS
+			NOMENUS
+			NOICONS
+			NOKEYSTATES
+			NOSYSCOMMANDS
+			NORASTEROPS
+			NOSHOWWINDOW
+			NOATOM
+			NOCLIPBOARD
+			NOCOLOR
+			NOCTLMGR
+			NODRAWTEXT
+			#NOGDI
+			NOKERNEL
+			#NOUSER
+			#NONLS
+			NOMB
+			NOMEMMGR
+			NOMETAFILE
+			NOMINMAX
+			#NOMSG
+			NOOPENFILE
+			NOSCROLL
+			NOSERVICE
+			NOSOUND
+			#NOTEXTMETRIC
+			NOWH
+			NOWINOFFSETS
+			NOCOMM
+			NOKANJI
+			#NOHELP
+			NOPROFILER
+			NODEFERWINDOWPOS
+			NOMCX
+			NOIME
+			NOMDI
+			NOINOUT
+	)
+endif()

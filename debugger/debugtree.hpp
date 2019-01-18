@@ -2,8 +2,8 @@
 #ifndef DEBUGTREE_H
 #define DEBUGTREE_H
 
-#include "../LinkerLib/linker.h"
-#include "../Compiler/environ.h"
+#include "linker.hpp"
+#include "environ.hpp"
 
 class DebugTree : public CTreeCtrl{
 	int st_nest;

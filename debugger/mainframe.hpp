@@ -2,10 +2,10 @@
 #ifndef MAINFRAME_H
 #define MAINFRAME_H
 
-#include "tabber.h"
-#include "debugger.h"
-#include "sourcefile.h"
-#include "debugtree.h"
+#include "tabber.hpp"
+#include "debugger.hpp"
+#include "sourcefile.hpp"
+#include "debugtree.hpp"
 
 class MainFrame : public CFrameWnd,public Debugger{
 

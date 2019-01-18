@@ -1,9 +1,9 @@
 
-#include "stdafx.h"
-#include "mainframe.h"
-#include "resource.h"
-#include "debuggerapp.h"
-#include "prefs.h"
+#include "stdafx.hpp"
+#include "mainframe.hpp"
+#include "resource.hpp"
+#include "debuggerapp.hpp"
+#include "prefs.hpp"
 
 #define WM_IDLEUPDATECMDUI  0x0363  // wParam == bDisableIfNoHandler
 

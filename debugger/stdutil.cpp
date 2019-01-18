@@ -1,5 +1,5 @@
 
-#include "stdafx.h"
+#include "stdafx.hpp"
 
 int atoi( const string &s ){
 	return atoi( s.c_str() );

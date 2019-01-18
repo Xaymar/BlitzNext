@@ -1,9 +1,9 @@
 
-#include "stdafx.h"
-#include "debugtree.h"
-#include "prefs.h"
+#include "stdafx.hpp"
+#include "debugtree.hpp"
+#include "prefs.hpp"
 
-#include "../RuntimeLib/basic.h"
+//#include "basic.hpp"
 
 IMPLEMENT_DYNAMIC( DebugTree,CTreeCtrl )
 BEGIN_MESSAGE_MAP( DebugTree,CTreeCtrl )

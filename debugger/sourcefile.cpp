@@ -1,7 +1,7 @@
 
-#include "stdafx.h"
-#include "sourcefile.h"
-#include "prefs.h"
+#include "stdafx.hpp"
+#include "sourcefile.hpp"
+#include "prefs.hpp"
 
 IMPLEMENT_DYNAMIC( SourceFile,CRichEditCtrl )
 BEGIN_MESSAGE_MAP( SourceFile,CRichEditCtrl )

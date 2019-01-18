@@ -1,9 +1,9 @@
 
-#include "stdafx.h"
-#include "debugger.h"
-#include "debuggerapp.h"
-#include "resource.h"
-#include "prefs.h"
+#include "stdafx.hpp"
+#include "debugger.hpp"
+#include "debuggerapp.hpp"
+#include "resource.hpp"
+#include "prefs.hpp"
 
 DebuggerApp debuggerApp;
 

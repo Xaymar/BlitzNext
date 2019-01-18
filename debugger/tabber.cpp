@@ -1,6 +1,7 @@
 
-#include "stdafx.h"
-#include "tabber.h"
+#include "stdafx.hpp"
+#include "tabber.hpp"
+#include <WinUser.h>
 
 IMPLEMENT_DYNAMIC( Tabber,CTabCtrl )
 BEGIN_MESSAGE_MAP( Tabber,CTabCtrl )

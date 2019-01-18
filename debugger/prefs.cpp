@@ -1,7 +1,7 @@
 
-#include "stdafx.h"
-#include "prefs.h"
-#include "debuggerapp.h"
+#include "stdafx.hpp"
+#include "prefs.hpp"
+#include "debuggerapp.hpp"
 #include <fstream>
 
 #define SWAPRB(x) ( (((x)>>16)&0xff) | ((x)&0xff00) | (((x)&0xff)<<16) )
