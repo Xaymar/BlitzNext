@@ -1,10 +1,8 @@
-
-#ifndef MODEL_H
-#define MODEL_H
-
+#pragma once
 #include "brush.hpp"
 #include "object.hpp"
 #include "rendercontext.hpp"
+#include "gxmesh.hpp"
 
 class Sprite;
 class Terrain;
@@ -147,9 +145,7 @@ class Model : public Object {
 	bool  auto_fade;
 	float auto_fade_nr, auto_fade_fr;
 
-	vector<MeshQueue*> queues[2];
+	std::vector<MeshQueue*> queues[2];
 
 	void enqueue(MeshQueue* q);
 };
-
-#endif

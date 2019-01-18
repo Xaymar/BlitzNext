@@ -1,8 +1,8 @@
-
 #include "planemodel.hpp"
 #include "camera.hpp"
 #include "frustum.hpp"
-#include "std.hpp"
+
+#include <gxgraphics.hpp>
 
 static Vector vts[17][17];
 

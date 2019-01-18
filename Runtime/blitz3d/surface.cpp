@@ -1,6 +1,6 @@
-
 #include "surface.hpp"
-#include "std.hpp"
+
+#include <gxgraphics.hpp>
 
 extern gxGraphics* gx_graphics;
 
@@ -22,7 +22,7 @@ void Surface::setBrush(const Brush& b)
 	++mon->brush_changes;
 }
 
-void Surface::setName(const string& n)
+void Surface::setName(const std::string& n)
 {
 	name = n;
 }
@@ -40,7 +40,7 @@ void Surface::clear(bool verts, bool tris)
 	++mon->geom_changes;
 }
 
-void Surface::addVertices(const vector<Vertex>& verts)
+void Surface::addVertices(const std::vector<Vertex>& verts)
 {
 	vertices.insert(vertices.end(), verts.begin(), verts.end());
 	++mon->geom_changes;
@@ -79,7 +79,7 @@ Vector Surface::getColor(int n) const
 	return Vector(r / 255.0f, g / 255.0f, b / 255.0f);
 }
 
-void Surface::addTriangles(const vector<Triangle>& tris)
+void Surface::addTriangles(const std::vector<Triangle>& tris)
 {
 	triangles.insert(triangles.end(), tris.begin(), tris.end());
 }
@@ -87,7 +87,7 @@ void Surface::addTriangles(const vector<Triangle>& tris)
 void Surface::updateNormals()
 {
 	int                 k;
-	map<Vector, Vector> norm_map;
+	std::map<Vector, Vector> norm_map;
 	for (k = 0; k < triangles.size(); ++k) {
 		const Triangle& t  = triangles[k];
 		const Vector&   v0 = vertices[t.verts[0]].coords;
@@ -141,7 +141,7 @@ gxMesh* Surface::getMesh()
 	return mesh;
 }
 
-gxMesh* Surface::getMesh(const vector<Bone>& bones)
+gxMesh* Surface::getMesh(const std::vector<Bone>& bones)
 {
 	valid_vs = valid_ts = 0;
 

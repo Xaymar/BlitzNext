@@ -1,7 +1,4 @@
-
-#ifndef CAMERA_H
-#define CAMERA_H
-
+#pragma once
 #include "frustum.hpp"
 #include "mirror.hpp"
 #include "model.hpp"
@@ -56,5 +53,3 @@ class Camera : public Object {
 	mutable Frustum local_frustum;
 	mutable bool    local_valid;
 };
-
-#endif

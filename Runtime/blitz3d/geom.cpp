@@ -1,6 +1,4 @@
-
 #include "geom.hpp"
-#include "std.hpp"
 
 Matrix    Matrix::tmps[64];
 Transform Transform::tmps[64];

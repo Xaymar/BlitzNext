@@ -1,8 +1,8 @@
-
 #include "brush.hpp"
-#include "std.hpp"
 
-#include "../gxruntime/gxgraphics.hpp"
+#include <gxgraphics.hpp>
+#include <gxscene.hpp>
+#include <gxcanvas.hpp>
 
 struct Brush::Rep {
 	union {

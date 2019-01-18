@@ -1,7 +1,6 @@
-
-#ifndef Q3BSPREP_H
-#define Q3BSPREP_H
-
+#pragma once
+#include <string>
+#include <vector>
 #include "meshcollider.hpp"
 #include "model.hpp"
 
@@ -13,7 +12,7 @@ struct Q3BSPNode;
 class Q3BSPRep {
 	public:
 	//constructor
-	Q3BSPRep(const string& f, float gamma_adj);
+	Q3BSPRep(const std::string& f, float gamma_adj);
 	~Q3BSPRep();
 
 	void render(Model* model, const RenderContext& rc);
@@ -32,9 +31,9 @@ class Q3BSPRep {
 
 	Vector ambient;
 
-	vector<Q3BSPFace*> faces;
-	vector<Q3BSPSurf*> surfs, r_surfs;
-	vector<Texture>    textures, light_maps;
+	std::vector<Q3BSPFace*> faces;
+	std::vector<Q3BSPSurf*> surfs, r_surfs;
+	std::vector<Texture> textures, light_maps;
 
 	int   vis_sz;
 	char* vis_data;
@@ -55,5 +54,3 @@ class Q3BSPRep {
 	void render(Q3BSPLeaf* l, int clip);
 	void render(Q3BSPNode* n, int clip);
 };
-
-#endif

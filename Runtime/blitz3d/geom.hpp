@@ -1,8 +1,6 @@
-
-#ifndef GEOM_H
-#define GEOM_H
-
-#include <math.h>
+#pragma once
+#include <cmath>
+#include <cfloat>
 
 class Vector;
 class Line;
@@ -738,5 +736,3 @@ inline Quat matrixQuat(const Matrix& p)
 	}
 	return Quat(w, Vector(x, y, z));
 }
-
-#endif

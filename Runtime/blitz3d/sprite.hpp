@@ -1,7 +1,4 @@
-
-#ifndef SPRITE_H
-#define SPRITE_H
-
+#pragma once
 #include "brush.hpp"
 #include "gxmesh.hpp"
 #include "model.hpp"
@@ -46,5 +43,3 @@ class Sprite : public Model {
 	int   view_mode, mesh_index;
 	bool  captured;
 };
-
-#endif

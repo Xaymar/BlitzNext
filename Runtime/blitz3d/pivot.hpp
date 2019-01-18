@@ -1,7 +1,4 @@
-
-#ifndef PIVOT_H
-#define PIVOT_H
-
+#pragma once
 #include "object.hpp"
 
 class Pivot : public Object {
@@ -15,5 +12,3 @@ class Pivot : public Object {
 		return new Pivot(*this);
 	}
 };
-
-#endif

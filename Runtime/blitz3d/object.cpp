@@ -1,6 +1,9 @@
-
 #include "object.hpp"
-#include "std.hpp"
+#include "animator.hpp"
+
+#include <gxruntime.hpp>
+#include <gxsound.hpp>
+#include <gxchannel.hpp>
 
 extern gxRuntime* gx_runtime;
 

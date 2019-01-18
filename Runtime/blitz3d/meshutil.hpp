@@ -1,7 +1,4 @@
-
-#ifndef MESHUTIL_H
-#define MESHUTIL_H
-
+#pragma once
 #include "meshmodel.hpp"
 
 struct MeshUtil {
@@ -25,5 +22,3 @@ struct MeshUtil {
 	static Mesh createCylinder( const Brush &b,int segs );
 	*/
 };
-
-#endif

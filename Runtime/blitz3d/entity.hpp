@@ -1,9 +1,5 @@
-
-#ifndef ENTITY_H
-#define ENTITY_H
-
+#pragma once
 #include <list>
-
 #include "geom.hpp"
 
 class Entity;
@@ -132,5 +128,3 @@ class Entity {
 	void invalidateLocal();
 	void InvalidateWorldTransform();
 };
-
-#endif

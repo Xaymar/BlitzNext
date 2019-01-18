@@ -1,7 +1,4 @@
-
-#ifndef LISTENER_H
-#define LISTENER_H
-
+#pragma once
 #include "object.hpp"
 
 class Listener : public Object {
@@ -25,5 +22,3 @@ class Listener : public Object {
 
 	private:
 };
-
-#endif

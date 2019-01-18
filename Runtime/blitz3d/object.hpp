@@ -1,14 +1,12 @@
-
-#ifndef OBJECT_H
-#define OBJECT_H
-
+#pragma once
 #include <vector>
-
-#include "animator.hpp"
+#include "animation.hpp"
 #include "collision.hpp"
 #include "entity.hpp"
 
 class gxSound;
+class gxChannel;
+class Animator;
 
 struct ObjCollision {
 	Object*   with;
@@ -121,7 +119,7 @@ class Object : public Entity {
 	bool               obscurer;
 	float              elapsed;
 	Vector             velocity;
-	vector<gxChannel*> channels;
+	std::vector<gxChannel*> channels;
 	Vector             capt_pos, capt_scl;
 	Quat               capt_rot;
 	mutable Object*    last_copy;
@@ -136,5 +134,3 @@ class Object : public Entity {
 
 	void updateSounds();
 };
-
-#endif

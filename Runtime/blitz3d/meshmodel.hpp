@@ -1,15 +1,14 @@
-
-#ifndef MESHMODEL_H
-#define MESHMODEL_H
-
+#pragma once
+#include <vector>
 #include "model.hpp"
 #include "surface.hpp"
 
 class MeshCollider;
+class Collision;
 
 class MeshModel : public Model {
 	public:
-	typedef vector<Surface*> SurfaceList;
+	typedef std::vector<Surface*> SurfaceList;
 
 	MeshModel();
 	MeshModel(const MeshModel& t);
@@ -59,11 +58,9 @@ class MeshModel : public Model {
 	Rep*          rep;
 	int           brush_changes;
 	Brush         render_brush;
-	vector<Brush> brushes;
+	std::vector<Brush> brushes;
 
-	vector<Surface::Bone> surf_bones;
+	std::vector<Surface::Bone> surf_bones;
 
 	MeshModel& operator=(const MeshModel&);
 };
-
-#endif

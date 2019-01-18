@@ -1,6 +1,6 @@
-
 #include "camera.hpp"
-#include "std.hpp"
+
+#include <gxscene.hpp>
 
 extern gxScene* gx_scene;
 

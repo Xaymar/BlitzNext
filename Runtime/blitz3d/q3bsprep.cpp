@@ -1,6 +1,8 @@
-
 #include "q3bsprep.hpp"
-#include "std.hpp"
+
+#include <gxgraphics.hpp>
+#include <gxcanvas.hpp>
+#include <stdutil.hpp>
 
 /* Quake3 File format types */
 
@@ -89,7 +91,7 @@ struct q3_header {
 struct Surf {
 	Q3BSPSurf*  surf;
 	int         texture, lm_index;
-	vector<int> verts, tris;
+	std::vector<int> verts, tris;
 };
 
 struct FaceCmp {
@@ -105,7 +107,7 @@ struct FaceCmp {
 	}
 };
 
-typedef map<q3_face*, Surf*, FaceCmp> FaceMap;
+typedef std::map<q3_face*, Surf*, FaceCmp> FaceMap;
 
 /* render reps */
 
@@ -114,7 +116,7 @@ struct Q3BSPFace;
 struct Q3BSPSurf {
 	Brush              brush;
 	gxMesh*            mesh;
-	vector<Q3BSPFace*> r_faces;
+	std::vector<Q3BSPFace*> r_faces;
 	int                texture, lm_index;
 };
 
@@ -127,13 +129,13 @@ struct Q3BSPFace {
 };
 
 struct Q3BSPBrush {
-	vector<Plane> planes;
+	std::vector<Plane> planes;
 };
 
 struct Q3BSPLeaf {
 	int                cluster;
 	Box                box;
-	vector<Q3BSPFace*> faces;
+	std::vector<Q3BSPFace*> faces;
 };
 
 struct Q3BSPNode {
@@ -153,10 +155,10 @@ struct Q3BSPNode {
 
 static q3_header                      header;
 static FaceMap                        face_map;
-static vector<Surf*>                  t_surfs;
-static vector<q3_vertex>              p_verts; //patch vertices
-static vector<Vector>                 p_coll_verts;
-static vector<MeshCollider::Triangle> coll_tris;
+static std::vector<Surf*>                  t_surfs;
+static std::vector<q3_vertex>              p_verts; //patch vertices
+static std::vector<Vector>                 p_coll_verts;
+static std::vector<MeshCollider::Triangle> coll_tris;
 
 static float gamma_adj;
 
@@ -164,7 +166,7 @@ static Vector               r_eye;
 static int                  r_cluster;
 static Frustum              r_frustum;
 static Vector               r_frustedges[12];
-static map<int, Q3BSPFace*> q3face_map;
+static std::map<int, Q3BSPFace*> q3face_map;
 
 extern gxScene*    gx_scene;
 extern gxRuntime*  gx_runtime;
@@ -182,7 +184,7 @@ static void debuglog(const string& t)
 	gx_runtime->debugLog(t.c_str());
 }
 #else
-static void debuglog(const string& t) {}
+static void debuglog(const std::string& t) {}
 #endif
 
 static Surf* findSurf(q3_face* f)
@@ -193,7 +195,7 @@ static Surf* findSurf(q3_face* f)
 	Surf* s     = new Surf;
 	s->texture  = f->texture;
 	s->lm_index = f->lm_index;
-	face_map.insert(make_pair(f, s));
+	face_map.insert(std::make_pair(f, s));
 	t_surfs.push_back(s);
 	return s;
 }
@@ -203,7 +205,7 @@ void Q3BSPRep::createTextures()
 	int     n_texs = header.dir[1].length / sizeof(q3_tex);
 	q3_tex* q3tex  = (q3_tex*)header.dir[1].lump;
 	for (int k = 0; k < n_texs; ++k) {
-		string t = string(q3tex->name);
+		std::string t = std::string(q3tex->name);
 		char   fl[32], co[32];
 		_itoa(q3tex->flags, fl, 16);
 		_itoa(q3tex->contents, co, 16);
@@ -264,7 +266,7 @@ void Q3BSPRep::createVis()
 
 void Q3BSPRep::createCollider()
 {
-	vector<MeshCollider::Vertex> coll_verts;
+	std::vector<MeshCollider::Vertex> coll_verts;
 	int                          n_verts = header.dir[10].length / sizeof(q3_vertex);
 	q3_vertex*                   t       = (q3_vertex*)header.dir[10].lump;
 	MeshCollider::Vertex         cv;
@@ -350,7 +352,7 @@ static void average(const q3_vertex& a, const q3_vertex& b, q3_vertex* c)
 	}
 }
 
-static void subdivide(vector<q3_vertex>& verts, int level, int index, int step)
+static void subdivide(std::vector<q3_vertex>& verts, int level, int index, int step)
 {
 	if (!level) {
 		q3_vertex t1, t2;
@@ -369,7 +371,7 @@ static void subdivide(vector<q3_vertex>& verts, int level, int index, int step)
 static void patchFace(Q3BSPFace* face, q3_face* q3face, bool draw, bool solid, int level)
 {
 	int               k, x, y;
-	vector<q3_vertex> verts;
+	std::vector<q3_vertex> verts;
 
 	if (draw) {
 		int step   = 1 << level;
@@ -422,7 +424,7 @@ static void patchFace(Q3BSPFace* face, q3_face* q3face, bool draw, bool solid, i
 	}
 
 	if (solid) {
-		vector<q3_vertex> verts;
+		std::vector<q3_vertex> verts;
 		int               step   = 1;
 		int               size_x = q3face->patch_size[0];
 		int               size_y = q3face->patch_size[1];
@@ -472,7 +474,7 @@ static void patchFace(Q3BSPFace* face, q3_face* q3face, bool draw, bool solid, i
 
 static void meshFace(Q3BSPFace* face, q3_face* q3face, bool draw, bool solid)
 {
-	static map<int, int> vert_map;
+	static std::map<int, int> vert_map;
 	vert_map.clear();
 	int*                   meshverts = (int*)header.dir[11].lump + q3face->meshvert;
 	MeshCollider::Triangle ct;
@@ -529,7 +531,7 @@ Q3BSPLeaf* Q3BSPRep::createLeaf(int n)
 	for (int k = 0; k < q3leaf->n_leaffaces; ++k) {
 		int face_n = leaffaces[k];
 
-		map<int, Q3BSPFace*>::const_iterator it = q3face_map.find(face_n);
+		std::map<int, Q3BSPFace*>::const_iterator it = q3face_map.find(face_n);
 		if (it != q3face_map.end()) {
 			if (it->second)
 				leaf->faces.push_back(it->second);
@@ -567,7 +569,7 @@ Q3BSPLeaf* Q3BSPRep::createLeaf(int n)
 			face->n_verts = face->n_tris = 0;
 			leaf->faces.push_back(face);
 			faces.push_back(face);
-			q3face_map.insert(make_pair(face_n, face));
+			q3face_map.insert(std::make_pair(face_n, face));
 		}
 
 		if (q3face->type == 2) {
@@ -608,7 +610,7 @@ Q3BSPNode* Q3BSPRep::createNode(int n)
 	return node;
 }
 
-Q3BSPRep::Q3BSPRep(const string& f, float gam) : root_node(0), vis_sz(0), vis_data(0), use_lmap(true)
+Q3BSPRep::Q3BSPRep(const std::string& f, float gam) : root_node(0), vis_sz(0), vis_data(0), use_lmap(true)
 {
 	gamma_adj = 1 - gam;
 

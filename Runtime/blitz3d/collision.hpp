@@ -1,7 +1,4 @@
-
-#ifndef COLLISION_H
-#define COLLISION_H
-
+#pragma once
 #include "geom.hpp"
 
 extern const float COLLISION_FLT_EPSILON;
@@ -23,5 +20,3 @@ struct Collision {
 
 	bool boxCollide(const Line& src_line, float src_radius, const Box& box);
 };
-
-#endif

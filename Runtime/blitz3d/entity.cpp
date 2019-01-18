@@ -1,8 +1,4 @@
-
 #include "entity.hpp"
-#include "std.hpp"
-
-//#include "stats.hpp"
 
 Entity *Entity::_orphans, *Entity::_last_orphan;
 
@@ -119,7 +115,7 @@ void Entity::SetParent(Entity* p)
 	InvalidateWorldTransform();
 }
 
-void Entity::SetName(const string& t)
+void Entity::SetName(const std::string& t)
 {
 	m_name = t;
 }

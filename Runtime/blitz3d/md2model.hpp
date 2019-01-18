@@ -1,13 +1,11 @@
-
-#ifndef MD2MODEL_H
-#define MD2MODEL_H
-
+#pragma once
 #include "md2rep.hpp"
 #include "model.hpp"
+#include <string>
 
 class MD2Model : public Model {
 	public:
-	MD2Model(const string& filename);
+	MD2Model(const std::string& filename);
 	MD2Model(const MD2Model& t);
 	~MD2Model();
 
@@ -59,5 +57,3 @@ class MD2Model : public Model {
 	//Unimplemented
 	MD2Model& operator=(const MD2Model&);
 };
-
-#endif

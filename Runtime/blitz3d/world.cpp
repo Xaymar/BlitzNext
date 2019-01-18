@@ -1,7 +1,6 @@
-
 #include "world.hpp"
 #include <queue>
-#include "std.hpp"
+#include "gxruntime.hpp"
 
 //0=tris compared for collision
 //1=max proj err of terrain
@@ -30,9 +29,9 @@ static void StaticEnumerateVisible()
 
 /******************************* Update *******************************/
 
-static vector<Object*> _objsByType[1000];
+static std::vector<Object*> _objsByType[1000];
 
-static vector<ObjCollision*> free_colls, used_colls;
+static std::vector<ObjCollision*> free_colls, used_colls;
 
 static ObjCollision* allocObjColl(Object* with, const Vector& coords, const Collision& coll)
 {
@@ -73,7 +72,7 @@ void World::clearCollisions()
 
 void World::addCollision(int src_type, int dst_type, int method, int response)
 {
-	vector<CollInfo>& info = _collInfo[src_type];
+	std::vector<CollInfo>& info = _collInfo[src_type];
 	for (size_t k = 0; k < info.size(); ++k) {
 		const CollInfo& t = info[k];
 		if (dst_type == t.dst_type)
@@ -183,13 +182,13 @@ void World::collide(Object* src)
 	float td    = coll_line.d.length();
 	float td_xz = Vector(coll_line.d.x, 0, coll_line.d.z).length();
 
-	const vector<CollInfo>& collinfos = _collInfo[src->getCollisionType()];
+	const std::vector<CollInfo>& collinfos = _collInfo[src->getCollisionType()];
 
 	int hits = 0;
 	for (;;) {
-		Collision                        coll;
-		Object*                          coll_obj = 0;
-		vector<CollInfo>::const_iterator coll_it, coll_info;
+		Collision                             coll;
+		Object*                               coll_obj = 0;
+		std::vector<CollInfo>::const_iterator coll_it, coll_info;
 
 		for (coll_it = collinfos.begin(); coll_it != collinfos.end(); ++coll_it) {
 			//			const std::list<Object*> &dst_objs = _objsByType[coll_it->dst_type];
@@ -501,9 +500,9 @@ void World::update(float elapsed)
 
 static Transform cam_tform; //current camera transform
 
-static vector<gxLight*>  _lights;
-static vector<Mirror*>   _mirrors;
-static vector<Listener*> _listeners;
+static std::vector<gxLight*>  _lights;
+static std::vector<Mirror*>   _mirrors;
+static std::vector<Listener*> _listeners;
 
 struct OrderComp {
 	bool operator()(Object* a, Object* b)
@@ -519,13 +518,13 @@ struct TransComp {
 	}
 };
 
-static vector<Model*> ord_mods, unord_mods;
+static std::vector<Model*> ord_mods, unord_mods;
 
-static priority_queue<Model*, vector<Model*>, OrderComp> ord_que;
+static std::priority_queue<Model*, std::vector<Model*>, OrderComp> ord_que;
 
-static priority_queue<Camera*, vector<Camera*>, OrderComp> cam_que;
+static std::priority_queue<Camera*, std::vector<Camera*>, OrderComp> cam_que;
 
-static priority_queue<Model*, vector<Model*>, TransComp> transparents;
+static std::priority_queue<Model*, std::vector<Model*>, TransComp> transparents;
 
 void World::capture()
 {
@@ -583,7 +582,7 @@ void World::render(float tween)
 		if (!cam->beginRenderFrame())
 			continue;
 
-		vector<Mirror*>::const_iterator mir_it;
+		std::vector<Mirror*>::const_iterator mir_it;
 		for (mir_it = _mirrors.begin(); mir_it != _mirrors.end(); ++mir_it) {
 			render(cam, *mir_it);
 		}
@@ -595,7 +594,7 @@ void World::render(float tween)
 
 	//	gx_runtime->debugLog( "End RenderWorld" );
 
-	vector<Listener*>::const_iterator lis_it;
+	std::vector<Listener*>::const_iterator lis_it;
 	for (lis_it = _listeners.begin(); lis_it != _listeners.end(); ++lis_it) {
 		(*lis_it)->renderListener();
 	}

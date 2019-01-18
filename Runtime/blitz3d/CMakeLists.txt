@@ -5,7 +5,6 @@ add_library(${PROJECT_NAME} STATIC
 	"animation.hpp"
 	"animator.cpp"
 	"animator.hpp"
-	"blitz3d.hpp"
 	"brush.cpp"
 	"brush.hpp"
 	"cachedtexture.cpp"
@@ -61,8 +60,6 @@ add_library(${PROJECT_NAME} STATIC
 	"rendercontext.hpp"
 	"sprite.cpp"
 	"sprite.hpp"
-	"std.cpp"
-	"std.hpp"
 	"surface.cpp"
 	"surface.hpp"
 	"terrain.cpp"
@@ -76,11 +73,9 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 target_link_libraries(${PROJECT_NAME}
-	PRIVATE
-		config
-		gxruntime
-		stdutil
-	PUBLIC
+	config
+	runtime_gfx
+	stdutil
 )
 
 target_include_directories(${PROJECT_NAME}

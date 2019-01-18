@@ -1,6 +1,4 @@
-
 #include "terrain.hpp"
-#include "std.hpp"
 #include "terrainrep.hpp"
 
 Terrain::Terrain(int size_shift) : rep(new TerrainRep(size_shift)) {}

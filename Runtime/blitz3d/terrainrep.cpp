@@ -1,19 +1,24 @@
-
 #include "terrainrep.hpp"
 #include <queue>
-#include "std.hpp"
+
+#include <gxgraphics.hpp>
+#include <gxruntime.hpp>
 
 extern gxRuntime*  gx_runtime;
 extern gxGraphics* gx_graphics;
 extern float       stats3d[10];
 
-static Vector            eye_vec;
-static Plane             eye_plane;
-static const Vector      up_normal(0, 1, 0);
-static TerrainRep::Tri*  tri_pool;
-static const TerrainRep* curr;
-static Frustum           frustum;
-static int               out_cnt, proc_cnt, clip_cnt;
+static Vector                        eye_vec;
+static Plane                         eye_plane;
+static const Vector                  up_normal(0, 1, 0);
+static TerrainRep::Tri*              tri_pool;
+static const TerrainRep*             curr;
+static Frustum                       frustum;
+static int                           out_cnt, proc_cnt, clip_cnt;
+static std::vector<TerrainRep::Tri*> tris;
+
+static int               vert_cnt, max_verts;
+static TerrainRep::Vert *verts, *next_vert;
 
 static float proj_epsilon = FLT_EPSILON; //.01f;
 
@@ -48,9 +53,6 @@ struct TerrainRep::Vert {
 	Vert(int x, int z, float sy) : x(x), z(z), v((float)x, curr->getHeight(x, z), (float)z), src_y(sy) {}
 };
 
-static int               vert_cnt, max_verts;
-static TerrainRep::Vert *verts, *next_vert;
-
 struct TerrainRep::Tri {
 	int   id;
 	short clip, v0, v1, v2;
@@ -66,20 +68,20 @@ struct TerrainRep::Tri {
 	{
 		static const int GROW = 64;
 		if (!tri_pool) {
-			tri_pool = new Tri[GROW];
+			tri_pool = new TerrainRep::Tri[GROW];
 			for (int k = 0; k < GROW - 1; ++k)
 				tri_pool[k].e0 = &tri_pool[k + 1];
 			tri_pool[GROW - 1].e0 = 0;
 		}
-		Tri* t   = tri_pool;
-		tri_pool = t->e0;
+		TerrainRep::Tri* t = tri_pool;
+		tri_pool           = t->e0;
 		return t;
 	}
 	void operator delete(void* q)
 	{
-		Tri* t   = (Tri*)q;
-		t->e0    = tri_pool;
-		tri_pool = t;
+		TerrainRep::Tri* t = (TerrainRep::Tri*)q;
+		t->e0              = tri_pool;
+		tri_pool           = t;
 	}
 	void unlink()
 	{
@@ -117,19 +119,18 @@ struct TriComp {
 	}
 };
 
-struct TriQue : public priority_queue<TerrainRep::Tri*, vector<TerrainRep::Tri*>, TriComp> {
-	vector<TerrainRep::Tri*>& getVector()
+struct TriQue : public std::priority_queue<TerrainRep::Tri*, std::vector<TerrainRep::Tri*>, TriComp> {
+	std::vector<TerrainRep::Tri*>& getVector()
 	{
 		return c;
 	}
-	const vector<TerrainRep::Tri*>& getVector() const
+	const std::vector<TerrainRep::Tri*>& getVector() const
 	{
 		return c;
 	}
 };
 
-static TriQue                   tri_que;
-static vector<TerrainRep::Tri*> tris;
+static TriQue tri_que;
 
 static bool clip(const Line& l, const Box& box)
 {
@@ -497,8 +498,8 @@ void TerrainRep::render(Model* model, const RenderContext& rc)
 		delete t;
 	}
 
-	int                 k;
-	const vector<Tri*>& q_tris = tri_que.getVector();
+	int                      k;
+	const std::vector<Tri*>& q_tris = tri_que.getVector();
 
 	if (!mesh)
 		out_cnt = 0;

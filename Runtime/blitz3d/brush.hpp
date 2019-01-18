@@ -1,9 +1,8 @@
-
-#ifndef BRUSH_H
-#define BRUSH_H
-
+#pragma once
 #include "geom.hpp"
 #include "texture.hpp"
+
+#include <gxscene.hpp>
 
 class Brush {
 	public:
@@ -38,5 +37,3 @@ class Brush {
 
 	Rep* write() const;
 };
-
-#endif

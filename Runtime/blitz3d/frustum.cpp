@@ -1,6 +1,4 @@
-
 #include "frustum.hpp"
-#include "std.hpp"
 
 Frustum::Frustum() {}
 

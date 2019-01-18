@@ -1,7 +1,4 @@
-
-#ifndef TERRAIN_H
-#define TERRAIN_H
-
+#pragma once
 #include "model.hpp"
 
 struct TerrainRep;
@@ -32,5 +29,3 @@ class Terrain : public Model {
 	private:
 	TerrainRep* rep;
 };
-
-#endif

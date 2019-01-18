@@ -1,7 +1,4 @@
-
-#ifndef RENDERCONTEXT_H
-#define RENDERCONTEXT_H
-
+#pragma once
 #include "frustum.hpp"
 
 class RenderContext {
@@ -33,5 +30,3 @@ class RenderContext {
 	Frustum   world_frustum, camera_frustum;
 	bool      ref;
 };
-
-#endif

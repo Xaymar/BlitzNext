@@ -1,12 +1,9 @@
-
-#ifndef LIGHT_H
-#define LIGHT_H
-
+#pragma once
 #include "geom.hpp"
-#include "gxlight.hpp"
 #include "object.hpp"
 
 class World;
+class gxLight;
 
 class Light : public Object {
 	public:
@@ -33,5 +30,3 @@ class Light : public Object {
 	friend class World;
 	gxLight* light;
 };
-
-#endif

@@ -1,7 +1,5 @@
-
 #include "animator.hpp"
 #include "object.hpp"
-#include "std.hpp"
 
 Animator::Animator(Animator* t) : _seqs(t->_seqs)
 {
@@ -24,7 +22,7 @@ Animator::Animator(Object* obj, int frames)
 	reset();
 }
 
-Animator::Animator(const vector<Object*>& objs, int frames) : _objs(objs)
+Animator::Animator(const std::vector<Object*>& objs, int frames) : _objs(objs)
 {
 	_anims.resize(_objs.size());
 	addSeq(frames);

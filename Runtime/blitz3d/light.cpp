@@ -1,7 +1,7 @@
-
 #include "light.hpp"
-#include "../gxruntime/gxscene.hpp"
-#include "std.hpp"
+
+#include <gxscene.hpp>
+#include <gxlight.hpp>
 
 extern gxScene* gx_scene;
 

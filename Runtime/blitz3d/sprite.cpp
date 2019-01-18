@@ -1,6 +1,7 @@
-
 #include "sprite.hpp"
-#include "std.hpp"
+
+#include <gxgraphics.hpp>
+#include <gxruntime.hpp>
 
 extern float stats3d[];
 
@@ -16,7 +17,7 @@ extern gxGraphics* gx_graphics;
 
 static gxMesh*     mesh;
 static int         mesh_size;
-static vector<int> mesh_indices;
+static std::vector<int> mesh_indices;
 
 static int allocIndex()
 {

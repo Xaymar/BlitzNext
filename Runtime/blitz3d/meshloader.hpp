@@ -1,15 +1,14 @@
-
-#ifndef MESHLOADER_H
-#define MESHLOADER_H
-
-#include "model.hpp"
+#pragma once
+#include "brush.hpp"
 #include "surface.hpp"
+
+class MeshModel;
 
 class MeshLoader {
 	public:
 	enum { HINT_COLLAPSE = 1, HINT_ANIMONLY = 2 };
 
-	virtual MeshModel* load(const string& f, const Transform& conv, int hint) = 0;
+	virtual MeshModel* load(const std::string& f, const Transform& conv, int hint) = 0;
 
 	//clear
 	static void beginMesh();
@@ -35,5 +34,3 @@ class MeshLoader {
 	//finally, update the mesh...
 	static void endMesh(MeshModel* mesh);
 };
-
-#endif

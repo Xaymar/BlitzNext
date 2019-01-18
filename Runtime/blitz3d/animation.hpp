@@ -1,9 +1,4 @@
-
-#ifndef ANIMATION_H
-#define ANIMATION_H
-
-#include <list>
-
+#pragma once
 #include "geom.hpp"
 
 class Animation {
@@ -33,5 +28,3 @@ class Animation {
 
 	Rep* write();
 };
-
-#endif

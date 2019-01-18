@@ -1,7 +1,4 @@
-
-#ifndef PLANEMODEL_H
-#define PLANEMODEL_H
-
+#pragma once
 #include "brush.hpp"
 #include "model.hpp"
 
@@ -33,5 +30,3 @@ class PlaneModel : public Model {
 		return this;
 	}
 };
-
-#endif

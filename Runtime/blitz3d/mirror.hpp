@@ -1,7 +1,4 @@
-
-#ifndef MIRROR_H
-#define MIRROR_H
-
+#pragma once
 #include "object.hpp"
 
 class Mirror : public Object {
@@ -20,5 +17,3 @@ class Mirror : public Object {
 		return this;
 	}
 };
-
-#endif

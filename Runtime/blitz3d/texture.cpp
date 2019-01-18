@@ -1,28 +1,28 @@
-
 #include "texture.hpp"
 #include "cachedtexture.hpp"
 #include "geom.hpp"
-#include "std.hpp"
 
-#include "../gxruntime/gxgraphics.hpp"
+#include <gxgraphics.hpp>
+#include <gxcanvas.hpp>
+#include <stdutil.hpp>
 
 extern gxScene*    gx_scene;
 extern gxGraphics* gx_graphics;
 
 struct Filter {
-	string t;
-	int    flags;
-	Filter(const string& t, int flags) : t(t), flags(flags) {}
+	std::string t;
+	int         flags;
+	Filter(const std::string& t, int flags) : t(t), flags(flags) {}
 };
 
-static vector<Filter> filters;
+static std::vector<Filter> filters;
 
-static int filterFile(const string& t, int flags)
+static int filterFile(const std::string& t, int flags)
 {
 	//check filters...
-	string l = tolower(t);
+	std::string l = tolower(t);
 	for (size_t k = 0; k < filters.size(); ++k) {
-		if (l.find(filters[k].t) != string::npos) {
+		if (l.find(filters[k].t) != std::string::npos) {
 			flags |= filters[k].flags;
 		}
 	}
@@ -30,9 +30,9 @@ static int filterFile(const string& t, int flags)
 }
 
 struct Texture::Rep {
-	int                  ref_cnt;
-	CachedTextureFactory cached_tex;
-	vector<gxCanvas*>    tex_frames;
+	int                    ref_cnt;
+	CachedTexture          cached_tex;
+	std::vector<gxCanvas*> tex_frames;
 
 	int  tex_blend, tex_flags;
 	bool transparent;
@@ -50,7 +50,7 @@ struct Texture::Rep {
 		memset(&matrix, 0, sizeof(matrix));
 	}
 
-	Rep(const string& f, int flags, int w, int h, int first, int cnt)
+	Rep(const std::string& f, int flags, int w, int h, int first, int cnt)
 		: ref_cnt(1), cached_tex(f, flags, w, h, first, cnt), tex_blend(gxScene::BLEND_MULTIPLY), tex_flags(0), sx(1),
 		  sy(1), tx(0), ty(0), rot(0), mat_used(false)
 	{
@@ -68,7 +68,7 @@ struct Texture::Rep {
 
 Texture::Texture() : rep(0) {}
 
-Texture::Texture(const string& f, int flags)
+Texture::Texture(const std::string& f, int flags)
 {
 	flags = filterFile(f, flags) | gxCanvas::CANVAS_TEXTURE;
 	if (flags & gxCanvas::CANVAS_TEX_MASK)
@@ -76,7 +76,7 @@ Texture::Texture(const string& f, int flags)
 	rep = new Rep(f, flags, 0, 0, 0, 1);
 }
 
-Texture::Texture(const string& f, int flags, int w, int h, int first, int cnt)
+Texture::Texture(const std::string& f, int flags, int w, int h, int first, int cnt)
 {
 	flags = filterFile(f, flags) | gxCanvas::CANVAS_TEXTURE;
 	if (flags & gxCanvas::CANVAS_TEX_MASK)
@@ -172,7 +172,7 @@ int Texture::getCanvasFlags() const
 	return rep && rep->tex_frames.size() ? rep->tex_frames[0]->getFlags() : 0;
 }
 
-CachedTextureFactory* Texture::getCachedTexture() const
+CachedTexture* Texture::getCachedTexture() const
 {
 	return rep ? &rep->cached_tex : 0;
 }
@@ -216,7 +216,7 @@ void Texture::clearFilters()
 	filters.clear();
 }
 
-void Texture::addFilter(const string& t, int flags)
+void Texture::addFilter(const std::string& t, int flags)
 {
 	filters.push_back(Filter(tolower(t), flags));
 }

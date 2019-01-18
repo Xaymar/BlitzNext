@@ -1,9 +1,4 @@
-
-#ifndef TERRAINREP_H
-#define TERRAINREP_H
-
-#include <queue>
-
+#pragma once
 #include "model.hpp"
 
 struct TerrainRep {
@@ -53,5 +48,3 @@ struct TerrainRep {
 	bool collide(const Line& line, float radius, Collision* curr_coll, const Transform& tform, int id, const Vert& v0,
 				 const Vert& v1, const Vert& v2, const Box& box) const;
 };
-
-#endif

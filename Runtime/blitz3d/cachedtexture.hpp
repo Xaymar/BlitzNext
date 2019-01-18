@@ -1,36 +1,35 @@
+#pragma once
+#include <set>
+#include <string>
+#include <vector>
 
-#ifndef CACHEDTEXTURE_H
-#define CACHEDTEXTURE_H
+class gxCanvas;
 
-#include "gxcanvas.hpp"
-
-class CachedTextureFactory {
+class CachedTexture {
 	public:
-	CachedTextureFactory(int w, int h, int flags, int cnt);
-	CachedTextureFactory(const string& f, int flags, int w, int h, int first, int cnt);
-	CachedTextureFactory(const CachedTextureFactory& t);
-	~CachedTextureFactory();
+	CachedTexture(int w, int h, int flags, int cnt);
+	CachedTexture(const std::string& f, int flags, int w, int h, int first, int cnt);
+	CachedTexture(const CachedTexture& t);
+	~CachedTexture();
 
-	CachedTextureFactory& operator=(const CachedTextureFactory& t);
+	CachedTexture& operator=(const CachedTexture& t);
 
-	string getName() const;
+	std::string getName() const;
 
-	const vector<gxCanvas*>& getFrames() const;
+	const std::vector<gxCanvas*>& getFrames() const;
 
-	bool operator<(const CachedTextureFactory& t) const
+	bool operator<(const CachedTexture& t) const
 	{
 		return rep < t.rep;
 	}
 
-	static void setPath(const string& t);
+	static void setPath(const std::string& t);
 
 	private:
-	struct CachedTexture;
-	CachedTexture* rep;
+	struct CTInstance;
+	CTInstance* rep;
 
-	CachedTexture* findRep(const string& f, int flags, int w, int h, int first, int cnt);
+	CTInstance* findRep(const std::string& f, int flags, int w, int h, int first, int cnt);
 
-	static set<CachedTexture*> rep_set;
+	static std::set<CTInstance*> rep_set;
 };
-
-#endif

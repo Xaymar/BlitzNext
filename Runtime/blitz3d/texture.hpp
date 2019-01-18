@@ -1,12 +1,10 @@
-
-#ifndef TEXTURE_H
-#define TEXTURE_H
-
+#pragma once
 #include <string>
-
 #include "cachedtexture.hpp"
 
-#include "gxcanvas.hpp"
+#include <gxscene.hpp>
+
+class gxCanvas;
 
 class Texture {
 	public:
@@ -30,7 +28,7 @@ class Texture {
 	const gxScene::Matrix* getMatrix() const;
 	int                    getBlend() const;
 	int                    getFlags() const;
-	CachedTextureFactory*  getCachedTexture() const;
+	CachedTexture*         getCachedTexture() const;
 
 	bool isTransparent() const;
 	bool operator<(const Texture& t) const;
@@ -42,5 +40,3 @@ class Texture {
 	struct Rep;
 	Rep* rep;
 };
-
-#endif

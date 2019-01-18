@@ -1,7 +1,4 @@
-
-#ifndef FRUSTUM_H
-#define FRUSTUM_H
-
+#pragma once
 #include "geom.hpp"
 
 class Frustum {
@@ -39,5 +36,3 @@ class Frustum {
 	Vector verts[9];
 	void   makePlanes();
 };
-
-#endif

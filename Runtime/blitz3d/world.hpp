@@ -1,9 +1,5 @@
-
-#ifndef WORLD_H
-#define WORLD_H
-
+#pragma once
 #include <list>
-
 #include "camera.hpp"
 #include "light.hpp"
 #include "listener.hpp"
@@ -42,7 +38,7 @@ class World {
 		int dst_type, method, response;
 	};
 
-	vector<CollInfo>   _collInfo[WORLD_COLLISION_TYPES];
+	std::vector<CollInfo>   _collInfo[WORLD_COLLISION_TYPES];
 	std::list<Object*> _objsByType[WORLD_COLLISION_TYPES];
 	std::list<Object*> _objsByTypeSwappable[WORLD_COLLISION_TYPES];
 
@@ -51,5 +47,3 @@ class World {
 	void render(Model* m, const RenderContext& rc);
 	void flushTransparent();
 };
-
-#endif

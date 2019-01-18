@@ -1,6 +1,6 @@
-
 #include "collision.hpp"
-#include "std.hpp"
+
+#include <gxruntime.hpp>
 
 const float COLLISION_FLT_EPSILON = .001f;
 

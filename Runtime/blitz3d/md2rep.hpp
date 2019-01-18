@@ -1,8 +1,7 @@
-
-#ifndef MD2REP_H
-#define MD2REP_H
-
+#pragma once
 #include "model.hpp"
+#include <string>
+#include <vector>
 
 class MD2Rep {
 	public:
@@ -10,7 +9,7 @@ class MD2Rep {
 		Vector coords, normal;
 	};
 
-	MD2Rep(const string& f);
+	MD2Rep(const std::string& f);
 	virtual ~MD2Rep();
 
 	void render(Vert* verts, int frame);
@@ -46,15 +45,13 @@ class MD2Rep {
 
 	struct Frame {
 		Vector         scale, trans;
-		vector<Vertex> verts;
+		std::vector<Vertex> verts;
 	};
 
 	Box              box;
 	gxMesh*          mesh;
 	int              n_frames;
 	int              n_verts, n_tris;
-	vector<Frame>    frames;
-	vector<VertexUV> uvs;
+	std::vector<Frame>    frames;
+	std::vector<VertexUV> uvs;
 };
-
-#endif

@@ -1,23 +1,25 @@
-
 #include "cachedtexture.hpp"
-#include "std.hpp"
+
+#include <stdutil.hpp>
+#include <gxcanvas.hpp>
+#include <gxgraphics.hpp>
 
 int active_texs;
 
 extern gxRuntime*  gx_runtime;
 extern gxGraphics* gx_graphics;
 
-set<CachedTextureFactory::CachedTexture*> CachedTextureFactory::rep_set;
+std::set<CachedTexture::CTInstance*> CachedTexture::rep_set;
 
-static string path;
+static std::string path;
 
-struct CachedTextureFactory::CachedTexture {
+struct CachedTexture::CTInstance {
 	int               ref_cnt;
-	string            file;
+	std::string       file;
 	int               flags, w, h, first;
-	vector<gxCanvas*> frames;
+	std::vector<gxCanvas*> frames;
 
-	CachedTexture(int w, int h, int flags, int cnt) : ref_cnt(1), flags(flags), w(w), h(h), first(0)
+	CTInstance(int w, int h, int flags, int cnt) : ref_cnt(1), flags(flags), w(w), h(h), first(0)
 	{
 		++active_texs;
 		while (cnt-- > 0) {
@@ -28,7 +30,7 @@ struct CachedTextureFactory::CachedTexture {
 		}
 	}
 
-	CachedTexture(const string& f, int flags, int w, int h, int first, int cnt)
+	CTInstance(const std::string& f, int flags, int w, int h, int first, int cnt)
 		: ref_cnt(1), file(f), flags(flags), w(w), h(h), first(first)
 	{
 		++active_texs;
@@ -94,7 +96,7 @@ struct CachedTextureFactory::CachedTexture {
 		gx_graphics->freeCanvas(t);
 	}
 
-	~CachedTexture()
+	~CTInstance()
 	{
 		--active_texs;
 		for (int k = 0; k < frames.size(); ++k)
@@ -102,12 +104,11 @@ struct CachedTextureFactory::CachedTexture {
 	}
 };
 
-CachedTextureFactory::CachedTexture* CachedTextureFactory::findRep(const string& f, int flags, int w, int h, int first,
-																   int cnt)
+CachedTexture::CTInstance* CachedTexture::findRep(const std::string& f, int flags, int w, int h, int first, int cnt)
 {
-	set<CachedTexture*>::const_iterator it;
+	std::set<CTInstance*>::const_iterator it;
 	for (it = rep_set.begin(); it != rep_set.end(); ++it) {
-		CachedTexture* rep = *it;
+		CTInstance* rep = *it;
 		if (rep->file == f && rep->flags == flags && rep->w == w && rep->h == h && rep->first == first
 			&& rep->frames.size() == cnt) {
 			++rep->ref_cnt;
@@ -117,38 +118,37 @@ CachedTextureFactory::CachedTexture* CachedTextureFactory::findRep(const string&
 	return 0;
 }
 
-CachedTextureFactory::CachedTextureFactory(int w, int h, int flags, int cnt) : rep(new CachedTexture(w, h, flags, cnt))
-{}
+CachedTexture::CachedTexture(int w, int h, int flags, int cnt) : rep(new CTInstance(w, h, flags, cnt)) {}
 
-CachedTextureFactory::CachedTextureFactory(const string& f_, int flags, int w, int h, int first, int cnt)
+CachedTexture::CachedTexture(const std::string& f_, int flags, int w, int h, int first, int cnt)
 {
-	string f = f_;
+	std::string f = f_;
 	if (f.substr(0, 2) == ".\\")
 		f = f.substr(2);
 	if (path.size()) {
-		string t = path + tolower(filenamefile(f));
+		std::string t = path + tolower(filenamefile(f));
 		if (rep = findRep(t, flags, w, h, first, cnt))
 			return;
-		rep = new CachedTexture(t, flags, w, h, first, cnt);
+		rep = new CTInstance(t, flags, w, h, first, cnt);
 		if (rep->frames.size()) {
 			rep_set.insert(rep);
 			return;
 		}
 		delete rep;
 	}
-	string t = tolower(fullfilename(f));
+	std::string t = tolower(fullfilename(f));
 	if (rep = findRep(t, flags, w, h, first, cnt))
 		return;
-	rep = new CachedTexture(t, flags, w, h, first, cnt);
+	rep = new CTInstance(t, flags, w, h, first, cnt);
 	rep_set.insert(rep);
 }
 
-CachedTextureFactory::CachedTextureFactory(const CachedTextureFactory& t) : rep(t.rep)
+CachedTexture::CachedTexture(const CachedTexture& t) : rep(t.rep)
 {
 	++rep->ref_cnt;
 }
 
-CachedTextureFactory::~CachedTextureFactory()
+CachedTexture::~CachedTexture()
 {
 	if (!--rep->ref_cnt) {
 		rep_set.erase(rep);
@@ -156,7 +156,7 @@ CachedTextureFactory::~CachedTextureFactory()
 	}
 }
 
-CachedTextureFactory& CachedTextureFactory::operator=(const CachedTextureFactory& t)
+CachedTexture& CachedTexture::operator=(const CachedTexture& t)
 {
 	++t.rep->ref_cnt;
 	if (!--rep->ref_cnt) {
@@ -167,17 +167,17 @@ CachedTextureFactory& CachedTextureFactory::operator=(const CachedTextureFactory
 	return *this;
 }
 
-string CachedTextureFactory::getName() const
+std::string CachedTexture::getName() const
 {
 	return rep->file;
 }
 
-const vector<gxCanvas*>& CachedTextureFactory::getFrames() const
+const std::vector<gxCanvas*>& CachedTexture::getFrames() const
 {
 	return rep->frames;
 }
 
-void CachedTextureFactory::setPath(const string& t)
+void CachedTexture::setPath(const std::string& t)
 {
 	path = tolower(t);
 	if (int sz = path.size()) {
