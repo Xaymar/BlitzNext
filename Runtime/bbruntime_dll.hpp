@@ -1,12 +1,12 @@
-
 /* Win32 runtime dynamic link lib */
 
-#ifndef BBRUNTIME_DLL_H
-#define BBRUNTIME_DLL_H
+#pragma once
+#include <streambuf>
+
+#include <stdutil.hpp>
 
 #include <windows.h>
 
-#include "stdutil.hpp"
 
 class Debugger;
 
@@ -26,5 +26,3 @@ class Runtime {
 };
 
 extern "C" _declspec(dllexport) Runtime* _cdecl runtimeGetRuntime();
-
-#endif

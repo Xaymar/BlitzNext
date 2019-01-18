@@ -4,7 +4,7 @@ add_subdirectory(lib)
 add_subdirectory(gfx)
 add_subdirectory(blitz3d)
 
-add_library(${PROJECT_NAME} MODULE
+add_library(${PROJECT_NAME} SHARED
 	"bbruntime_dll.hpp"
 	"bbruntime_dll.cpp"
 	"resource.hpp"
@@ -12,13 +12,26 @@ add_library(${PROJECT_NAME} MODULE
 )
 
 target_link_libraries(${PROJECT_NAME}
-	PRIVATE
-		runtime_lib
-		runtime_gfx
-		stdutil
-		${fmod_LIBRARIES}
-		${FreeImage_LIBRARIES}
+	config
+	runtime_lib
+	runtime_gfx
+	runtime_blitz3d
+	stdutil
+	${fmod_LIBRARIES}
+	${FreeImage_LIBRARIES}
+	ddraw
+	dsound
+	dxguid
+	mswsock
+	shell32
+	winmm
 )
+
+if(MSVC)
+	target_compile_options(${PROJECT_NAME}
+		PRIVATE /EHa
+	)
+endif()
 
 #target_include_directories(${PROJECT_NAME}
 #	
