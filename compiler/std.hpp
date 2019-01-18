@@ -5,14 +5,14 @@
 #include "config.hpp"
 #include "stdutil.hpp"
 
-#include <set>
-#include <map>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <list>
+#include <map>
+#include <set>
 #include <string>
 #include <vector>
-#include <fstream>
-#include <iostream>
-#include <iomanip>
 
 using namespace std;
 
