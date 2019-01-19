@@ -1,24 +1,15 @@
-project(compiler)
-
-add_subdirectory(lib)
-add_subdirectory(gen)
+project(compiler_gen)
 
 set(PRIVATE_SOURCE
 	"main.cpp"
-	"libs.cpp"
-	"libs.hpp"
+	"nasm_insts.txt"
 )
 
 add_executable(${PROJECT_NAME}
 	${PRIVATE_SOURCE}
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "blitzcc")
-
 target_link_libraries(${PROJECT_NAME}
-	compiler_lib
-	linker
-	runtime
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -76,19 +67,9 @@ if (WIN32)
 	)
 endif()
 
-install(TARGETS ${PROJECT_NAME} runtime linker
-	DESTINATION lib
-	RUNTIME DESTINATION bin
-	LIBRARY DESTINATION lib
-	OBJECTS DESTINATION lib
-	RESOURCE DESTINATION lib
-	PUBLIC_HEADER DESTINATION include
-	PRIVATE_HEADER DESTINATION source
+add_custom_command(TARGET ${PROJECT_NAME}
+	PRE_LINK
+	COMMAND ${CMAKE_COMMAND} -E copy
+		"${PROJECT_SOURCE_DIR}/nasm_insts.txt"
+		"$<TARGET_FILE_DIR:${PROJECT_NAME}>/nasm_insts.txt"
 )
-if(MSVC)
-	install(
-		FILES $<TARGET_PDB_FILE:${PROJECT_NAME}> ${fmod_BINARIES} ${FreeImage_BINARIES}
-		DESTINATION bin
-		OPTIONAL
-	)
-endif()
