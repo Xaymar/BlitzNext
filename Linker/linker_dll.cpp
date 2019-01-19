@@ -1,6 +1,5 @@
 
-#include "linker.hpp"
-#include "std.hpp"
+#include <linker.hpp>
 
 #include <windows.h>
 

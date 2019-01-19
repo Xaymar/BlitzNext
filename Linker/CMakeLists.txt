@@ -10,7 +10,6 @@ target_link_libraries(${PROJECT_NAME}
 	linker_lib
 )
 
-
 if (WIN32)
 	target_compile_definitions(${PROJECT_NAME}
 		PRIVATE
@@ -58,5 +57,22 @@ if (WIN32)
 			NOIME
 			NOMDI
 			NOINOUT
+	)
+endif()
+
+install(TARGETS ${PROJECT_NAME}
+	DESTINATION lib
+	RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	OBJECTS DESTINATION lib
+	RESOURCE DESTINATION lib
+	PUBLIC_HEADER DESTINATION include
+	PRIVATE_HEADER DESTINATION source
+)
+if(MSVC)
+	install(
+		FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
+		DESTINATION bin
+		OPTIONAL
 	)
 endif()
