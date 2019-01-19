@@ -4,7 +4,7 @@
 #include "surface.hpp"
 
 class MeshCollider;
-class Collision;
+struct Collision;
 
 class MeshModel : public Model {
 	public:

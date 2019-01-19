@@ -27,15 +27,16 @@ target_link_libraries(${PROJECT_NAME}
 	winmm
 )
 
+target_include_directories(${PROJECT_NAME}
+	PUBLIC
+		${PROJECT_SOURCE_DIR}
+)
+
 if(MSVC)
 	target_compile_options(${PROJECT_NAME}
 		PRIVATE /EHa
 	)
 endif()
-
-#target_include_directories(${PROJECT_NAME}
-#	
-#)
 
 if (WIN32)
 	target_compile_definitions(${PROJECT_NAME}
@@ -86,3 +87,29 @@ if (WIN32)
 			NOINOUT
 	)
 endif()
+
+install(TARGETS ${PROJECT_NAME}
+	DESTINATION lib
+	RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	OBJECTS DESTINATION lib
+	RESOURCE DESTINATION lib
+	PUBLIC_HEADER DESTINATION include
+	PRIVATE_HEADER DESTINATION source
+)
+if(MSVC)
+	install(
+		FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
+		DESTINATION bin
+		OPTIONAL
+	)
+endif()
+
+install(
+	FILES ${fmod_BINARIES}
+	DESTINATION bin
+)
+install(
+	FILES ${FreeImage_BINARIES}
+	DESTINATION bin
+)
