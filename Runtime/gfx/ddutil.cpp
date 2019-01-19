@@ -311,19 +311,12 @@ IDirectDrawSurface7* ddUtil::createSurface(int w, int h, int flags, gxGraphics* 
 		desc.dwFlags |= DDSD_HEIGHT;
 	}
 
-	// Format
-	if (flags & gxCanvas::CANVAS_TEXTURE) {
-		// Flags guaranteed:
-		// - CANVAS_TEX_RGB
-		// - CANVAS_TEX_ALPHA
-		// - CANVAS_TEXTURE
+	// Pixel Format
+	if (flags & gxCanvas::CANVAS_3DRENDER) {
+		// 3D RenderTargets must be in Primary format.
 		desc.dwFlags |= DDSCAPS_3DDEVICE | DDSD_PIXELFORMAT;
-		desc.ddsCaps.dwCaps |= DDSCAPS_TEXTURE | DDSCAPS_VIDEOMEMORY;
-		if (flags & gxCanvas::CANVAS_TEXTURE) {
-			desc.ddpfPixelFormat = gfx->primFmt;
-		} else {
-			desc.ddpfPixelFormat = gfx->texRGBAlphaFmt[hi];
-		}
+		desc.ddsCaps.dwCaps |= DDSCAPS_VIDEOMEMORY | DDSCAPS_LOCALVIDMEM;
+		desc.ddpfPixelFormat = gfx->primFmt;
 	} else {
 		if (flags & gxCanvas::CANVAS_TEX_MASK) {
 			desc.dwFlags |= DDSD_PIXELFORMAT;
@@ -340,33 +333,24 @@ IDirectDrawSurface7* ddUtil::createSurface(int w, int h, int flags, gxGraphics* 
 		}
 	}
 
-	// Cube Map
-	if (flags & (gxCanvas::CANVAS_TEX_CUBE)) {
-		desc.ddsCaps.dwCaps |= DDSCAPS_COMPLEX;
-		desc.ddsCaps.dwCaps2 |= DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_ALLFACES;
-	}
-
-	// Video Memory
-	if (!(flags & gxCanvas::CANVAS_TEX_VIDMEM)) {
-		desc.ddsCaps.dwCaps2 |= DDSCAPS2_TEXTUREMANAGE;
-		if (flags & gxCanvas::CANVAS_TEX_MIPMAP) {
-			desc.ddsCaps.dwCaps |= DDSCAPS_MIPMAP | DDSCAPS_COMPLEX;
-		}
-	}
-
-	// Texture Move
-	if ((flags & gxCanvas::CANVAS_TEXTURE) || (flags & gxCanvas::CANVAS_3DRENDER)) {
+	// Is 3D Texture?
+	if (flags & gxCanvas::CANVAS_TEXTURE) {
 		desc.ddsCaps.dwCaps |= DDSCAPS_TEXTURE;
+
+		// Video Memory
 		if (!(flags & gxCanvas::CANVAS_TEX_VIDMEM)) {
 			desc.ddsCaps.dwCaps2 |= DDSCAPS2_TEXTUREMANAGE;
 			if (flags & gxCanvas::CANVAS_TEX_MIPMAP) {
 				desc.ddsCaps.dwCaps |= DDSCAPS_MIPMAP | DDSCAPS_COMPLEX;
 			}
 		}
+
+		// Cube Map
 		if (flags & (gxCanvas::CANVAS_TEX_CUBE)) {
 			desc.ddsCaps.dwCaps |= DDSCAPS_COMPLEX;
 			desc.ddsCaps.dwCaps2 |= DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_ALLFACES;
 		}
+
 		adjustTexSize((int*)&desc.dwWidth, (int*)&desc.dwHeight, gfx->dir3dDev, !(flags & (gxCanvas::CANVAS_TEX_NPOT)));
 	} else {
 		desc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
