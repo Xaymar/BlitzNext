@@ -1,14 +1,12 @@
 project(linker_lib)
 
-add_library(${PROJECT_NAME} SHARED
+add_library(${PROJECT_NAME} STATIC
 	"dlltoexe.cpp"
 	"dlltoexe.hpp"
 	"image_util.cpp"
 	"image_util.hpp"
 	"linker.cpp"
 	"linker.hpp"
-	"std.cpp"
-	"std.hpp"
 )
 
 target_link_libraries(${PROJECT_NAME}

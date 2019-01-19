@@ -1,7 +1,2 @@
-
-#ifndef DLLTOEXE_H
-#define DLLTOEXE_H
-
+#pragma once
 bool dllToExe(const char* exe_file, const char* dll_file, const char* entry);
-
-#endif

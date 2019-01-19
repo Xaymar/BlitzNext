@@ -1,8 +1,7 @@
-
 #include "dlltoexe.hpp"
-#include "std.hpp"
+#include <fstream>
 
-using namespace std;
+#include <Windows.h>
 
 #pragma pack(push, 1)
 struct Head {
@@ -41,10 +40,10 @@ bool dllToExe(const char* exe_file, const char* dll_file, const char* entry_func
 		return false;
 
 	//Convert dll to exe
-	fstream in(dll_file, ios_base::binary | ios_base::in);
+	std::fstream in(dll_file, std::ios_base::binary | std::ios_base::in);
 	if (!in.is_open())
 		return false;
-	fstream out(exe_file, ios::binary | ios_base::out | ios_base::trunc);
+	std::fstream out(exe_file, std::ios::binary | std::ios_base::out | std::ios_base::trunc);
 	if (!out.is_open())
 		return false;
 
