@@ -24,7 +24,7 @@ std::string filenamepath(const std::string& t);
 std::string filenamefile(const std::string& t);
 
 //lazy version of auto_ptr
-template<class T>
+/*template<class T>
 class a_ptr {
 	public:
 	a_ptr(T* t = 0) : t(t) {}
@@ -62,7 +62,7 @@ class a_ptr {
 
 	private:
 	T* t;
-};
+};*/
 
 //Speed-up for SLOW sstream
 class qstreambuf : public std::streambuf {
